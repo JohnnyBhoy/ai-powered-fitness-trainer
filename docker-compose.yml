@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: gopeakfit-app
+    container_name: gopeakfit-app
+    restart: unless-stopped
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8000:80"
+    networks:
+      - gopeakfit
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    container_name: gopeakfit-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: gopeakfit
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - gopeakfit
+
+volumes:
+  dbdata:
+
+networks:
+  gopeakfit:
