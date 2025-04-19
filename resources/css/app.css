@@ -26,3 +26,7 @@ body {
 .font-dagny {
    font-family:"Dagny Pro, sans-serif";
 }
+html {
+   scroll-behavior: smooth;
+ }
+ 
