@@ -1,6 +1,13 @@
 import Header from "../Header";
-
 import Footer from "../Footer";
+import MainContent from "./MainContent";
+import WhatWeOffer from "./WhatWeOffer";
+import HowItWorks from "./HowItWorks";
+import Philosophy from "./Philosophy";
+import Challenge from "./Challenge";
+import HardTruth from "./HardTruth";
+import Join from "./Join";
+
 
 function Homepage() {
     return (
@@ -11,8 +18,14 @@ function Homepage() {
             minWidth:"100vw"
         }}>
             <Header />
-                <main style={{ flexGrow: 1, padding: "1rem" }}>
-                   
+                <main style={{ flexGrow: 1}}>
+                    <MainContent/>
+                    <WhatWeOffer/>
+                    <HowItWorks/>
+                    <Philosophy/>
+                    <Challenge/>
+                    <HardTruth/>
+                    <Join/>
                 </main>
             <Footer />
         </div>

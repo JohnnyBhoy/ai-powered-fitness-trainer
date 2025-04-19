@@ -5,17 +5,17 @@
 
 @font-face {
    font-family: "Alfarn W05";
-   src: url("../../public/fonts/Alfarn\ W05\ Regular.ttf") format("truetype");
+   src: url("../fonts/Alfarn W05 Regular.ttf") format("truetype");
    font-weight: normal;
    font-style: normal;
-}
-
-@font-face {
+ }
+ 
+ @font-face {
    font-family: "Dagny Pro";
-   src: url("../../public/fonts/fonnts.com-DagnyPro.otf") format("opentype");
+   src: url("../fonts/fonnts.com-DagnyPro.otf") format("opentype");
    font-weight: normal;
    font-style: normal;
-}
+ }
 
 body {
    font-family: "Montserrat", sans-serif;
