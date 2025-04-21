@@ -22,7 +22,7 @@ export default function Welcome({
     return (
     <>
     <div className="container">
-        <Head title="Welcome" />
+        <Head title="GO PEAK FIT" />
         <Homepage/>
         
     </div>
