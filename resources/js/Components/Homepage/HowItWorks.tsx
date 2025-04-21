@@ -71,7 +71,7 @@ function HowItWorks() {
                                         {step.content.map((point, index) => (
                                             <li key={index} className="flex items-start">
                                                 {(step.id === 2 || step.id === 3) ? (
-                                                    <span className="text-[#23B5D3] font-bold mr-2">✔</span>
+                                                    <span className="text-[#23B5D3] font-bold mr-2">✓</span>
                                                 ) : null}
                                                 {point}
                                             </li>
