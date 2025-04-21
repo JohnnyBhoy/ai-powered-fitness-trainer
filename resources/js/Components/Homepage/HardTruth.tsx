@@ -42,10 +42,10 @@ const HardTruth = () => {
               <h2 className="text-4xl font-bold mb-4 font-alfarn max-w-lg">Invest In Your Health For Less Than $2/Day</h2>
               
               <ul className="list-none list-inside text-md">
-                <li><span className="text-[#23B5D3] font-bold mr-2">✔</span>Personalized protein meal plan</li>
-                <li><span className="text-[#23B5D3] font-bold mr-2">✔</span>Progressive strength workouts (3x/week)</li>
-                <li><span className="text-[#23B5D3] font-bold mr-2">✔</span>Daily wellness checklists (sleep, water, sunlight)</li>
-                <li><span className="text-[#23B5D3] font-bold mr-2">✔</span>24/7 coach and community support</li>
+                <li><span className="text-[#23B5D3] font-bold mr-2">✓</span>Personalized protein meal plan</li>
+                <li><span className="text-[#23B5D3] font-bold mr-2">✓</span>Progressive strength workouts (3x/week)</li>
+                <li><span className="text-[#23B5D3] font-bold mr-2">✓</span>Daily wellness checklists (sleep, water, sunlight)</li>
+                <li><span className="text-[#23B5D3] font-bold mr-2">✓</span>24/7 coach and community support</li>
               </ul>
             
               <button className="mt-4 bg-black text-white px-6 py-2 rounded-full text-xs hover:bg-gray-800 transition w-fit">

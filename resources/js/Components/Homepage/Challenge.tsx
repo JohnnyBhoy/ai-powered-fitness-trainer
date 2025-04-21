@@ -17,31 +17,31 @@ const Challenge = () => {
           <div>
             <h4 className="text-[#23B5D3] font-bold text-md">Protein? High.</h4>
             <ul className="list-none list-inside text-sm">
-              <li> <span className="text-rose-500 font-bold mr-2">✔</span>Meat, eggs, fish—every meal.</li>
-              <li> <span className="text-[#23B5D3] font-bold mr-2">✔</span>Keeps you full, fuels fat burning, and prevents muscle loss.</li>
-              <li> <span className="text-[#23B5D3] font-bold mr-2">✔</span>Eat 1g of protein per pound of goal weight.</li>
+              <li> <span className="text-[#23B5D3] font-bold mr-2">✓</span>Meat, eggs, fish—every meal.</li>
+              <li> <span className="text-[#23B5D3] font-bold mr-2">✓</span>Keeps you full, fuels fat burning, and prevents muscle loss.</li>
+              <li> <span className="text-[#23B5D3] font-bold mr-2">✓</span>Eat 1g of protein per pound of goal weight.</li>
             </ul>
           </div>
           <div>
             <h4 className="text-[#23B5D3] font-bold text-md">Fats and Sugars? Only the Good Stuff.</h4>
             <ul className="list-none list-inside text-sm">
-              <li>  <span className="text-[#23B5D3] font-bold mr-2">✔</span>Avocado, olive oil, eggs, and small amounts of cheese.</li>
-              <li>  <span className="text-[#23B5D3] font-bold mr-2">✔</span>No junk oils, no processed fats or sugars.</li>
-              <li>  <span className="text-[#23B5D3] font-bold mr-2">✔</span>Limited fresh fruit.</li>
+              <li>  <span className="text-[#23B5D3] font-bold mr-2">✓</span>Avocado, olive oil, eggs, and small amounts of cheese.</li>
+              <li>  <span className="text-[#23B5D3] font-bold mr-2">✓</span>No junk oils, no processed fats or sugars.</li>
+              <li>  <span className="text-[#23B5D3] font-bold mr-2">✓</span>Limited fresh fruit.</li>
             </ul>
           </div>
           <div>
             <h4 className="text-[#23B5D3] font-bold text-md">Water? A Lot.</h4>
             <ul className="list-none list-inside text-sm">
-              <li>   <span className="text-[#23B5D3] font-bold mr-2">✔</span>At least 100 oz per day.</li>
-              <li>   <span className="text-[#23B5D3] font-bold mr-2">✔</span>No sugary drinks, no alcohol. Black coffee & tea are fine.</li>
+              <li>   <span className="text-[#23B5D3] font-bold mr-2">✓</span>At least 100 oz per day.</li>
+              <li>   <span className="text-[#23B5D3] font-bold mr-2">✓</span>No sugary drinks, no alcohol. Black coffee & tea are fine.</li>
             </ul>
           </div>
           <div>
             <h4 className="text-[#23B5D3] font-bold text-lg">Workouts? Move Every Day.</h4>
             <ul className="list-none list-inside">
-              <li>  <span className="text-[#23B5D3] font-bold mr-2">✔</span>Walk, lift, or sweat daily.</li>
-              <li>   <span className="text-[#23B5D3] font-bold mr-2">✔</span>At least 20 minutes—non-negotiable.</li>
+              <li>  <span className="text-[#23B5D3] font-bold mr-2">✓</span>Walk, lift, or sweat daily.</li>
+              <li>   <span className="text-[#23B5D3] font-bold mr-2">✓</span>At least 20 minutes—non-negotiable.</li>
             </ul>
           </div>
         </div>
