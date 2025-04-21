@@ -18,7 +18,7 @@ function Homepage() {
             minWidth:"100vw"
         }}>
             <Header />
-                <main style={{ flexGrow: 7}}>
+                <main className="flex flex-col">
                     <MainContent/>
                     <WhatWeOffer/>
                     <HowItWorks/>
