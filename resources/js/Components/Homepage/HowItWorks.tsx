@@ -50,7 +50,7 @@ function HowItWorks() {
                     Start Your $1 Trial Now
                 </button>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-15 max-w-4xl w-full">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-15 max-w-4xl w-full pt-10">
                     <div className="text-left max-w-md mx-auto">
                         {steps.map((step) => (
                            <div key={step.id} className="border-b border-gray-300 py-4">

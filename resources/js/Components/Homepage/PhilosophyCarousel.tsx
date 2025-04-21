@@ -41,7 +41,7 @@ const Carousel = () => {
   const transitionRef = useRef(null);
 
   const totalSlides = carouselData.length;
-  const slides = [carouselData[totalSlides - 1], ...carouselData, carouselData[0]]; // Fake slides for smooth looping
+  const slides = [carouselData[totalSlides - 1], ...carouselData, carouselData[0]];
 
   const nextSlide = () => {
     if (index >= totalSlides) {
@@ -79,7 +79,7 @@ const Carousel = () => {
         ref={transitionRef}
       >
         {slides.map((carouselItem, carouselIndex) => (
-          <div key={carouselIndex} className="min-w-full px-35">
+          <div key={carouselIndex} className="min-w-full px-40">
             <h2 className="text-lg font-semibold text-center font-monserrat text-[#23B5D3] mb-2">PHILOSOPHY</h2>
             <h2 className="text-2xl font-bold text-center font-alfarn mb-4 pb-5">{carouselItem.title}</h2>
             <div className="space-y-6">

@@ -18,7 +18,7 @@ function Homepage() {
             minWidth:"100vw"
         }}>
             <Header />
-                <main style={{ flexGrow: 1}}>
+                <main style={{ flexGrow: 7}}>
                     <MainContent/>
                     <WhatWeOffer/>
                     <HowItWorks/>
