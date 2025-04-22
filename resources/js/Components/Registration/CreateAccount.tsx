@@ -17,12 +17,12 @@ function CreateAccount() {
         mental and physical reset designed to strip away excuses, torch excess weight, and prove what you’re capable of.
       </p>
 
-      <div className="mt-10 flex flex-col lg:flex-row justify-center items-center gap-4 lg:gap-2 w-full max-w-6xl pb-10">
-        {/* Right Side - Form Section (appears first on mobile) */}
-        <div className="w-full lg:w-1/2 bg-slate-50 px-10 py-10 rounded-xl shadow-md text-left order-1 lg:order-2">
+      <div className="mt-10 flex flex-col lg:flex-row justify-center items-stretch gap-2 lg:gap-2 w-full max-w-6xl pb-10">
+        {/* Form Section */}
+        <div className="w-full lg:w-1/2 bg-slate-50 px-10 py-10 rounded-xl shadow-md text-left order-1 lg:order-2 flex flex-col justify-center">
           <h3 className="text-lg font-bold mb-6 text-center">Create Your Account</h3>
           <form className="space-y-4">
-            {/* First Row of Inputs */}
+            {/* Name Inputs */}
             <div className="flex gap-4">
               <div className="w-1/2">
                 <label htmlFor="first-name" className="block text-sm font-semibold mb-2">First Name</label>
@@ -112,29 +112,29 @@ function CreateAccount() {
           </form>
         </div>
 
-        {/* Left Side - Image Section (appears second on mobile) */}
-        <div className="relative w-full lg:w-1/2 flex justify-center items-center order-2 lg:order-1 ">
-          <div className="h-full">
+        {/* Image Section */}
+        <div className="relative w-full lg:w-1/2 flex justify-center items-center order-2 lg:order-1">
+          <div className="w-full flex justify-center items-center relative">
+            {/* Main Image */}
             <img
               src="/images/registration.png"
               alt="Fitness Image"
-              className="rounded-xl h-130 w-full object-cover"
+              className="rounded-xl w-3/4 object-contain"
             />
 
-            {/* Workout Notification Image */}
+            {/* Notification Image */}
             <img
-                src="/images/main-subimg1.png"
-                alt="Workout Notification"
-                className="rounded-xl absolute top-10 left-25 transform -translate-x-1/2 h-15 "
-                />
+              src="/images/main-subimg1.png"
+              alt="Workout Notification"
+              className="rounded-xl absolute top-20 left-24 Tansform -translate-x-1/2 h-20"
+            />
 
             {/* Rating Image */}
             <img
-                src="/images/main-subimg2.png"
-                alt="Rating"
-                className="rounded-xl absolute bottom-[-50px] right-12 h-16 "
+              src="/images/main-subimg2.png"
+              alt="Rating"
+              className="rounded-xl absolute bottom-[-50px] right-32 h-20 Transform translate-x-1/2"
             />
-
           </div>
         </div>
       </div>

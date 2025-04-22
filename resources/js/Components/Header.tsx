@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -18,12 +19,12 @@ const Header = () => {
                 </nav>
 
                 <div className="flex space-x-2">
-                    <button className="px-4 py-2 bg-black text-white rounded-full text-sm hover:bg-gray-900 text-xs">
+                    <a className="px-4 py-2 bg-black text-white rounded-full text-sm hover:bg-gray-900 text-xs">
                         Start Trial
-                    </button>
-                    <button className="px-4 py-2 border border-gray-700 text-gray-700 rounded-full text-sm hover:bg-[#20b5c9] hover:text-white text-xs">
+                    </a>
+                    <a href='/register' className="px-4 py-2 border border-gray-700 text-gray-700 rounded-full text-sm hover:bg-[#20b5c9] hover:text-white text-xs">
                         Login/Signup
-                    </button>
+                    </a>
                 </div>
             </header>
 
@@ -61,9 +62,13 @@ const Header = () => {
                         <button className="w-full px-4 py-2 bg-black text-white rounded-full text-sm hover:bg-gray-900 text-xs">
                             Start Trial
                         </button>
-                        <button className="w-full px-4 py-2 border border-gray-700 text-gray-700 rounded-full text-sm hover:bg-[#20b5c9] hover:text-white text-xs">
+                        <a
+                            href="/register"
+                            className="w-full px-4 py-2 border border-gray-700 text-gray-700 rounded-full text-sm hover:bg-[#20b5c9] hover:text-white text-xs text-center block"
+                            >
                             Login/Signup
-                        </button>
+                        </a>
+
                     </div>
                 </div>
             )}

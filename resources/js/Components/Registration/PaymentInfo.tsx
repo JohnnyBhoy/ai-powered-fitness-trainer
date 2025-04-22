@@ -103,31 +103,31 @@ function PaymentInfo() {
             </h1>
         
             <ul className="list-none list-inside text-md text-left max-w-lg space-y-6 text-justify">
-              <li><span className="text-[#23B5D3] font-bold mr-2">✔</span>
+              <li><span className="text-[#23B5D3] font-bold mr-2">✓</span>
                 Today is Day 1 – You start strong with your customized plan
               </li>
-              <li><span className="text-[#23B5D3] font-bold mr-2">✔</span>
+              <li><span className="text-[#23B5D3] font-bold mr-2">✓</span>
                 On Day 6, you’ll be automatically enrolled in the full program
                 for $49/month (less than $2 a day).
               </li>
-              <li><span className="text-[#23B5D3] font-bold mr-2">✔</span>
+              <li><span className="text-[#23B5D3] font-bold mr-2">✓</span>
                 Day 6, your real transformation begins. With continued
                 accountability, guidance, and progress tracking, you’ll have
                 everything you need to turn these 5 days into lifelong
                 success.
               </li>
 
-              <li><span className="text-[#23B5D3] font-bold mr-2">✔</span>
+              <li><span className="text-[#23B5D3] font-bold mr-2">✓</span>
                 No Risk. Cancel Anytime. If you decide the program isn’t for
                 you, simply cancel before the end of your 5-day challenge,
                 and you won’t be charged. No stress, no questions, no hassle.
               </li>
 
-              <li><span className="text-[#23B5D3] font-bold mr-2">✔</span>
+              <li><span className="text-[#23B5D3] font-bold mr-2">✓</span>
                 You can do anything for 5 days. Prove it to yourself.
               </li>
 
-              <li><span className="text-[#23B5D3] font-bold mr-2">✔</span>
+              <li><span className="text-[#23B5D3] font-bold mr-2">✓</span>
                 Sign Up Now for Just $1 & Get Started Today!
               </li>
             </ul>
@@ -135,7 +135,7 @@ function PaymentInfo() {
             <img 
                 src="/images/hardtruthstar.png" 
                 alt="Rating Image" 
-                className="rounded-xl h-23 absolute bottom-[-120px] right-[-50px] transform -translate-x-1/2"
+                className="rounded-xl h-16 absolute bottom-[-80px] right-[-50px] transform -translate-x-1/2"
             />
 
         </div>

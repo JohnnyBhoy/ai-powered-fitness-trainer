@@ -18,7 +18,7 @@ function TheGoal() {
           <textarea
             value={goal}
             onChange={(e) => setGoal(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg mb-1 h-50 bg-gray-200 resize-none"
+            className="w-full p-3 border border-gray-300 rounded-lg mb-1 h-40 bg-gray-200 resize-none"
           
           />
            <p className='text-[10px] text-gray-400 italic'>Example: lose 10 pounds and increase lean muscle mass.</p>
@@ -29,7 +29,7 @@ function TheGoal() {
           <textarea
             value={why}
             onChange={(e) => setWhy(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg mb-1 h-50 bg-gray-200 resize-none"
+            className="w-full p-3 border border-gray-300 rounded-lg mb-1 h-40 bg-gray-200 resize-none"
            
           />
           <p className='text-[10px] text-gray-400 italic'>Example: Beach Vacation in 3 months and I want to look good in a swimsuit.</p>
@@ -42,7 +42,7 @@ function TheGoal() {
           <textarea
             value={pastObstacles}
             onChange={(e) => setPastObstacles(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg mb-1 h-50 bg-gray-200 resize-none"
+            className="w-full p-3 border border-gray-300 rounded-lg mb-1 h-40 bg-gray-200 resize-none"
             
           />
           <p className='text-[10px] text-gray-400 italic'>Example: Lack of consistency, no accountability, emotional eating, busy schedule.</p>
@@ -53,7 +53,7 @@ function TheGoal() {
           <textarea
             value={currentStruggles}
             onChange={(e) => setCurrentStruggles(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg mb-1 h-50 bg-gray-200 resize-none"
+            className="w-full p-3 border border-gray-300 rounded-lg mb-1 h-40 bg-gray-200 resize-none"
           />
          <p className='text-[10px] text-gray-400 italic'>Example: Late-night snacking, skipping workouts, not knowing what to eat.</p>
         </div>
