@@ -96,7 +96,7 @@ function PaymentInfo() {
         </div>
 
         {/* Left Side - checklist*/}
-        <div className="relative w-full lg:w-1/2 flex flex-col  order-2 lg:order-1">
+        <div className="relative w-full lg:w-1/2 flex flex-col  order-2 lg:order-1 mb-2">
 
             <h1 className="text-2xl font-semibold mt-2 text-[#23B5D3] text-left pb-5">
              HOW IT WORKS

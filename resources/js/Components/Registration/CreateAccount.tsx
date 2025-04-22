@@ -107,7 +107,7 @@ function CreateAccount() {
               type="submit"
               className="w-full bg-[#23B5D3] text-white py-2 rounded-md font-semibold hover:bg-[#1b9bb6] transition"
             >
-              SUBMIT
+              CONTINUE
             </button>
           </form>
         </div>

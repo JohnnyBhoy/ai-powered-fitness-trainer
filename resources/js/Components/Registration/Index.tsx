@@ -7,6 +7,7 @@ import TheGoal from "./TheGoal";
 
 
 function Registration() {
+    
     return (
         <div style={{
             display: "flex",
@@ -17,8 +18,8 @@ function Registration() {
                 <main>
                     <CreateAccount/>
                     <LocationAndBiometrics/>
-                    <PaymentInfo/>
                     <TheGoal/>
+                    <PaymentInfo/>
                 </main>
             <Footer />
         </div>
