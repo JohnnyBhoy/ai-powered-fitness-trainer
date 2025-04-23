@@ -83,18 +83,12 @@ const Carousel = () => {
     if (!isTransitioning) {
       const timer = setTimeout(() => {
         setIsTransitioning(true);
-      }, 50);
+      }, 20);
       return () => clearTimeout(timer);
     }
   }, [isTransitioning]);
 
-  // Auto-advance slides (optional)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      goToNext();
-    }, 8000); // Change slide every 8 seconds
-    return () => clearInterval(interval);
-  }, [currentIndex]);
+
 
   const goToNext = () => {
     setCurrentIndex(prev => prev + 1);
@@ -124,7 +118,7 @@ const Carousel = () => {
   };
 
   return (
-    <div className="relative w-full max-w-4xl mx-auto bg-gray-100 rounded-lg py-10 overflow-hidden">
+    <div className="relative w-full max-w-5xl mx-auto bg-gray-100 rounded-lg py-10 overflow-hidden">
       {/* Slide Container */}
       <div
         ref={containerRef}
