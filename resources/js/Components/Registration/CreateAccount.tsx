@@ -126,14 +126,14 @@ function CreateAccount() {
             <img
               src="/images/main-subimg1.png"
               alt="Workout Notification"
-              className="rounded-xl absolute top-20 left-24 Tansform -translate-x-1/2 h-20"
+              className="rounded-xl absolute top-20 md:left-8  transform-translate-x-1/2 md:h-20 w-28 left-10"
             />
 
             {/* Rating Image */}
             <img
               src="/images/main-subimg2.png"
               alt="Rating"
-              className="rounded-xl absolute bottom-[-50px] right-32 h-20 Transform translate-x-1/2"
+              className="rounded-xl absolute bottom-[-40px] md:right-20  transform-translate-x-1/2 right-5 md:w-48 w-32"
             />
           </div>
         </div>

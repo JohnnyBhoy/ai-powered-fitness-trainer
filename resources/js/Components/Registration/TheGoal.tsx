@@ -10,7 +10,7 @@ function TheGoal() {
   return (
     <div className="flex flex-col items-center px-4 bg-white text-black py-10 max-w-4xl mx-auto">
       <h1 className="text-2xl font-semibold mt-2 text-[#23B5D3] mb-6 ">THE GOAL</h1>
-      <h2 className="text-3xl font-semibold mb-8 font-alfarn">ACCOUNTABILITY THAT DRIVES RESULTS</h2>
+      <h2 className="text-3xl font-semibold mb-8 font-alfarn text-center">ACCOUNTABILITY THAT DRIVES RESULTS</h2>
       
       <div className="flex flex-wrap w-full gap-6 mb-8 mt-10">
         <div className="flex-1 min-w-[300px]">
