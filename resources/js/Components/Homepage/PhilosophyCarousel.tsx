@@ -89,7 +89,7 @@ const Carousel = () => {
                   <div className="w-11 h-11 bg-black text-white flex items-center justify-center rounded-full font-bold z-10">{item.label}</div>
                   {/* Hide connecting lines on mobile */}
                   {idx < carouselItem.items.length - 1 && (
-                    <div className="absolute top-full left-1/2 w-1 h-10 bg-black transform -translate-x-1/2 sm:block hidden"></div>
+                    <div className="absolute top-full left-1/2 w-1 h-12 bg-black transform -translate-x-1/2 sm:block hidden"></div>
                   )}
                 </div>
                 <div className="pl-5 pt-2 sm:pl-10 sm:pt-0 text-center sm:text-left">

@@ -54,7 +54,7 @@ const HardTruth = () => {
             </div>
   
             {/* Right Column - Image */}
-            <div className="w-full relative">
+            <div className="w-full relative pt-4">
               <img
                 src="/images/hardtruth2.png"
                 alt="Hard Truth Illustration"
@@ -64,7 +64,7 @@ const HardTruth = () => {
                <img 
                     src="/images/hardtruthstar.png" 
                     alt="Workout Notification Image" 
-                    className="rounded-xl w-64 absolute bottom-20 left-[-100px]"
+                    className="rounded-xl md:w-56 w-40 absolute bottom-20 md:left-[-100px]"
                 />
 
             </div>
