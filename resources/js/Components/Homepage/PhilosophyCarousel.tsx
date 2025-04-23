@@ -129,7 +129,7 @@ const Carousel = () => {
         onTouchEnd={handleTouchEnd}
       >
         {slides.map((carouselItem, carouselIndex) => (
-          <div key={carouselIndex} className="min-w-full px-5 sm:px-10 md:px-20 lg:px-40">
+          <div key={carouselIndex} className="min-w-full px-20 sm:px-10 md:px-20 lg:px-40">
             <h2 className="text-lg font-semibold text-center font-monserrat text-[#23B5D3] mb-2">PHILOSOPHY</h2>
             <h2 className="text-2xl font-bold text-center font-alfarn mb-4 pb-5">{carouselItem.title}</h2>
             <div className="space-y-6">
