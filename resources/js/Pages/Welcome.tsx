@@ -1,6 +1,7 @@
 import Guest from '@/Layouts/GuestLayout';
 import { PageProps } from '@/types';
 import { Head, Link } from '@inertiajs/react';
+import Homepage from '@/Components/Homepage/Index';
 
 export default function Welcome({
     auth,
@@ -19,11 +20,15 @@ export default function Welcome({
     };
 
     return (
-        <Guest>
-            <Head title="Welcome" />
-            <div className="flex items-center">
-                <h1 className='text-center text-xl'>This is a homepage, modify this at "resources/js/Page/Welcome.tsx"</h1>
-            </div>
-        </Guest>
+    <>
+    <div className="container">
+        <Head title="GO PEAK FIT" />
+        <Homepage/>
+        
+    </div>
+       
+    </>
+           
+       
     );
 }

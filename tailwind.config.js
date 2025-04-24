@@ -12,9 +12,13 @@ export default {
 
     theme: {
         extend: {
+          
+
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
-            },
+                alfarn: ['Alfarn W05', 'sans-serif'],
+                dagny: ['Dagny Pro', 'sans-serif'],
+              },
         },
     },
 

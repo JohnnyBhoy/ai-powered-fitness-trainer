@@ -1,3 +1,32 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@font-face {
+   font-family: "Alfarn W05";
+   src: url("../fonts/Alfarn W05 Regular.ttf") format("truetype");
+   font-weight: normal;
+   font-style: normal;
+ }
+ 
+ @font-face {
+   font-family: "Dagny Pro";
+   src: url("../fonts/fonnts.com-DagnyPro.otf") format("opentype");
+   font-weight: normal;
+   font-style: normal;
+ }
+
+body {
+   font-family: "Montserrat", sans-serif;
+}
+.font-alfarn {
+   font-family: "Alfarn W05", sans-serif;
+}
+.font-dagny {
+   font-family:"Dagny Pro, sans-serif";
+}
+html {
+   scroll-behavior: smooth;
+ }
+ 
