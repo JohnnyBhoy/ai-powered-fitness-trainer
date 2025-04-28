@@ -1,10 +1,55 @@
-import { useState } from 'react';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
+import { useUserStore } from '@/stores/useUserStore'
+
+interface RegisterFormData {
+  firstName: string
+  lastName: string
+  email: string
+  username: string
+  password: string
+  password_confirmation: string
+}
 
 function CreateAccount() {
+  const {setUserId} = useUserStore();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [form, setForm] = useState<RegisterFormData>({
+    firstName: '',
+    lastName: '',
+    email: '',
+    username: '',
+    password: '',
+    password_confirmation: '',
+  })
+
+  const mutation = useMutation({
+    mutationFn: (data: RegisterFormData) => axios.post('/register', data),
+    onSuccess: (res) => {
+      const userId = res.data.id
+      setUserId(userId);
+      alert(`Account created successfully! Your user ID is ${userId}`)
+    },
+    onError: (error: any) => {
+      alert(error.response?.data?.message ?? 'Registration failed.')
+    },
+  })
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value })
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    mutation.mutate(form)
+  }
+
+  console.log(form);
+
 
   return (
     <div className="flex flex-col items-center px-4 bg-white text-black text-center py-10">
@@ -21,21 +66,24 @@ function CreateAccount() {
         {/* Form Section */}
         <div className="w-full lg:w-1/2 bg-slate-50 px-10 py-10 rounded-xl shadow-md text-left order-1 lg:order-2 flex flex-col justify-center">
           <h3 className="text-lg font-bold mb-6 text-center">Create Your Account</h3>
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {/* Name Inputs */}
             <div className="flex gap-4">
               <div className="w-1/2">
                 <label htmlFor="first-name" className="block text-sm font-semibold mb-2">First Name</label>
                 <input
-                  id="first-name"
-                  type="text"
+                  name="firstName"
+                  value={form.firstName}
+                  onChange={handleChange}
                   className="w-full p-2 border border-gray-400 rounded-md bg-white"
                 />
               </div>
               <div className="w-1/2">
                 <label htmlFor="last-name" className="block text-sm font-semibold mb-2">Last Name</label>
                 <input
-                  id="last-name"
+                  name="lastName"
+                  value={form.lastName}
+                  onChange={handleChange}
                   type="text"
                   className="w-full p-2 border border-gray-400 rounded-md bg-white"
                 />
@@ -48,6 +96,9 @@ function CreateAccount() {
               <input
                 id="email"
                 type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
                 className="w-full p-2 border border-gray-400 rounded-md bg-white"
               />
             </div>
@@ -56,8 +107,9 @@ function CreateAccount() {
             <div>
               <label htmlFor="username" className="block text-sm font-semibold mb-2">Username</label>
               <input
-                id="username"
-                type="text"
+                name="username"
+                value={form.username}
+                onChange={handleChange}
                 className="w-full p-2 border border-gray-400 rounded-md bg-white"
               />
             </div>
@@ -67,6 +119,9 @@ function CreateAccount() {
               <label htmlFor="password" className="block text-sm font-semibold mb-2">Password</label>
               <input
                 id="password"
+                name="password"
+                value={form.password}
+                onChange={handleChange}
                 type={showPassword ? "text" : "password"}
                 className="w-full p-2 border border-gray-400 rounded-md pr-10 bg-white"
               />
@@ -87,6 +142,9 @@ function CreateAccount() {
               <label htmlFor="confirm-password" className="block text-sm font-semibold mb-2">Confirm Password</label>
               <input
                 id="confirm-password"
+                name="password_confirmation"
+                value={form.password_confirmation}
+                onChange={handleChange}
                 type={showConfirmPassword ? "text" : "password"}
                 className="w-full p-2 border border-gray-400 rounded-md pr-10 bg-white"
               />
@@ -105,9 +163,10 @@ function CreateAccount() {
             {/* Submit Button */}
             <button
               type="submit"
+              disabled={mutation.isPending}
               className="w-full bg-[#23B5D3] text-white py-2 rounded-md font-semibold hover:bg-[#1b9bb6] transition"
             >
-              CONTINUE
+              {mutation.isPending ? 'Submitting...' : 'CONTINUE'}
             </button>
           </form>
         </div>

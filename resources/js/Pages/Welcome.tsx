@@ -20,15 +20,9 @@ export default function Welcome({
     };
 
     return (
-    <>
     <div className="container">
         <Head title="GO PEAK FIT" />
         <Homepage/>
-        
-    </div>
-       
-    </>
-           
-       
+    </div>       
     );
 }

@@ -4,8 +4,10 @@ import './bootstrap';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME ?? 'Go Peak Fit';
+const queryClient = new QueryClient()
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -17,7 +19,11 @@ createInertiaApp({
     setup({ el, App, props }) {
         const root = createRoot(el);
 
-        root.render(<App {...props} />);
+        root.render(
+            <QueryClientProvider client={queryClient}>
+                <App {...props} />
+            </QueryClientProvider>
+        );
     },
     progress: {
         color: '#4B5563',

@@ -1,3 +1,4 @@
+import { Link } from '@inertiajs/react';
 import { useState } from 'react';
 
 
@@ -8,7 +9,9 @@ const Header = () => {
         <>
             <header className="hidden md:flex bg-[#F7F9FC] py-5 px-40 items-center justify-between shadow-sm">
                 <div className="flex">
-                    <img src="/logos/header-logo.png" alt="Go Peak Fit" className="h-6" />
+                    <Link href="/">
+                       <img src="/logos/header-logo.png" alt="Go Peak Fit" className="h-6" />              
+                    </Link>
                 </div>
 
                 <nav className="flex space-x-10 text-gray-700 text-sm font-medium">
@@ -22,9 +25,9 @@ const Header = () => {
                     <a className="px-4 py-2 bg-black text-white rounded-full text-sm hover:bg-gray-900 text-xs">
                         Start Trial
                     </a>
-                    <a href='/register' className="px-4 py-2 border border-gray-700 text-gray-700 rounded-full text-sm hover:bg-[#20b5c9] hover:text-white text-xs">
+                    <Link href='/register' className="px-4 py-2 border border-gray-700 text-gray-700 rounded-full text-sm hover:bg-[#20b5c9] hover:text-white text-xs">
                         Login/Signup
-                    </a>
+                    </Link>
                 </div>
             </header>
 
