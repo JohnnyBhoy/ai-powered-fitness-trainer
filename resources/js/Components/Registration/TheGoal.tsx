@@ -11,7 +11,7 @@ type GoalFormData = {
   user_id: null | number
 }
 
-function TheGoal() {
+function TheGoal({ onComplete }: { onComplete: () => void }) {
   const {userId} = useUserStore();
     
   const {

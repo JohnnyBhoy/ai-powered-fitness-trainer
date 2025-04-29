@@ -18,7 +18,7 @@ type BiometricsFormData = {
     user_id: null | number
 }
 
-function LocationAndBiometrics() {
+function LocationAndBiometrics({ onComplete }: { onComplete: () => void }) {
     const {userId} = useUserStore();
     
     const {
@@ -31,6 +31,7 @@ function LocationAndBiometrics() {
         mutationFn: (data: BiometricsFormData) => axios.post('/biometrics', data),
         onSuccess: (res) => {
           alert(`Location and biometrics updated.`)
+          onComplete();
         },
         onError: (error: any) => {
           alert(error.response?.data?.message ?? 'Biomertrics failed.')

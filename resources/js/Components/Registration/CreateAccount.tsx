@@ -14,7 +14,7 @@ interface RegisterFormData {
   password_confirmation: string
 }
 
-function CreateAccount() {
+function CreateAccount({ onComplete }: { onComplete: () => void }) {
   const {setUserId} = useUserStore();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -29,10 +29,11 @@ function CreateAccount() {
 
   const mutation = useMutation({
     mutationFn: (data: RegisterFormData) => axios.post('/register', data),
-    onSuccess: (res) => {
+    onSuccess: (res:any) => {
       const userId = res.data.id
       setUserId(userId);
       alert(`Account created successfully! Your user ID is ${userId}`)
+      onComplete();
     },
     onError: (error: any) => {
       alert(error.response?.data?.message ?? 'Registration failed.')
