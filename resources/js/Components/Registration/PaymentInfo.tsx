@@ -19,7 +19,6 @@ function PaymentInfo({ onComplete }: { onComplete: () => void }) {
       <div className="mt-10 flex flex-col lg:flex-row justify-center items-center gap-4 lg:gap-2 w-full max-w-6xl pb-10">
         {/* Right Side - Form Section (appears first on mobile) */}
         <div className="w-full lg:w-1/2 bg-slate-50 px-10 py-10 rounded-xl shadow-md text-left order-1 lg:order-2">
-          <h2 className="text-xl font-semibold mb-6 text-left">Payment Information</h2>
           <form className="space-y-4">
               <div className="relative p-4 mt-6">
                   <h4 className="text-lg font-semibold mb-5">Summary</h4>
