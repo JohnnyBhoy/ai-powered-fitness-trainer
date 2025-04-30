@@ -89,11 +89,14 @@ function TheGoal({ onComplete }: { onComplete: () => void }) {
         </div>
       </div>
       
-      <button 
-       type="submit"
-       className="w-full max-w-md bg-[#23B5D3] text-white py-2 rounded-md font-semibold hover:bg-[#1b9bb6] transition mt-6">
-        CONTINUE
-      </button>
+        <div className="flex justify-center">
+          <button 
+            type="submit"
+            className="w-full max-w-md bg-[#23B5D3] text-white py-2 rounded-md font-semibold hover:bg-[#1b9bb6] transition mt-6">
+            CONTINUE
+          </button>
+        </div>
+        
       </form>
     </div>
   );
