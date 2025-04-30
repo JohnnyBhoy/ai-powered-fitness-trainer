@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import { useUserStore } from '@/stores/useUserStore'
+import { toast } from 'sonner'
 
 type BiometricsFormData = {
     city: string
@@ -30,11 +31,11 @@ function LocationAndBiometrics({ onComplete }: { onComplete: () => void }) {
     const mutation = useMutation({
         mutationFn: (data: BiometricsFormData) => axios.post('/biometrics', data),
         onSuccess: (res) => {
-          alert(`Location and biometrics updated.`)
+          toast.success(`Location and biometrics updated.`)
           onComplete();
         },
         onError: (error: any) => {
-          alert(error.response?.data?.message ?? 'Biomertrics failed.')
+          toast.error(error.response?.data?.message ?? 'Biomertrics failed.')
         },
       })
 
