@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import { useUserStore } from '@/stores/useUserStore'
+import { toast } from 'sonner'
 
 interface RegisterFormData {
   firstName: string
@@ -14,7 +15,7 @@ interface RegisterFormData {
   password_confirmation: string
 }
 
-function CreateAccount() {
+function CreateAccount({ onComplete }: { onComplete: () => void }) {
   const {setUserId} = useUserStore();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -29,13 +30,14 @@ function CreateAccount() {
 
   const mutation = useMutation({
     mutationFn: (data: RegisterFormData) => axios.post('/register', data),
-    onSuccess: (res) => {
+    onSuccess: (res:any) => {
       const userId = res.data.id
       setUserId(userId);
-      alert(`Account created successfully! Your user ID is ${userId}`)
+      toast.success(`Account created successfully! Your user ID is ${userId}`)
+      onComplete();
     },
     onError: (error: any) => {
-      alert(error.response?.data?.message ?? 'Registration failed.')
+      toast.error(error.response?.data?.message ?? 'Registration failed.')
     },
   })
 
@@ -48,7 +50,7 @@ function CreateAccount() {
     mutation.mutate(form)
   }
 
-  console.log(form);
+
 
 
   return (
