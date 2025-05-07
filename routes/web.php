@@ -20,7 +20,7 @@ Route::get('/', function () {
 
 Route::get('/registration', function () {
     return Inertia::render('Register');
-})->name('register');
+})->name('registers');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {return Inertia::render('Dashboard');})->name('dashboard');
@@ -45,7 +45,7 @@ Route::get('/cancel', [StripePaymentController::class, 'cancel'])->name('cancel'
 |--------------------------------------------------------------------------
 |
 | This route is for web portal simulator of Workout bot
-| This will act as test of sms based expert ai workout
+| This will act as test of sms based expert ai workout  
 | trainer
 |
 */

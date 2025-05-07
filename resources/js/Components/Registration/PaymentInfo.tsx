@@ -6,17 +6,24 @@ function PaymentInfo({ onComplete }: { onComplete: () => void }) {
   const handleCheckout = async () => {
     const stripe = await stripePromise;
   
+    const csrfToken = document?.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '';
+
     const response = await fetch('/session', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': document?.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        'X-CSRF-TOKEN': csrfToken,
       },
       body: JSON.stringify({}),
     });
   
     const session = await response.json();
   
+    if (!stripe) {
+      console.error('Stripe is not loaded properly.');
+      return;
+    }
+    
     // Redirect to Stripe Checkout
     const result = await stripe.redirectToCheckout({
       sessionId: session.id,
