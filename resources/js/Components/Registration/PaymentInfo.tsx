@@ -1,9 +1,31 @@
-
-import { faCreditCard } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import { loadStripe } from '@stripe/stripe-js';
 
 function PaymentInfo({ onComplete }: { onComplete: () => void }) {
+  const stripePromise = loadStripe(import.meta.env.STRIPE_KEY);
+
+  const handleCheckout = async () => {
+    const stripe = await stripePromise;
+  
+    const response = await fetch('/session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': document?.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+      },
+      body: JSON.stringify({}),
+    });
+  
+    const session = await response.json();
+  
+    // Redirect to Stripe Checkout
+    const result = await stripe.redirectToCheckout({
+      sessionId: session.id,
+    });
+  
+    if (result.error) {
+      alert(result.error.message);
+    }
+  };
 
   return (
     <div className="flex flex-col items-center px-4 bg-white text-black text-center py-10">
@@ -33,12 +55,17 @@ function PaymentInfo({ onComplete }: { onComplete: () => void }) {
                   </div>
               </div>
               {/* Submit Button */}
-              <button
-                  type="submit"
-                  className="w-full bg-[#23B5D3] text-white py-2 font-alfarn text-white rounded-md font-semibold hover:bg-[#1b9bb6] transition"
-              >
-                  Start 5-day challenge for $1
-              </button>
+              <a href="checkout">
+                  <button
+                    type="button"
+                    onClick={handleCheckout}
+                    className="w-full bg-[#23B5D3] text-white py-2 font-alfarn text-white rounded-md font-semibold hover:bg-[#1b9bb6] transition"
+                >
+                    Start 5-day challenge for $1
+                </button>
+              </a>
+                    
+            
               <div className="mt-4">
                   <h3 className="text-xs font-semibold">RECURRING BILLING & TRIALS</h3>
                   <p className="text-[8px] mt-1">

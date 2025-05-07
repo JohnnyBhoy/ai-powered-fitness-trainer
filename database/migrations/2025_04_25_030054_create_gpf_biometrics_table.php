@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
     public function up(): void {
-        Schema::create('biometrics', function (Blueprint $table) {
+        Schema::create('gpf_biometrics', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade')->unique();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->string('phone_number')->nullable();
@@ -24,6 +24,6 @@ return new class extends Migration {
     }
 
     public function down(): void {
-        Schema::dropIfExists('biometrics');
+        Schema::dropIfExists('gpf_biometrics');
     }
 };
