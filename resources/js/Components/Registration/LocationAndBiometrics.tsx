@@ -40,6 +40,13 @@ function LocationAndBiometrics({ onComplete }: { onComplete: () => void }) {
       })
 
     const onSubmit = (data: BiometricsFormData) => {
+        const submitBtn = document.getElementById('submitBtn') as HTMLButtonElement;
+
+        if (submitBtn) {
+          submitBtn.classList.add('disabled');
+          submitBtn.disabled = true;
+        }
+        
         data = {...data, user_id: userId}
         mutation.mutate(data)
     }
@@ -194,6 +201,7 @@ function LocationAndBiometrics({ onComplete }: { onComplete: () => void }) {
                         {/* Continue Button */}
                         <button
                             type="submit"
+                            id="submitBtn"
                             className="w-full bg-[#23B5D3] text-white py-2 rounded-md font-semibold hover:bg-[#1b9bb6] transition mt-6"
                         >
                             {mutation.isPending ? 'Submitting...' : 'CONTINUE'}

@@ -1,7 +1,9 @@
+import ApplicationLogo from '@/Components/ApplicationLogo';
 import Checkbox from '@/Components/Checkbox';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
+import SecondaryButton from '@/Components/SecondaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
@@ -39,6 +41,9 @@ export default function Login({
             )}
 
             <form onSubmit={submit}>
+                <div className="grid place-items-center py-4">
+                   <ApplicationLogo />
+                </div>
                 <div>
                     <InputLabel htmlFor="email" value="Email" />
 
@@ -72,7 +77,7 @@ export default function Login({
                     <InputError message={errors.password} className="mt-2" />
                 </div>
 
-                <div className="mt-4 block">
+                <div className="mt-4 block flex justify-between">
                     <label className="flex items-center">
                         <Checkbox
                             name="remember"
@@ -88,9 +93,7 @@ export default function Login({
                             Remember me
                         </span>
                     </label>
-                </div>
 
-                <div className="mt-4 flex items-center justify-end">
                     {canResetPassword && (
                         <Link
                             href={route('password.request')}
@@ -99,6 +102,16 @@ export default function Login({
                             Forgot your password?
                         </Link>
                     )}
+                </div>
+
+                <div className="mt-4 flex items-center justify-between">
+
+                <Link href="register">
+                    <SecondaryButton disabled={processing}>
+                            Sign up
+                    </SecondaryButton>
+                </Link>
+                
 
                     <PrimaryButton className="ms-4" disabled={processing}>
                         Log in

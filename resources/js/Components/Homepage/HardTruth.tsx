@@ -1,6 +1,5 @@
 const HardTruth = () => {
     return (
-      <>
         <div className="flex flex-col items-center px-4 bg-white text-black py-10">
           <div className="flex flex-col md:flex-row max-w-6xl w-full gap-8">
             {/* Left Column - Image */}
@@ -63,14 +62,13 @@ const HardTruth = () => {
                {/* Workout Notification Image */}
                <img 
                     src="/images/hardtruthstar.png" 
-                    alt="Workout Notification Image" 
+                    alt="Workout Notification Images" 
                     className="rounded-xl md:w-56 w-40 absolute bottom-20 md:left-[-100px]"
                 />
 
             </div>
           </div>
         </div>
-      </>
     );
   };
   

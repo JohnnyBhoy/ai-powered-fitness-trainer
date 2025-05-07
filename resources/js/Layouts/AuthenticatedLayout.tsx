@@ -14,6 +14,8 @@ export default function Authenticated({
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
 
+        console.log(user);
+
     return (
         <div className="min-h-screen bg-gray-100">
             <nav className="border-b border-gray-100 bg-white">
@@ -21,7 +23,7 @@ export default function Authenticated({
                     <div className="flex h-16 justify-between">
                         <div className="flex">
                             <div className="flex shrink-0 items-center">
-                                <Link href="/">
+                                <Link href={route('dashboard')}>
                                     <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
                                 </Link>
                             </div>
@@ -32,6 +34,20 @@ export default function Authenticated({
                                     active={route().current('dashboard')}
                                 >
                                     Dashboard
+                                </NavLink>
+
+                                <NavLink
+                                    href={route('progress')}
+                                    active={route().current('progress')}
+                                >
+                                    Progress
+                                </NavLink>
+
+                                <NavLink
+                                    href={route('conversation')}
+                                    active={route().current('conversation')}
+                                >
+                                    Conversations
                                 </NavLink>
                             </div>
                         </div>
@@ -45,7 +61,8 @@ export default function Authenticated({
                                                 type="button"
                                                 className="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
                                             >
-                                                {user.name}
+                                              <img src="/images/male.png" alt="Go Peak Fit" className="h-10 shadow-sm border rounded mr-3"/>
+                                                {user.first_name} {user?.last_name}
 
                                                 <svg
                                                     className="-me-0.5 ms-2 h-4 w-4"

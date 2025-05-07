@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\GoalRequest;
-use App\Models\Goals;
+use App\Models\GpfGoals;
 
 class GoalsController extends Controller
 {
     public function store(GoalRequest $request)
     {
-        $goal = Goals::create([
+        $goal = GpfGoals::create([
             ...$request->validated(),
         ]);
 

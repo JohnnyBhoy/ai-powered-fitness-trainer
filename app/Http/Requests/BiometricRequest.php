@@ -14,7 +14,7 @@ class BiometricRequest extends FormRequest
         return [
             'city'              => 'required|string|max:255',
             'state'             => 'required|string|max:255',
-            'phone_number'      => 'required|string|max:20',
+            'phone_number'      => 'required|string|max:20|unique:gpf_biometrics,phone_number',
             'age'               => 'required|integer|min:0|max:120',
             'sex'               => 'required|in:male,female,other',
             'current_weight'    => 'required|numeric|min:0',
