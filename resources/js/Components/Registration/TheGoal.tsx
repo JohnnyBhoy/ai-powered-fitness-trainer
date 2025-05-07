@@ -2,6 +2,8 @@ import { useUserStore } from '@/stores/useUserStore'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+
 
 type GoalFormData = {
   goal: string
@@ -11,7 +13,7 @@ type GoalFormData = {
   user_id: null | number
 }
 
-function TheGoal() {
+function TheGoal({ onComplete }: { onComplete: () => void }) {
   const {userId} = useUserStore();
     
   const {
@@ -23,7 +25,8 @@ function TheGoal() {
   const mutation = useMutation({
       mutationFn: (data: GoalFormData) => axios.post('/goals', data),
       onSuccess: (res) => {
-        alert(`Goals updated.`)
+        toast.success('Goals updated.')
+        onComplete();
       },
       onError: (error: any) => {
         alert(error.response?.data?.message ?? 'Goals update failed.')
@@ -89,11 +92,14 @@ function TheGoal() {
         </div>
       </div>
       
-      <button 
-       type="submit"
-       className="w-full max-w-md bg-[#23B5D3] text-white py-2 rounded-md font-semibold hover:bg-[#1b9bb6] transition mt-6">
-        CONTINUE
-      </button>
+        <div className="flex justify-center">
+          <button 
+            type="submit"
+            className="w-full max-w-md bg-[#23B5D3] text-white py-2 rounded-md font-semibold hover:bg-[#1b9bb6] transition mt-6">
+            CONTINUE
+          </button>
+        </div>
+        
       </form>
     </div>
   );
