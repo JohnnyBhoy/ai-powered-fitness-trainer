@@ -144,7 +144,7 @@ const Carousel = () => {
                   </div>
                   <div className="pl-5 pt-2 sm:pl-10 sm:pt-0 text-center sm:text-left">
                     <span className="text-[#23B5D3] text-lg font-semibold">{item.title}</span>
-                    <p className="text-gray-700 text-xs sm:text-sm">{item.description}</p>
+                    <p className="text-gray-700 text-md sm:text-sm">{item.description}</p>
                   </div>
                 </div>
               ))}

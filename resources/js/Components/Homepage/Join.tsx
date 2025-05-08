@@ -10,9 +10,13 @@ const Join = () => {
         <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-8 font-alfarn">
           Eat more. Achieve More.
         </h2>
-        <button className="bg-[#23B5D3] hover:bg-cyan-600 text-white font-medium px-6 py-3 rounded-full shadow-md transition duration-300">
+        <a
+          href="/register"
+          className="bg-[#23B5D3] hover:bg-cyan-600 text-white font-medium px-6 py-3 rounded-full shadow-md transition duration-300 inline-block text-center"
+        >
           Start Your $1 Trial—See Results in 5 Days!
-        </button>
+        </a>
+
       </div>
     );
   };
