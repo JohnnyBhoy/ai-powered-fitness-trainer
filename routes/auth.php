@@ -41,6 +41,12 @@ Route::middleware('guest')->group(function () {
 
     Route::post('/goals', [GoalsController::class, 'store'])
     ->name('goals');
+
+    Route::post('/verify', [BiometricController::class, 'verifyPhoneNumber'])
+    ->name('verify');
+
+    Route::post('/resend-otp', [BiometricController::class, 'resendOtp'])
+    ->name('resend');
 });
 
 Route::middleware('auth')->group(function () {

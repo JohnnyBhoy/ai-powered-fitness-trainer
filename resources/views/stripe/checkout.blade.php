@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>GoPeakFit</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/js/app.tsx'])
 </head>
 <body class="bg-gray-100 text-gray-900">
 <form action="{{ route('session') }}" method="POST">

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>GoPeakFit</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/js/app.tsx'])
 </head>
 <body class="bg-gray-100 text-gray-900">
 <div class="min-h-screen bg-white flex items-center justify-center px-4 py-16">

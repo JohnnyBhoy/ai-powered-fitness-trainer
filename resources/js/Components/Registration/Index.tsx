@@ -7,6 +7,7 @@ import LocationAndBiometrics from "./LocationAndBiometrics";
 import TheGoal from "./TheGoal";
 import PaymentInfo from "./PaymentInfo";
 import { Toaster } from 'sonner'
+import PhoneVerification from "./PhoneVerification";
 
 function Registration() {
     const [step, setStep] = useState(1);
@@ -14,8 +15,9 @@ function Registration() {
     const steps = [
         { id: 1, component: <CreateAccount onComplete={() => setStep(2)} /> },
         { id: 2, component: <LocationAndBiometrics onComplete={() => setStep(3)} /> },
-        { id: 3, component: <TheGoal onComplete={() =>  setStep(4)}/> },
-        { id: 4, component: <PaymentInfo onComplete={() =>  console.log("test")}/> },
+        { id: 3, component: <PhoneVerification onComplete={() => setStep(4)} /> },
+        { id: 4, component: <TheGoal onComplete={() =>  setStep(5)}/> },
+        { id: 5, component: <PaymentInfo onComplete={() =>  console.log("test")}/> },
     ];
 
     return (
