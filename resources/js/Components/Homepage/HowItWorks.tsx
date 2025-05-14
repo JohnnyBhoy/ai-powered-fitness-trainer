@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { faChevronDown,faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link } from "@inertiajs/react";
 
 const steps = [
     {
@@ -38,19 +39,21 @@ function HowItWorks() {
     };
 
     return (
-        <>
             <div id="how-it-works" className="flex flex-col items-center px-4 bg-white text-black text-center pb-10 bg-[#f5f5f5]">
-                <h4 className="text-sm font-bold text-[#23B5D3] uppercase text-center w-full max-w-lg">
+                <h4 className="text-lg font-bold text-[#23B5D3] uppercase text-center w-full max-w-lg">
                     How It Works
                 </h4>
                 <h2 className="text-2xl font-extrabold mt-2 text-gray-800 max-w-sm text-center">
                     ACCOUNTABILITY THAT DRIVES RESULT
                 </h2>
-                <button className="mt-4 bg-black text-white px-6 py-2 rounded-full text-xs hover:bg-gray-800 transition">
+                <Link
+                    href="/register"
+                    className="mt-4 bg-black text-white px-6 py-2 rounded-full text-sm hover:bg-gray-800 transition inline-block text-center"
+                >
                     Start Your $1 Trial Now
-                </button>
+                </Link>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-15 max-w-4xl w-full pt-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-15 max-w-6xl w-full pt-10">
                     <div className="text-left max-w-md mx-auto">
                         {steps.map((step) => (
                            <div key={step.id} className="border-b border-gray-300 py-4">
@@ -59,7 +62,7 @@ function HowItWorks() {
                                     onClick={() => toggleStep(step.id)}
                                 >
                                     <span className="text-sm flex items-center">
-                                        <span className="bg-[#23B5D3] text-white px-2 py-1 text-xs font-bold mr-2 rounded">
+                                        <span className="bg-[#23B5D3] text-white px-2 py-1 text-sm font-bold mr-2 rounded">
                                             STEP {step.id}
                                         </span>
                                         {step.title}
@@ -85,12 +88,11 @@ function HowItWorks() {
                         <img
                             src="/images/how-it-works.png"
                             alt="How It Works"
-                            className="w-full max-w-sm"
+                            className="w-full max-w-3xl"
                         />
                     </div>
                 </div>
             </div>
-        </>
     );
 }
 
