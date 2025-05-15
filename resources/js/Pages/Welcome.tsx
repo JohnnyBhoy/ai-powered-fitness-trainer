@@ -1,7 +1,6 @@
-import Guest from '@/Layouts/GuestLayout';
-import { PageProps } from '@/types';
-import { Head, Link } from '@inertiajs/react';
 import Homepage from '@/Components/Homepage/Index';
+import { PageProps } from '@/types';
+import { Head } from '@inertiajs/react';
 
 export default function Welcome({
     auth,

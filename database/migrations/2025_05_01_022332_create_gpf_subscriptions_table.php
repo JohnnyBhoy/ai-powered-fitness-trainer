@@ -22,8 +22,8 @@ return new class extends Migration
             $table->string('payment_type')->nullable();
             $table->string('status')->nullable();
             $table->string('currency')->nullable();
-            $table->string('session_id')->nullable()->unique();
-            $table->string('payment_intent_id')->nullable()->unique();
+            $table->string('session_id')->nullable();
+            $table->string('payment_intent_id')->nullable();
             $table->string('days_left')->nullable();
             $table->string('product_name')->nullable();
             $table->string('customer_id')->nullable();

@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\WorkoutTrainerController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/sms', [WorkoutTrainerController::class, 'handleIncomingSms']);  // Handle SMS replies
+Route::get('/subscriptions', [SubscriptionController::class, 'getValues']);

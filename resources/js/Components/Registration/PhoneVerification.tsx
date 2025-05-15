@@ -10,6 +10,10 @@ type PhoneVerificationData = {
     otp: string
 }
 
+type ResendPhoneVerificationData = {
+    user_id: number | null
+}
+
 function PhoneVerification({ onComplete }: { onComplete: () => void }) {
     const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
     const { userId } = useUserStore();
@@ -20,6 +24,7 @@ function PhoneVerification({ onComplete }: { onComplete: () => void }) {
         formState: { errors },
     } = useForm<PhoneVerificationData>()
 
+    // Verify phone number by sending OTP code
     const mutation = useMutation({
         mutationFn: (data: PhoneVerificationData) => axios.post('/verify', data),
         onSuccess: (res) => {
@@ -37,6 +42,25 @@ function PhoneVerification({ onComplete }: { onComplete: () => void }) {
         },
     })
 
+    // Resend Verification Code (OTP)
+    const mutationResend = useMutation({
+        mutationFn: (data: ResendPhoneVerificationData) => axios.post('/resend-otp', data),
+        onSuccess: (res) => {
+            inputsRef.current = [];
+            toast.success(`We sent you new verification code (6-digit OTP), please check your inbox.`)
+        },
+        onError: (error: any) => {
+            const submitResendBtn = document.getElementById('submitResendBtn') as HTMLButtonElement;
+
+            if (submitResendBtn) {
+                submitResendBtn.classList.remove('disabled');
+                submitResendBtn.disabled = false;
+            }
+            toast.error(error.response?.data?.message ?? 'Resending failed, please try again.');
+        },
+    })
+
+    // Submit send code
     const onSubmit = (data: PhoneVerificationData) => {
         const submitBtn = document.getElementById('submitBtn') as HTMLButtonElement;
 
@@ -47,6 +71,19 @@ function PhoneVerification({ onComplete }: { onComplete: () => void }) {
 
         data = { ...data, user_id: userId, otp: otpCode }
         mutation.mutate(data)
+    }
+
+    // Submit resend code
+    const onSubmitResend = (data: ResendPhoneVerificationData) => {
+        const submitResendBtn = document.getElementById('submitResendBtn') as HTMLButtonElement;
+
+        if (submitResendBtn) {
+            submitResendBtn.classList.add('disabled');
+            submitResendBtn.disabled = true;
+        }
+
+        data = { ...data, user_id: userId }
+        mutationResend.mutate(data)
     }
 
     const length = 6;
@@ -60,7 +97,6 @@ function PhoneVerification({ onComplete }: { onComplete: () => void }) {
 
         const otp = inputsRef.current.map(input => input?.value || '').join('');
         setOtpCode(otp);
-        console.log('OTP:', otp);
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
@@ -71,7 +107,7 @@ function PhoneVerification({ onComplete }: { onComplete: () => void }) {
 
     return (
         <div className="flex flex-col items-center gap-6 mt-[10%]">
-            <h2 className="text-2xl font-semibold text-gray-800">Phone number verification, enter OTP we sent you in your phone.</h2>
+            <h4 className="text-lg font-semibold text-gray-800">Phone number verification, enter OTP we sent you in your phone.</h4>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 flex flex-col items-center gap-6 mt-10">
                 <div className="flex gap-3">
                     {Array.from({ length }).map((_, i) => (
@@ -88,29 +124,45 @@ function PhoneVerification({ onComplete }: { onComplete: () => void }) {
                     ))}
                 </div>
 
-                <button 
-                className="mt-4 bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition"
-                type="submit"
-                id="submitBtn">
+                <button
+                    className="mt-4 bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition"
+                    type="submit"
+                    id="submitBtn">
                     Verify
                 </button>
 
                 {mutation.isSuccess && (
-                            <p className="text-green-600 text-sm text-center mt-2">
-                                Phone number verified!
-                            </p>
-                        )}
-                        {mutation.isError && (
-                            <p className="text-red-500 text-sm text-center mt-2">
-                                Something went wrong. Please try again.
-                            </p>
-                        )}
+                    <p className="text-green-600 text-sm text-center mt-2">
+                        Phone number verified!
+                    </p>
+                )}
+                {mutation.isError && (
+                    <p className="text-red-500 text-sm text-center mt-2">
+                        Something went wrong. Please try again.
+                    </p>
+                )}
             </form>
 
-            <h5>Unable to receive OTP? resend it here
-                <button className='underline text-blue-500 hover:text-blue-800 hover:font-bold ml-2'> Resend OTP.</button>
-            </h5>
-        </div>
+            {/** Resend OTP */}
+            <form onSubmit={handleSubmit(onSubmitResend)}>
+                <h5>Unable to receive OTP? resend it here
+                    <button 
+                    type="submit"
+                    id="submitResendBtn"
+                    className='underline text-blue-500 hover:text-blue-800 hover:font-bold ml-2'> Resend OTP.</button>
+                </h5>
+                {mutationResend.isSuccess && (
+                    <p className="text-green-600 text-sm text-center mt-2">
+                        Phone number verified!
+                    </p>
+                )}
+                {mutation.isError && (
+                    <p className="text-red-500 text-sm text-center mt-2">
+                        Something went wrong. Please try again.
+                    </p>
+                )}
+            </form>
+        </div >
     );
 }
 

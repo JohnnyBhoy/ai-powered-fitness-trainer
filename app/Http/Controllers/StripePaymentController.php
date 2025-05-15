@@ -33,6 +33,8 @@ class StripePaymentController extends Controller
     public function createSession(Request $request)
     {
         $userId = $request->get('user_id') ?? 0;
+        $amount = $request->get('amount') ?? 1;
+        $productName =  $request->get('amount') == 1 ? 'Go Peaf Fit 5-Day Challenge' : 'Go Peaf Fit 1-on-1 Coaching';
 
         Stripe::setApiKey(config('services.stripe.secret'));
 
@@ -40,10 +42,10 @@ class StripePaymentController extends Controller
         // Log payment transactions to gpf_subscriptions table
         GpfSubscription::create([
             'user_id' => $userId,
-            'subscription' => 'trial',
-            'amount' => 1,
+            'subscription' => $amount == 1 ? 'trial' : 'premium',
+            'amount' => $amount,
             'quantity' => 1,
-            'total_amount' => 1,
+            'total_amount' => $amount,
             'payment_status' => 'pending',
             'payment_type' => 'card',
             'status' => 'pending',
@@ -53,30 +55,56 @@ class StripePaymentController extends Controller
             'days_left' => 5,
         ]);
 
-        $session = Session::create([
-            'line_items' => [
-                [
-                    'price_data' => [
-                        'currency' => 'USD',
-                        'product_data' => [
-                            'name' => 'Go Peaf Fit 5-Day Challenge',
-                            'description' => 'For just $1, you’re getting 5 days of structure, accountability, and real results. No guesswork, no gimmicks—just a proven plan to jumpstart your transformation.'
+        // Trial Payment
+        if ($amount == 1) {
+            $session = Session::create([
+                'line_items' => [
+                    [
+                        'price_data' => [
+                            'currency' => 'USD',
+                            'product_data' => [
+                                'name' => 'Go Peaf Fit 5-Day Challenge',
+                                'description' => 'For just $1, you’re getting 5 days of structure, accountability, and real results. No guesswork, no gimmicks—just a proven plan to jumpstart your transformation.',
+                            ],
+                            'unit_amount' => 100, // $1 (in cents)
                         ],
-                        'unit_amount' => 100,
+                        'quantity' => 1,
                     ],
-                    'quantity' => 1,
                 ],
-            ],
-            'mode' => 'payment',
-            'success_url' => route('success') . '?session_id={CHECKOUT_SESSION_ID}&user_id=' . $userId,
-            'cancel_url' => route('checkout'),
-        ]);
+                'mode' => 'payment', // One-time payment
+                'success_url' => route('success') . "?session_id={CHECKOUT_SESSION_ID}&user_id=$userId&amount=$amount" ,
+                'cancel_url' => route('checkout'),
+            ]);
+        } else {
+            // Regular Subscription (49)
+            $session = Session::create([
+                'line_items' => [
+                    [
+                        'price_data' => [
+                            'currency' => 'USD',
+                            'product_data' => [
+                                'name' => 'Go Peaf Fit 1-on-1 Coaching',
+                                'description' => 'Access to real human coaching and personalized plans for $49/month.',
+                            ],
+                            'recurring' => [
+                                'interval' => 'month', // Monthly recurring payment
+                            ],
+                            'unit_amount' => 4900, // $49 (in cents)
+                        ],
+                        'quantity' => 1,
+                    ],
+                ],
+                'mode' => 'subscription', // Recurring subscription
+                'success_url' => route('success') . "?session_id={CHECKOUT_SESSION_ID}&user_id=$userId&amount=$amount",
+                'cancel_url' => route('checkout'),
+            ]);
+        }
 
         // Store the important payment details in db
         $stripePaymentData = [
             'session_id' => $session->id,
             'currency' => $session->currency,
-            'product_name' => 'Go Peak Fit 5-Days Trial',
+            'product_name' => $productName,
             'status' => $session->status,
             'amount' => $session->amount_total,
         ];

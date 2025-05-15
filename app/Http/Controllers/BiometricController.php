@@ -84,7 +84,7 @@ class  BiometricController extends Controller
         // Get the token based on email
         $user = GpfPhoneVerification::where('user_id', $userId)->first();
 
-        try {    
+        try {
             if ($otp !== $user->otp) {
                 return response()->json([
                     'message' => 'Invalid OTP provided. Please try again.',
@@ -113,18 +113,20 @@ class  BiometricController extends Controller
     {
         $newOtp = $this->generateOTP();
         $userId = $request->input('user_id');
-        $phone = $request->input('phone_number');
 
         // Validate the form data
         $request->validate([
             'user_id' => 'required', // Ensure the user id is entered
         ]);
 
+        // Get phone number based in user id
+        $phoneNumber = GpfBiometric::where('user_id', $userId)->value('phone_number');
+
         // Update new confirm token
         $user = GpfPhoneVerification::where('user_id', $userId)->update(['otp' => $newOtp]);
 
         // Optionally, send a confirmation message to the user's phone number using Twilio
-        $this->sendOtp($phone, $newOtp);
+        $this->sendOtp($phoneNumber, $newOtp);
 
         // Compare
         if ($user) {

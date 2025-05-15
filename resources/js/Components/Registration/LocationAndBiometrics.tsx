@@ -141,7 +141,7 @@ function LocationAndBiometrics({ onComplete }: { onComplete: () => void }) {
                                         {...register('current_weight')}
                                         className="w-full p-2 border border-gray-400 rounded-md bg-white text-sm pr-10"
                                     />
-                                    <span className="absolute right-3 top-2 text-sm text-gray-500">kg</span>
+                                    <span className="absolute right-3 top-2 text-sm text-gray-500">lbs</span>
                                 </div>
                             </div>
                             <div className="w-1/2">
@@ -153,7 +153,7 @@ function LocationAndBiometrics({ onComplete }: { onComplete: () => void }) {
                                         {...register('goal_weight')}
                                         className="w-full p-2 border border-gray-400 rounded-md bg-white text-sm pr-10"
                                     />
-                                    <span className="absolute right-3 top-2 text-sm text-gray-500">kg</span>
+                                    <span className="absolute right-3 top-2 text-sm text-gray-500">lbs</span>
                                 </div>
                             </div>
                         </div>

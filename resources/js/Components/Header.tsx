@@ -25,7 +25,7 @@ const Header = () => {
                     <Link href='/register' className="px-4 py-2 bg-black text-white rounded-full text-sm hover:bg-gray-900 text-xs">
                         Start Trial
                     </Link>
-                    <Link href='/register' className="px-4 py-2 border border-gray-700 text-gray-700 rounded-full text-sm hover:bg-[#20b5c9] hover:text-white text-xs">
+                    <Link href='/login' className="px-4 py-2 border border-gray-700 text-gray-700 rounded-full text-sm hover:bg-[#20b5c9] hover:text-white text-xs">
                         Login/Signup
                     </Link>
                 </div>

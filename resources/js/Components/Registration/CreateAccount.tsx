@@ -179,7 +179,7 @@ function CreateAccount({ onComplete }: { onComplete: () => void }) {
             {/* Main Image */}
             <img
               src="/images/registration.png"
-              alt="Fitness Image"
+              alt="Fitness Images"
               className="rounded-xl w-3/4 object-contain"
             />
 

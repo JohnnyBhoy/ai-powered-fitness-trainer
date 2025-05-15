@@ -26,7 +26,7 @@ function TheGoal({ onComplete }: { onComplete: () => void }) {
       mutationFn: (data: GoalFormData) => axios.post('/goals', data),
       onSuccess: (res) => {
         toast.success('Goals updated.')
-        window.location.href=`/checkout?id=${userId}`;
+        window.location.href=`/checkout?id=${userId}&amount=1`;
       },
       onError: (error: any) => {
         alert(error.response?.data?.message ?? 'Goals update failed.')

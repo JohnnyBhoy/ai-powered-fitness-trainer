@@ -17,7 +17,7 @@
         <!-- Confirmation -->
         <h2 class="text-3xl font-bold text-[#23B5D3]">Payment Successful</h2>
         <p class="text-gray-700 text-sm">
-            Congratulations! Your payment has been processed securely and your 5-Day Challenge is now unlocked.
+            Congratulations! Your payment has been processed securely and your {{ request(key: 'amount') == '1' ? '5-Day Challenge' : 'GoPeakFit 1-on-1 Coaching'}} is now unlocked.
         </p>
 
         <!-- Motivational Quote -->
@@ -27,7 +27,7 @@
 
         <!-- CTA Button -->
         <a href="{{ route('dashboard') }}" class="inline-block bg-[#23B5D3] hover:bg-[#1b9bb6] text-white font-semibold py-2 px-6 rounded-md transition">
-            Start Your Challenge
+            Start Your {{ request(key: 'amount') == '1' ? '5-Day Challenge' : 'GoPeakFit 1-on-1 Coaching'}}
         </a>
 
         <!-- Footer Note -->

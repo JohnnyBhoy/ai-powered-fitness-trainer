@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\AIChatController;
+use App\Http\Controllers\MealController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProgressController;
+use App\Http\Controllers\WorkoutController;
 use App\Http\Controllers\WorkoutTrainerController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +32,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/progess', [ProfileController::class, 'destroy'])->name('progress');
     Route::get('/conversation', [ProfileController::class, 'destroy'])->name('conversation');
+    Route::get('/workout', [WorkoutController::class, 'index'])->name('workout');
+    Route::get('/meals', [MealController::class, 'index'])->name('meals');
+    Route::get('/progress', [ProgressController::class, 'index'])->name('progress');
 });
 
 
@@ -45,7 +51,7 @@ Route::get('/cancel', [StripePaymentController::class, 'cancel'])->name('cancel'
 |--------------------------------------------------------------------------
 |
 | This route is for web portal simulator of Workout bot
-| This will act as test of sms based expert ai workout  
+| This will act as test of sms based expert ai workout
 | trainer
 |
 */

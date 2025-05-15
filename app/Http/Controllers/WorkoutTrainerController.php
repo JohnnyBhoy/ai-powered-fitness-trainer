@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\GpfMessage;
-use App\Models\GpfPhoneVerification;
 use App\Models\GpfSubscription;
 use DateTime;
 use Illuminate\Http\Request;
@@ -147,8 +146,8 @@ class WorkoutTrainerController extends Controller
             
             - Age: $user->age years
             - Sex: $user->sex
-            - Current Weight: $user->current_weight kg
-            - Goal Weight: $user->goal_weight kg
+            - Current Weight: $user->current_weight lbs
+            - Goal Weight: $user->goal_weight lbs
             - Fitness Level: $user->fitness_level (e.g., beginner, intermediate, advanced)
             - Equipment Access: $user->equipment_access (e.g., gym, dumbbells at home, bodyweight only)
             - Food Allergies: $user->food_allergies (e.g., nuts, gluten, lactose; write 'None' if not provided)
