@@ -11,6 +11,8 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
         <link rel="icon" type="image/png" href="{{ asset('logos/mobile-header-logo.png') }}">
 
+        <link rel="icon" type="image/png" href="{{ asset('logos/mobile-header-logo.png') }}">
+
         <!-- Scripts -->
         @routes
         @viteReactRefresh
