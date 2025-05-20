@@ -17,7 +17,7 @@ const Join = () => {
           className="bg-[#23B5D3] hover:bg-cyan-600 text-white font-medium px-6 py-3 rounded-full shadow-md transition duration-300 inline-block text-center"
         >
           Start Your $1 Trial—See Results in 5 Days!
-        </button>
+        </Link>
       </div>
     );
   };

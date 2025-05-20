@@ -46,11 +46,11 @@ function HowItWorks() {
                 <h2 className="text-2xl font-extrabold mt-2 text-gray-800 max-w-sm text-center">
                     ACCOUNTABILITY THAT DRIVES RESULT
                 </h2>
-                <button className="mt-4 bg-black text-white px-6 py-2 rounded-full text-xs hover:bg-gray-800 transition">
+                <Link href="/register" className="mt-4 bg-black text-white px-6 py-2 rounded-full text-sm hover:bg-gray-800 transition inline-block text-center">
                     Start Your $1 Trial Now
-                </button>
+                </Link>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-15 max-w-4xl w-full pt-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-15 max-w-6xl w-full pt-10">
                     <div className="text-left max-w-md mx-auto">
                         {steps.map((step) => (
                            <div key={step.id} className="border-b border-gray-300 py-4">

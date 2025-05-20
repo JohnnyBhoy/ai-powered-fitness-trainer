@@ -22,27 +22,27 @@ const MainContent = () => {
                         actually willing to do what it takes? This isn’t a detox. This isn’t a
                         gimmick. This is your wake-up call.
                     </p>
-                    <button className="px-6 py-3 bg-white text-black rounded-full text-xs md:text-lg font-medium hover:bg-gray-100 transition text-[10px] font-arial">
+                    <Link href="/register" className="px-6 py-3 bg-white text-black rounded-full text-md md:text-lg font-medium hover:bg-gray-100 transition text-[10px] font-arial">
                         Start Your $1 Challenge Now
-                    </button>
+                    </Link>
                 </div>
 
                 {/* Right Image */}
                 <div className="w-full md:w-1/2 flex justify-center relative">
-                    <img src="/images/main-img.png" alt="Fitness Image" className="rounded-xl h-80 " />
+                    <img src="/images/main-img.png" alt="Fitness Images"  className="rounded-xl h-[400px] w-[350px]" />
                 
                     {/* Workout Notification Image */}
                     <img 
                         src="/images/main-subimg1.png" 
-                        alt="Workout Notification Image" 
-                        className="rounded-xl h-12 absolute top-30 md:left-32 transform -translate-x-1/2"
+                        alt="Workout Notification Images" 
+                        className="rounded-xl h-12 absolute top-20 md:left-50 transform translate-x-[-100px] translate-y-[-10px]"
                     />
 
                     {/* Rating Image*/}
                     <img 
                         src="/images/main-subimg2.png" 
-                        alt="Rating Image" 
-                        className="rounded-xl h-12 absolute bottom-20 md:right-54 transform translate-x-1/2"
+                        alt="Rating Images" 
+                        className="rounded-xl h-12 absolute bottom-20 md:right-40 transform translate-x-[40px] translate-y-[-10px]"
                     />
                 </div>
             </div>

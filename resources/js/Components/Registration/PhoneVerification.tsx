@@ -95,7 +95,7 @@ function PhoneVerification({ onComplete }: { onComplete: () => void }) {
             inputsRef.current[index + 1]?.focus();
         }
 
-        const otp = inputsRef.current.map(input => input?.value || '').join('');
+        const otp = inputsRef.current.map(input => input?.value ?? '').join('');
         setOtpCode(otp);
     };
 
