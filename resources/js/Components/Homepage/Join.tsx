@@ -14,10 +14,11 @@ const Join = () => {
         </h2>
         <Link
           href="/register"
-          className="bg-[#23B5D3] hover:bg-cyan-600 text-white font-medium px-6 py-3 rounded-full shadow-md transition duration-300 inline-block text-center"
+          className="bg-[#23B5D3] hover:bg-cyan-600 text-white font-medium text-sm sm:text-base md:text-lg px-1 sm:px-4 py-2 sm:py-3 rounded-full shadow-md transition-all duration-300 w-full sm:w-fit text-center block sm:inline-block"
         >
           Start Your $1 Trial—See Results in 5 Days!
         </Link>
+
       </div>
     );
   };
