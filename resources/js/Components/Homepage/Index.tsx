@@ -17,19 +17,26 @@ function Homepage() {
             display: "flex",
             flexDirection: "column",
             minHeight: "100vh",
-            minWidth:"100vw"
+            minWidth: "100vw"
         }}>
-            <Header />
-                <main className="flex flex-col">
-                    <MainContent/>
-                    <WhatWeOffer/>
-                    <HowItWorks/>
-                    <KeyDiff/>
-                    <Philosophy/>
-                    <Challenge/>
-                    <HardTruth/>
-                    <Join/>
-                </main>
+            <div style={{
+                position: "sticky",
+                top: 0,
+                zIndex: 50, // ensure it's above other content
+                backgroundColor: "white" // or your actual header background
+            }}>
+                <Header />
+            </div>
+            <main className="flex flex-col">
+                <MainContent />
+                <WhatWeOffer />
+                <HowItWorks />
+                <KeyDiff />
+                <Philosophy />
+                <Challenge />
+                <HardTruth />
+                <Join />
+            </main>
             <Footer />
         </div>
     );
