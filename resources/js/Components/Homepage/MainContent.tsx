@@ -17,7 +17,7 @@ const MainContent = () => {
                                 Challenge</p>
                         </span>
                     </h2>
-                    <p className="text-md md:text-md mb-4 text-gray-900 font-medium">
+                    <p className="text-md md:text-md mb-4 text-gray-900 font-medium mb-8">
                         You say you want results. You say you want change. But are you
                         actually willing to do what it takes? This isn’t a detox. This isn’t a
                         gimmick. This is your wake-up call.
