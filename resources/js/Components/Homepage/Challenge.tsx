@@ -15,7 +15,7 @@ const Challenge = () => {
   
         <h3 className="text-lg font-semibold mb-4">The Rules (No Negotiations, No Shortcuts)</h3>
   
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto text-left">
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto text-left mb-8">
           <div>
             <h4 className="text-[#23B5D3] font-bold text-md">Protein? High.</h4>
             <ul className="list-none list-inside text-md">
@@ -48,7 +48,7 @@ const Challenge = () => {
           </div>
         </div>
   
-        <Link href="/register" className="mt-8 bg-[#23B5D3] hover:bg-[#23B5E3] text-white text-xs font-bold py-3 px-6 rounded-full shadow-md">
+        <Link href="/register" className="mt-8 bg-[#23B5D3] hover:bg-[#23B5E3] text-white text-md font-bold py-3 px-6 rounded-full shadow-md">
           Start Your 5-Day Challenge for $1 Now
         </Link>
       </div>
