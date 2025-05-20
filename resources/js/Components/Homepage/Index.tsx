@@ -7,6 +7,8 @@ import Philosophy from "./Philosophy";
 import Challenge from "./Challenge";
 import HardTruth from "./HardTruth";
 import Join from "./Join";
+import KeyDiff from "./KeyDiff";
+
 
 
 function Homepage() {
@@ -22,6 +24,7 @@ function Homepage() {
                     <MainContent/>
                     <WhatWeOffer/>
                     <HowItWorks/>
+                    <KeyDiff/>
                     <Philosophy/>
                     <Challenge/>
                     <HardTruth/>

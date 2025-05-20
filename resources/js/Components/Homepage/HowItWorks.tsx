@@ -43,7 +43,7 @@ function HowItWorks() {
                 <h4 className="text-lg font-bold text-[#23B5D3] uppercase text-center w-full max-w-lg">
                     How It Works
                 </h4>
-                <h2 className="text-2xl font-extrabold mt-2 text-gray-800 max-w-sm text-center">
+                <h2 className="text-3xl font-extrabold mt-2 text-gray-800 max-w-sm text-center font-alfarn">
                     ACCOUNTABILITY THAT DRIVES RESULT
                 </h2>
                 <Link href="/register" className="mt-4 bg-black text-white px-6 py-2 rounded-full text-sm hover:bg-gray-800 transition inline-block text-center">

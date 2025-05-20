@@ -30,7 +30,7 @@ const HardTruth = () => {
                 Take the Challenge. Change Your Life. 5 Days. $1. Zero Excuses.
               </p>
   
-              <Link href="/register" className="mt-4 bg-black text-white px-6 py-2 rounded-full text-md hover:bg-gray-800 transition w-fit">
+              <Link href="/register" className="mt-2 bg-black text-white px-6 py-2 rounded-full text-lg hover:bg-gray-800 transition w-fit">
                 Start Your 5-day Challenge for $1
               </Link>
             </div>
@@ -49,7 +49,7 @@ const HardTruth = () => {
                 <li><span className="text-[#23B5D3] font-bold mr-2">✓</span>24/7 coach and community support</li>
               </ul>
             
-              <Link href="/register"  className="mt-4 bg-black text-white px-6 py-2 rounded-full text-md hover:bg-gray-800 transition w-fit">
+              <Link href="/register"  className="mt-4 bg-black text-white px-6 py-2 rounded-full text-lg hover:bg-gray-800 transition w-fit">
                 Try 5 Days for $1—Unlock Lifetime Hab
               </Link>
             </div>
