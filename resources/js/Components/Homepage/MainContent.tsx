@@ -32,18 +32,21 @@ const MainContent = () => {
                     <img src="/images/main-img.png" alt="Fitness Images"  className="rounded-xl h-[400px] w-[350px]" />
                 
                     {/* Workout Notification Image */}
-                    <img 
-                        src="/images/main-subimg1.png" 
-                        alt="Workout Notification Images" 
-                        className="rounded-xl h-12 absolute top-20 md:left-50 transform translate-x-[-100px] translate-y-[-10px]"
+                    <img
+                        src="/images/main-subimg1.png"
+                        alt="Workout Notification Images"
+                        className="rounded-xl w-[140px] h-auto md:w-[220px] md:h-auto object-contain absolute top-20 left-4 md:left-2 translate-x-[-30px] translate-y-[20px]"
                     />
+
+
 
                     {/* Rating Image*/}
                     <img 
                         src="/images/main-subimg2.png" 
                         alt="Rating Images" 
-                        className="rounded-xl h-12 absolute bottom-20 md:right-40 transform translate-x-[40px] translate-y-[-10px]"
+                        className="rounded-xl w-[120px] h-auto md:w-[180px] md:h-auto object-contain absolute bottom-0 right-4 md:right-10 translate-x-6 translate-y-[-10px]"
                     />
+
                 </div>
             </div>
         </div>

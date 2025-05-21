@@ -185,17 +185,17 @@ function CreateAccount({ onComplete }: { onComplete: () => void }) {
 
             {/* Notification Image */}
             <img
-              src="/images/main-subimg1.png"
-              alt="Workout Notification"
-              className="rounded-xl absolute top-20 md:left-8  transform-translate-x-1/2 md:h-20 w-28 left-10"
-            />
+                  src="/images/main-subimg1.png"
+                  alt="Workout Notification Images"
+                  className="rounded-xl h-22 w-[160px] md:h-22 md:w-[220px] absolute top-20 md:left-36 transform translate-x-[-110px] translate-y-[20px]"
+              />
 
             {/* Rating Image */}
-            <img
-              src="/images/main-subimg2.png"
-              alt="Rating"
-              className="rounded-xl absolute bottom-[-40px] md:right-20  transform-translate-x-1/2 right-5 md:w-48 w-32"
-            />
+             <img 
+                  src="/images/main-subimg2.png" 
+                  alt="Rating Images" 
+                  className="rounded-xl h-[60px] w-[160px] md:h-[80px] md:w-[180px] absolute bottom-0 md:right-26 transform translate-x-[50px] translate-y-[-10px]"
+              />
           </div>
         </div>
       </div>

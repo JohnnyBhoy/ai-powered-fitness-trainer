@@ -48,9 +48,13 @@ const Challenge = () => {
           </div>
         </div>
   
-        <Link href="/register" className="mt-8 bg-[#23B5D3] hover:bg-[#23B5E3] text-white text-md font-bold py-3 px-6 rounded-full shadow-md">
+        <Link
+          href="/register"
+          className="mt-6 sm:mt-8 bg-[#23B5D3] hover:bg-[#23B5E3] text-white text-sm sm:text-base md:text-lg lg:text-xl font-bold py-2 sm:py-3 px-5 sm:px-5 rounded-full shadow-md w-full sm:w-auto text-center block sm:inline-block"
+        >
           Start Your 5-Day Challenge for $1 Now
         </Link>
+
       </div>
     );
   };
