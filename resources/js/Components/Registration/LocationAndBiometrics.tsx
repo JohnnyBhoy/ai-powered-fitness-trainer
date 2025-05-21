@@ -97,11 +97,20 @@ function LocationAndBiometrics({ onComplete }: { onComplete: () => void }) {
 
                             <input
                                 id="phone"
-                                {...register('phone_number')}
+                                {...register('phone_number', {
+                                    required: 'Phone number is required',
+                                    pattern: {
+                                        value: /^(?:\+1)?(?:\d{10})$/, // Allows both +1XXXXXXXXXX or XXXXXXXXXX
+                                        message: 'Please enter a valid phone number.',
+                                    },
+                                })}
                                 type="tel"
                                 placeholder='Phone number is used to send and receive texts to hold you accountable to the 5 day challenge.'
                                 className="w-full p-2 border border-gray-400 rounded-md bg-white text-sm placeholder:text-[9px] italic"
                             />
+                              {errors.phone_number && (
+                                <p className="text-red-500 text-xs">{errors.phone_number.message}</p>
+                            )}
                         </div>
 
                         {/* Age and Sex */}
@@ -191,12 +200,6 @@ function LocationAndBiometrics({ onComplete }: { onComplete: () => void }) {
                                 className="w-full p-2 border border-gray-400 rounded-md bg-white text-sm"
                             />
                         </div>
-
-
-
-
-
-
 
                         {/* Continue Button */}
                         <button
