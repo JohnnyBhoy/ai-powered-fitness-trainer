@@ -7,7 +7,8 @@ import { useRef, useState } from 'react'
 
 type PhoneVerificationData = {
     user_id: number | null
-    otp: string
+    otp: string,
+    phone_number: string // Ensure phone_number field is here
 }
 
 type ResendPhoneVerificationData = {
@@ -18,10 +19,12 @@ function PhoneVerification({ onComplete }: { onComplete: () => void }) {
     const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
     const { userId } = useUserStore();
     const [otpCode, setOtpCode] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState(''); // Store phone number to reset it
     const {
         register,
         handleSubmit,
         formState: { errors },
+        reset, // Added to reset form state
     } = useForm<PhoneVerificationData>()
 
     // Verify phone number by sending OTP code
@@ -39,6 +42,18 @@ function PhoneVerification({ onComplete }: { onComplete: () => void }) {
                 submitBtn.disabled = false;
             }
             toast.error(error.response?.data?.message ?? 'Verification failed.');
+
+            // Reset the phone number field and OTP state upon failure
+            setPhoneNumber(''); // Clear phone number
+            setOtpCode(''); // Clear OTP code
+            reset({ phone_number: '' }); // Optionally reset the phone number in the form
+
+             // Manually clear the OTP input fields
+            inputsRef.current.forEach(input => {
+                if (input) {
+                    input.value = ''; // Clear input values
+                }
+            });
         },
     })
 
@@ -138,7 +153,7 @@ function PhoneVerification({ onComplete }: { onComplete: () => void }) {
                 )}
                 {mutation.isError && (
                     <p className="text-red-500 text-sm text-center mt-2">
-                        Something went wrong. Please try again.
+                        Verification failed. Please try again.
                     </p>
                 )}
             </form>
@@ -146,21 +161,11 @@ function PhoneVerification({ onComplete }: { onComplete: () => void }) {
             {/** Resend OTP */}
             <form onSubmit={handleSubmit(onSubmitResend)}>
                 <h5>Unable to receive OTP? resend it here
-                    <button 
-                    type="submit"
-                    id="submitResendBtn"
-                    className='underline text-blue-500 hover:text-blue-800 hover:font-bold ml-2'> Resend OTP.</button>
+                    <button
+                        type="submit"
+                        id="submitResendBtn"
+                        className='underline text-blue-500 hover:text-blue-800 hover:font-bold ml-2'> Resend OTP.</button>
                 </h5>
-                {mutationResend.isSuccess && (
-                    <p className="text-green-600 text-sm text-center mt-2">
-                        Phone number verified!
-                    </p>
-                )}
-                {mutation.isError && (
-                    <p className="text-red-500 text-sm text-center mt-2">
-                        Something went wrong. Please try again.
-                    </p>
-                )}
             </form>
         </div >
     );

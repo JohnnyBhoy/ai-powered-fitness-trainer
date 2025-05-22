@@ -15,6 +15,15 @@ class  BiometricController extends Controller
     {
         $otp = $this->generateOTP();
 
+         // Get the phone number from the request
+        $phone = $request->phone_number;
+
+        // Preprocess the phone number to ensure it starts with +1
+        if (strpos($phone, '+1') !== 0) {
+            $phone = '+1' . $phone; // Prepend +1 if missing
+        }
+
+
         // Prepare the data we insert to phone verification table
         $phoneVerificationData = [
             'user_id' => $request->user_id,
@@ -30,14 +39,14 @@ class  BiometricController extends Controller
         // Populate Messages
         GpfMessage::create([
             'user_id' => $request->user_id,
-            'phone_number' => $request->phone_number,
+            'phone_number' => $phone,
         ]);
 
         // Populate user phone number verificationd data
         GpfPhoneVerification::create($phoneVerificationData);
 
         // Optionally, send a confirmation message to the user's phone number using Twilio
-        $this->sendOtp($request->phone_number, $otp);
+        $this->sendOtp($phone, $otp);
 
         return response()->json([
             'message' => 'Biometrics saved successfully!',
@@ -48,7 +57,7 @@ class  BiometricController extends Controller
     // Generate 6-digits OTP
     private function generateOTP(): string
     {
-        return str_pad(strval(random_int(0, 999999)), 6, '0', STR_PAD_LEFT);
+        return str_pad(strval(random_int(1, 999999)), 6, '0', STR_PAD_LEFT);
     }
 
     // Send a confirmation SMS using Twilio (optional)
