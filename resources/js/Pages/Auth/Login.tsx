@@ -10,6 +10,7 @@ import TextInput from '@/Components/TextInput';
 import { Link, useForm } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
 import { Toaster } from 'sonner';
+import RegHeader from '@/Components/RegistrationHeader';
 
 export default function Login({
     status,
@@ -36,7 +37,7 @@ export default function Login({
         <>
             <Toaster richColors position="top-center" />
             <div className="flex flex-col min-h-screen">
-                <Header />
+                <RegHeader />
                 <main className="flex-grow justify-center place-items-center">
                     {status && (
                         <div className="mb-4 text-sm font-medium text-green-600">

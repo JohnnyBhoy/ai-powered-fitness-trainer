@@ -9,6 +9,7 @@ import PaymentInfo from "./PaymentInfo";
 import { Toaster } from 'sonner'
 import PhoneVerification from "./PhoneVerification";
 import ConsentForm from "./ConsentForm";
+import RegHeader from "../RegistrationHeader";
 
 function Registration() {
     const [step, setStep] = useState(1);
@@ -26,7 +27,7 @@ function Registration() {
         <>
         <Toaster richColors position="top-center" />
             <div className="flex flex-col min-h-screen">
-                <Header />
+                <RegHeader />
                 <main className="flex-grow">
                     <AnimatePresence mode="wait">
                         <motion.div
