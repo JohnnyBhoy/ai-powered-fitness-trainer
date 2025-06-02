@@ -14,9 +14,9 @@ import KeyDiff from "./KeyDiff";
 function Homepage() {
     return (
     <>
-        <div className="flex flex-col min-h-screen min-w-screen">
+        <div className="flex flex-col min-h-screen">
             <Header />
-                <main className="flex-grow justify-center place-items-center">
+                <main className="flex-grow">
                     <MainContent />
                     <WhatWeOffer />
                     <HowItWorks />
