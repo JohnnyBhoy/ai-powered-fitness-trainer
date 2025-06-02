@@ -19,7 +19,7 @@ export default function Welcome({
     };
 
     return (
-    <div className="container">
+    <div className="flex flex-col min-h-screen min-w-screen">
         <Head title="GO PEAK FIT" />
         <Homepage/>
     </div>       
