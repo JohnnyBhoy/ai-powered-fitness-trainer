@@ -13,32 +13,22 @@ import KeyDiff from "./KeyDiff";
 
 function Homepage() {
     return (
-        <div style={{
-            display: "flex",
-            flexDirection: "column",
-            minHeight: "100vh",
-            minWidth: "100vw"
-        }}>
-            <div style={{
-                position: "sticky",
-                top: 0,
-                zIndex: 50, // ensure it's above other content
-                backgroundColor: "white" // or your actual header background
-            }}>
-                <Header />
-            </div>
-            <main className="flex flex-col">
-                <MainContent />
-                <WhatWeOffer />
-                <HowItWorks />
-                <KeyDiff />
-                <Philosophy />
-                <Challenge />
-                <HardTruth />
-                <Join />
-            </main>
+    <>
+        <div className="flex flex-col min-h-screen">
+            <Header />
+                <main className="flex-grow">
+                    <MainContent />
+                    <WhatWeOffer />
+                    <HowItWorks />
+                    <KeyDiff />
+                    <Philosophy />
+                    <Challenge />
+                    <HardTruth />
+                    <Join />
+                </main>
             <Footer />
         </div>
+    </>
     );
 }
 
