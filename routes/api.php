@@ -9,3 +9,6 @@ Route::post('/sms', [WorkoutTrainerController::class, 'handleIncomingSms']);  //
 Route::get('/subscriptions', [SubscriptionController::class, 'getValues']);
 
 Route::post('/consent', [ConsentController::class, 'store']);
+
+//SMS Test
+Route::post('/send-sms/{to}/{message}', [WorkoutTrainerController::class, 'sendSms']);

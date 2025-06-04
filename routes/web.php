@@ -59,9 +59,10 @@ Route::get('/cancel', [StripePaymentController::class, 'cancel'])->name('cancel'
 /** Workout trainer bot */
 Route::post('/sms', [WorkoutTrainerController::class, 'handleIncomingSms']);  // Handle SMS replies
 Route::get('/send-encouragement', [WorkoutTrainerController::class, 'sendWorkoutEncouragement']);  // Trigger 3x day SMS
-require __DIR__.'/auth.php';
 
 // Twilio proof of consent
 Route::get('/consent', function () {
   return Inertia::render('ConsentForm');
 })->name('consent.form');
+
+require __DIR__.'/auth.php';

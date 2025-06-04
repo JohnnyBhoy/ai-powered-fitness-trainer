@@ -19,14 +19,20 @@ class WorkoutTrainerController extends Controller
         $token = env('TWILIO_AUTH_TOKEN');
         $twilioPhoneNumber = env('TWILIO_PHONE_NUMBER');
 
-        $twilio = new Client($sid, password: $token);
-        $twilio->messages->create(
-            $to,
-            [
-                'from' => $twilioPhoneNumber,
-                'body' => $message,
-            ]
-        );
+        $twilio = new Client($sid,  $token);
+
+        try {
+            $twilio->messages->create(
+                $to,
+                [
+                    'from' => $twilioPhoneNumber,
+                    'body' => $message,
+                ]
+            );
+            return response()->json(['status' => 'Message sent successfully.']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     // Method to get response from OpenAI
@@ -117,7 +123,7 @@ class WorkoutTrainerController extends Controller
             } else {
                 // Update first the days left in free trial
                 GpfSubscription::where('user_id', $user->user_id)
-                ->update(['days_left' => 5 - $daysDifference]);
+                    ->update(['days_left' => 5 - $daysDifference]);
 
                 // Here we prepare the data
                 $systemPropmt = $this->generatePrompt($user);
