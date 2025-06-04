@@ -15,8 +15,8 @@ const KeyDiff = () => {
   
             {/* Right Column - Content */}
             <div className="w-full flex flex-col justify-center pt-10 h-full">
-              <h2 className="text-3xl font-bold mb-4 text-[#23B5D3]">THE KEY DIFFERENCE?</h2>
-              <h2 className="text-4xl font-bold mb-4 font-alfarn max-w-sm">You Won’t Quit!</h2>
+              <h2 className="text-2xl font-bold mb-4 text-[#23B5D3]">THE KEY DIFFERENCE?</h2>
+              <h2 className="text-3xl font-bold mb-4 font-alfarn max-w-sm">You Won’t Quit!</h2>
   
               <p className="max-w-2xl mx-auto  mb-4 text-md">
                  Most programs leave you on your own. We don’t. We make sure you follow
