@@ -26,6 +26,14 @@ Route::get('/registration', function () {
     return Inertia::render('Register');
 })->name('registers');
 
+Route::get('/privacy-policy', function () {
+    return Inertia::render('Privacy/Index');
+})->name('privacy-policy');
+
+Route::get('/terms-and-conditions', function () {
+    return Inertia::render('Terms/Index');
+})->name('terms-and-conditions');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {return Inertia::render('Dashboard');})->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
