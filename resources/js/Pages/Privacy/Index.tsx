@@ -10,36 +10,48 @@ interface PolicySectionData {
 
 const policySections: PolicySectionData[] = [
   {
-    title: "1. Introduction",
-    content:
-      "We value your privacy and are committed to protecting your personal information. This Privacy Policy outlines how we handle data when you use our services.",
+    title: "1. What We Collect",
+    content: `We collect personal data only when it helps us provide, improve, or personalize your coaching experience. This includes your name, email, and password; your fitness preferences, goals, and responses to coaching; any messages or feedback you submit; device and browser information; IP address and session logs; usage patterns and interaction data; and cookies and analytics data used for performance and personalization.`
   },
   {
-    title: "2. Information We Collect",
-    content:
-      "We collect information you provide directly (e.g., when registering), and indirectly through cookies, analytics, and usage logs.",
+    title: "2. How We Use Your Data",
+    content: `We use your data to generate and deliver AI-driven coaching messages, personalize your fitness experience, improve the accuracy and effectiveness of our AI systems, send service-related communications, and monitor app performance and prevent abuse. We do not use your data to train third-party AI models.`
   },
   {
-    title: "3. How We Use Your Information",
-    content:
-      "To improve our services, communicate with users, provide customer support, and meet legal obligations.",
+    title: "3. How AI Is Used",
+    content: `Our platform uses AI to generate personalized coaching suggestions, notifications, and progress updates. These messages are based on your inputs and interaction history. Note that AI-generated messages are informational only. They are not medical advice and should not be used as a substitute for professional healthcare consultation.`
   },
   {
     title: "4. Sharing Your Data",
-    content:
-      "We do not sell your data. We may share information with trusted third-party partners under strict confidentiality agreements.",
+    content: `We may share limited data with third parties when necessary to run our services, such as cloud providers for hosting or storage, analytics services like Google Analytics, and communication tools used for email delivery. We do not sell your personal data—ever.`
   },
   {
-    title: "5. Your Rights",
-    content:
-      "You have the right to access, update, or delete your personal data. Contact us to exercise your rights.",
+    title: "5. Your Rights & Choices",
+    content: `You can access, update, or delete your data at any time. You may opt out of marketing emails and request a copy of your personal data. California residents should refer to the CCPA rights section for additional options.`
   },
   {
-    title: "6. Changes to This Policy",
-    content:
-      "We may update this Privacy Policy. When we do, we will revise the updated date and notify you as required.",
+    title: "6. Your Control Options",
+    content: `You can view or update your account information, opt out of non-essential communications, and adjust cookie settings through your browser.`
+  },
+  {
+    title: "7. Data Security",
+    content: `We use industry-standard encryption, access controls, and continuous monitoring to safeguard your data. While no system is 100% invulnerable, security remains a top priority.`
+  },
+  {
+    title: "8. Data Retention",
+    content: `We retain personal data only as long as your account is active or as legally required. If you delete your account, your data is deleted or anonymized within [X] days.`
+  },
+  {
+    title: "9. Children’s Privacy",
+    content: `GoPeakFit is not designed for children under 13. We do not knowingly collect personal data from minors. If we discover that we have, we will delete it immediately.`
+  },
+  {
+    title: "10. Changes to This Policy",
+    content: `We may update this policy as our services evolve. If we make significant changes, we’ll notify you via email or in-app messaging.`
   },
 ];
+
+
 
 function PolicySection(props: PolicySectionData) {
   const { title, content } = props;
