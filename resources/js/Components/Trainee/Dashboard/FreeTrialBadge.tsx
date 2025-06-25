@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import UpgradeModal from "./UpgradeModal";
 
 const FreeTrialBadge = () => {
+    console.log('run:');
+
     const user = usePage().props.auth.user;
     const [daysLeft, setDaysLeft] = useState<number | null>(null);
     const [trialEndDate, setTrialEndDate] = useState<Date | null>(null);
@@ -26,11 +28,11 @@ const FreeTrialBadge = () => {
         setTrialEndDate(end);
     }, []);
 
-    if (daysLeft === null || daysLeft <= 0) return null;
+    if (daysLeft === null) return null;
 
     const formatDate = (date: Date) =>
         date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-
+    
     let bgColor = "bg-green-100 text-green-800";
     if (daysLeft <= 2) bgColor = "bg-red-100 text-red-800";
     else if (daysLeft <= 5) bgColor = "bg-yellow-100 text-yellow-800";

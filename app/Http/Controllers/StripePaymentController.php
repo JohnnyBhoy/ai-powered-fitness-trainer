@@ -38,25 +38,25 @@ class StripePaymentController extends Controller
 
         Stripe::setApiKey(config('services.stripe.secret'));
 
-
-        // Log payment transactions to gpf_subscriptions table
-        GpfSubscription::create([
-            'user_id' => $userId,
-            'subscription' => $amount == 1 ? 'trial' : 'premium',
-            'amount' => $amount,
-            'quantity' => 1,
-            'total_amount' => $amount,
-            'payment_status' => 'pending',
-            'payment_type' => 'card',
-            'status' => 'pending',
-            'currency' => 'usd',
-            'session_id' => null,
-            'payment_intent_id' => null,
-            'days_left' => 5,
-        ]);
-
         // Trial Payment
         if ($amount == 1) {
+            // Log payment transactions to gpf_subscriptions table
+            GpfSubscription::create([
+                'user_id' => $userId,
+                'subscription' => 'trial',
+                'amount' => $amount,
+                'quantity' => 1,
+                'total_amount' => $amount,
+                'payment_status' => 'pending',
+                'payment_type' => 'card',
+                'status' => 'pending',
+                'currency' => 'usd',
+                'session_id' => null,
+                'payment_intent_id' => null,
+                'days_left' => 5,
+            ]);
+
+
             $session = Session::create([
                 'line_items' => [
                     [
@@ -72,7 +72,7 @@ class StripePaymentController extends Controller
                     ],
                 ],
                 'mode' => 'payment', // One-time payment
-                'success_url' => route('success') . "?session_id={CHECKOUT_SESSION_ID}&user_id=$userId&amount=$amount" ,
+                'success_url' => route('success') . "?session_id={CHECKOUT_SESSION_ID}&user_id=$userId&amount=$amount",
                 'cancel_url' => route('checkout'),
             ]);
         } else {
@@ -98,6 +98,9 @@ class StripePaymentController extends Controller
                 'success_url' => route('success') . "?session_id={CHECKOUT_SESSION_ID}&user_id=$userId&amount=$amount",
                 'cancel_url' => route('checkout'),
             ]);
+
+            //Update to premium
+            GpfSubscription::where('user_id', $userId)->update(['subscription' => 'premium']);
         }
 
         // Store the important payment details in db

@@ -122,8 +122,10 @@ class WorkoutTrainerController extends Controller
                 return;
             } else {
                 // Update first the days left in free trial
-                GpfSubscription::where('user_id', $user->user_id)
-                    ->update(['days_left' => 5 - $daysDifference]);
+                if ($daysDifference < 0) {
+                    GpfSubscription::where('user_id', $user->user_id)
+                        ->update(['days_left' => 5 - $daysDifference]);
+                }
 
                 // Here we prepare the data
                 $systemPropmt = $this->generatePrompt($user);
@@ -146,7 +148,7 @@ class WorkoutTrainerController extends Controller
     // Generate dynamic prompts
     private function generatePrompt($user)
     {
-        return  "You are an strict expert Expert fitness and nutrition coach. Your job is to help the user reach their health goals through personalized workout and diet advice. Be practical, empathetic, and realistic in your suggestions.
+        return  trim("You are an strict expert Expert fitness and nutrition coach. Your job is to help the user reach their health goals through personalized workout and diet advice. Be practical, empathetic, and realistic in your suggestions.
 
             User Profile:
             
@@ -171,19 +173,21 @@ class WorkoutTrainerController extends Controller
             6. Emphasize consistency and sustainability over intensity.
             7. Respond in a tone like a real personal coach, not a robot.
             
-            Never recommend dangerous practices. Always check if a suggestion is safe given the user’s profile.";
+            Never recommend dangerous practices. Always check if a suggestion is safe given the user’s profile.");
     }
 
     // generate dyanmic user message to ai
     private function generateMessage($user, $systemPropmt)
     {
-        $userName = "$user->first_name $user->last_name";
+        $username = "$user->first_name $user->last_name";
         $userMessage = "";
 
         if (is_null($user->conversations)) {
-            $userMessage = "You are GPF, a strict and disciplined expert in fitness and nutrition. Your job is to push {$userName} to take serious, immediate action toward health and strength. Analyze this profile: {$systemPropmt}. Introduce yourself with a firm, commanding tone and give clear, no-excuse advice or a starter plan they must follow. Your message must be under 150 characters. Avoid soft language—be direct, results-driven, and uncompromising. No hashtags or filler. note that keep it short and pricise reply like in sms bot, make it only 150 characters long";
+            $userMessage = "{$systemPropmt}. Introduce yourself to $username with a firm, commanding tone and give clear, no-excuse advice or a starter plan they must follow.  Avoid soft language—be direct, results-driven, and uncompromising. No hashtags or filler. note that keep it short and pricise reply like in sms bot, make it only 150 characters long";
         } else {
-            $userMessage = "This is the whole conversation [$user->conversations], create a response to trainee's last message based on the conversations, be strict and act like a expert coach, avoid repeatitive greetings and be strict to the point. note that keep it short, specific and precise reply like in sms bot, also remove the motivational message at the end, stick to the reply or ai response, make it only 150 characters long";
+            $recentConvo = substr($user->conversations, -200);
+
+            $userMessage = "This is the latest conversation [$recentConvo], create a response to trainee's last message based on the conversations, be strict and act like a expert coach, avoid repeatitive greetings and be strict to the point. note that keep it short, specific and precise reply like in sms bot, also remove the motivational message at the end, stick to the reply or ai response, make it only 150 characters long";
         }
 
         return $userMessage;

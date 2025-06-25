@@ -50,8 +50,6 @@ export default function Authenticated({
         return text.charAt(0).toUpperCase() + text.slice(1);
       }
 
-    console.log(subscriptions);
-
     return (
         <div className="min-h-screen bg-gray-100">
             <div className="flex h-screen overflow-x-hidden bg-gray-100">
