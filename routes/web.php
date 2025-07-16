@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\Api\PromoController;
 use App\Http\Controllers\MealController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProgressController;
@@ -68,5 +69,8 @@ Route::get('/send-encouragement', [WorkoutTrainerController::class, 'sendWorkout
 Route::get('/consent', function () {
   return Inertia::render('ConsentForm');
 })->name('consent.form');
+
+//30-Day Promo Code
+Route::get('promocode', [PromoController::class, 'index'])->name('promo.challenge');
 
 require __DIR__.'/auth.php';

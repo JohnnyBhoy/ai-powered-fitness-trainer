@@ -5,6 +5,8 @@ export interface User {
     email: string;
     email_verified_at?: string;
     created_at: string;
+    is_active: number;
+    is_promo: number;
 }
 
 export type PageProps<

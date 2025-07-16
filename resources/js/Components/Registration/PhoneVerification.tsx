@@ -140,7 +140,7 @@ function PhoneVerification({ onComplete }: { onComplete: () => void }) {
                 </div>
 
                 <button
-                    className="mt-4 bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition"
+                    className="mt-4 bg-[#23B5D3] text-white px-6 py-2 rounded-lg transition"
                     type="submit"
                     id="submitBtn">
                     Verify

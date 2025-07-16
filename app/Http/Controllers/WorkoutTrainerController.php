@@ -72,18 +72,15 @@ class WorkoutTrainerController extends Controller
             ->leftJoin('gpf_messages as gm', 'u.id', '=', 'gm.user_id')
             ->leftJoin('gpf_biometrics as b', 'u.id', '=', 'b.user_id')
             ->leftJoin('gpf_goals as g', 'u.id', '=', 'g.user_id')
-            ->where('b.phone_number', $userPhone)
+            ->where('gm.phone_number', $userPhone)
             ->first();
 
         // Here we prepare the data
         $systemPropmt = $this->generatePrompt($userData);
 
-        // Setup user message
-        $userMessage = "$userData->conversations, $userData->first_name : $userMessage";
-
         // Continue conversation
         $botResponse = $this->getOpenAIResponse($userMessage, $systemPropmt);
-        $newConversation = $userData->conversations . " | GPF: $userMessage | $userData->first_name : $botResponse";
+        $newConversation = $userData->conversations . " |$userData->first_name : $userMessage |GPF : $botResponse";
 
         // Update conversation
         GpfMessage::where('user_id', $userData->id)
@@ -91,10 +88,13 @@ class WorkoutTrainerController extends Controller
                 'conversations' => $newConversation,
             ]);
 
-        // Send SMS
-        $this->sendSms($userPhone, $botResponse);
+        $twiml = '<?xml version="1.0" encoding="UTF-8"?>
+                    <Response>
+                        <Message>' . htmlspecialchars($botResponse) . '</Message>
+                    </Response>';
 
-        return response()->xml('<Response></Response>');
+        return response($twiml, 200)
+            ->header('Content-Type', 'application/xml');
     }
 
     // Method to send workout encouragement messages
@@ -103,6 +103,16 @@ class WorkoutTrainerController extends Controller
         // Set the timezone to Colorado (America/Denver)
         date_default_timezone_set('America/Denver');
         $today = new DateTime();
+        $hour = (int) $today->format('G'); // 0 - 23
+
+        // Define time segments
+        if ($hour >= 5 && $hour < 12) {
+            $timeOfDay = 'morning';
+        } elseif ($hour >= 12 && $hour < 17) {
+            $timeOfDay = 'afternoon';
+        } else {
+            $timeOfDay = 'evening';
+        }
 
         $users = DB::table('users as u')
             ->leftJoin('gpf_messages as gm', 'u.id', '=', 'gm.user_id')
@@ -117,37 +127,81 @@ class WorkoutTrainerController extends Controller
             $daysDifference = $interval->days;
 
             // We check if the free trial is already in 5 days since user signup
-            if ($daysDifference == 5) {
+            if ($daysDifference >= 5 && $user->is_promo == 0) {
                 $this->sendSms($user->phone_number, 'You already reached your 5-days GPF Trail Plan, we are now charging you $49 usd monthly to continue our workout and diet plan. you can stop or unsubscribe anytime you want. Thank you.');
+                return;
+            }
+            if ($daysDifference >= 30 && $user->is_promo == 1) {
+                $this->sendSms($user->phone_number, 'You already reached your 30-days GPF Trail Plan, Thank you for trying our GOPEAKFIT Program.');
                 return;
             } else {
                 // Update first the days left in free trial
-                if ($daysDifference < 0) {
+                $trialDays = $user->is_promo ? 30 : 5;
+
+                if ($daysDifference <= $trialDays) {
                     GpfSubscription::where('user_id', $user->user_id)
-                        ->update(['days_left' => 5 - $daysDifference]);
+                        ->update(['days_left' => $trialDays - $daysDifference]);
                 }
 
-                // Here we prepare the data
-                $systemPropmt = $this->generatePrompt($user);
+                // Define message bank
+                $messages = [
+                    'morning' => [
+                        "Morning check-in: How did you sleep? Energy 1-10? Hydrate now, then attack the day.",
+                        "You said you had goals—prove it today. What’s your first move?",
+                        "New day. No excuses. What’s one win you’ll lock in before noon?",
+                        "Wake up with purpose. What’s your mindset this morning? Locked in or lazy?",
+                        "Start now: What’s your top priority today? Say it out loud. Own it.",
+                        "What’s one habit you’re building today? Don’t skip. Don’t slide.",
+                        "Are you feeling strong or making excuses? Decide now.",
+                        "It’s grind time. Stretch, hydrate, commit. What’s the plan?",
+                        "You got 24 hours. What’s your non-negotiable win today?"
+                    ],
+                    'afternoon' => [
+                        "Midday pulse check: Are you staying focused or drifting? Adjust now.",
+                        "You’re halfway through—what have you actually accomplished so far?",
+                        "Don’t coast through the day. What’s one thing you’re avoiding right now?",
+                        "This is where most people slow down. Push harder. What’s left to crush?",
+                        "Rate your effort so far 1-10. If it’s under 8, fix it.",
+                        "You said you wanted change. Prove it in your next action.",
+                        "Refocus time: What’s something small but meaningful you can finish today?",
+                        "Hydrate. Breathe. Now get back in control—what are you finishing before 5PM?",
+                        "Are you on track with your meals, training, mindset? Adjust now if needed."
+                    ],
+                    'evening' => [
+                        "Day’s almost done. Did you keep your word today?",
+                        "What’s one thing you crushed today? And one thing you need to improve tomorrow?",
+                        "Look back: Were your actions aligned with your goals?",
+                        "No fluff—did you train, eat right, and stay focused today? Be honest.",
+                        "End strong: What’s one thing you learned about yourself today?",
+                        "You either built momentum or made excuses. Which one was it?",
+                        "Progress isn’t just effort—it’s consistency. Did you show up today?",
+                        "Before sleep: What will tomorrow’s top priority be?",
+                        "Win or waste? Label today. Then plan to do better (or repeat) tomorrow."
+                    ],
+                ];
 
-                $userMessage = $this->generateMessage($user, $systemPropmt);
+                // Randomize the message
+                $user->conversations == null
+                    ? $botMessage = "Introduce yourself to $user->first_name as 'GPF', his expert workout and diet coach  with a firm, commanding tone and give clear, no-excuse advice or a starter plan they must follow.  Avoid soft language—be direct, results-driven, and uncompromising. No hashtags or filler. note that keep it short and pricise reply like in sms bot, make it only 150 characters long"
+                    : $botMessage = $messages[$timeOfDay][array_rand($messages[$timeOfDay])];
 
-                // Trainer Bot message
-                $botMessages =  $this->getOpenAIResponse($userMessage, $systemPropmt);
+
 
                 // Append the message to conversations
                 GpfMessage::where('user_id', operator: $user->user_id)
-                    ->update(['conversations' => "$user->conversations ,GPF: $botMessages"]);
+                    ->update(['conversations' => "$user->conversations ,GPF: $botMessage"]);
 
                 // Send message via Twilio
-                $this->sendSms($user->phone_number, $botMessages);
+                $this->sendSms($user->phone_number, $botMessage);
             }
         }
     }
 
     // Generate dynamic prompts
-    private function generatePrompt($user)
+    private function generatePrompt($user): string
     {
+        $strictnessLevel = $this->getStrictnessLevel($user->strictness_level);
+
         return  trim("You are an strict expert Expert fitness and nutrition coach. Your job is to help the user reach their health goals through personalized workout and diet advice. Be practical, empathetic, and realistic in your suggestions.
 
             User Profile:
@@ -172,24 +226,24 @@ class WorkoutTrainerController extends Controller
             5. Offer ideas for overcoming their struggles and past roadblocks.
             6. Emphasize consistency and sustainability over intensity.
             7. Respond in a tone like a real personal coach, not a robot.
+            8. Reply in short, precise and complete thought and not more then 300 characters unless needed.
             
-            Never recommend dangerous practices. Always check if a suggestion is safe given the user’s profile.");
+            Never recommend dangerous practices. Always check if a suggestion is safe given the user’s profile. Reply only short and precise response but
+            make it longer if necessary, like a text messages, remember that $user->first_name wants his workout training to be $strictnessLevel");
     }
 
-    // generate dyanmic user message to ai
-    private function generateMessage($user, $systemPropmt)
+    private function getStrictnessLevel($level)
     {
-        $username = "$user->first_name $user->last_name";
-        $userMessage = "";
-
-        if (is_null($user->conversations)) {
-            $userMessage = "{$systemPropmt}. Introduce yourself to $username with a firm, commanding tone and give clear, no-excuse advice or a starter plan they must follow.  Avoid soft language—be direct, results-driven, and uncompromising. No hashtags or filler. note that keep it short and pricise reply like in sms bot, make it only 150 characters long";
-        } else {
-            $recentConvo = substr($user->conversations, -200);
-
-            $userMessage = "This is the latest conversation [$recentConvo], create a response to trainee's last message based on the conversations, be strict and act like a expert coach, avoid repeatitive greetings and be strict to the point. note that keep it short, specific and precise reply like in sms bot, also remove the motivational message at the end, stick to the reply or ai response, make it only 150 characters long";
+        if ($level == 1) {
+            return 'Chill: General meal guidelines (no tracking)';
         }
 
-        return $userMessage;
+        if ($level == 2) {
+            return 'Balanced: Macro targets with suggested portions';
+        }
+
+        if ($level == 3) {
+            return 'Strict: Precise calorie/macro tracking with specific food weights';
+        }
     }
 }

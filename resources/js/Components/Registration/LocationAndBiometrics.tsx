@@ -14,14 +14,16 @@ type BiometricsFormData = {
     current_weight: number
     goal_weight: number
     fitness_level: string
+    strictness_level: number
     equipment_access: string
     food_allergies: string
     user_id: null | number
 }
 
 function LocationAndBiometrics({ onComplete }: { onComplete: () => void }) {
-    const {userId} = useUserStore();
-    
+    const submitBtn = document.getElementById('submitBtn') as HTMLButtonElement;
+    const { userId } = useUserStore();
+
     const {
         register,
         handleSubmit,
@@ -31,23 +33,25 @@ function LocationAndBiometrics({ onComplete }: { onComplete: () => void }) {
     const mutation = useMutation({
         mutationFn: (data: BiometricsFormData) => axios.post('/biometrics', data),
         onSuccess: (res) => {
-          toast.success(`Location and biometrics updated.`)
-          onComplete();
+            toast.success(`Location and biometrics updated.`)
+            onComplete();
         },
-        onError: (error: any) => {
-          toast.error(error.response?.data?.message ?? 'Biomertrics failed.')
+        onError: (error: any) => { 
+            submitBtn.classList.remove('disabled');
+            submitBtn.disabled = false;
+            
+            toast.error(error.response?.data?.message ?? 'Biomertrics failed.')
         },
-      })
+    })
 
     const onSubmit = (data: BiometricsFormData) => {
-        const submitBtn = document.getElementById('submitBtn') as HTMLButtonElement;
 
         if (submitBtn) {
-          submitBtn.classList.add('disabled');
-          submitBtn.disabled = true;
+            submitBtn.classList.add('disabled');
+            submitBtn.disabled = true;
         }
-        
-        data = {...data, user_id: userId}
+
+        data = { ...data, user_id: userId }
         mutation.mutate(data)
     }
 
@@ -92,29 +96,29 @@ function LocationAndBiometrics({ onComplete }: { onComplete: () => void }) {
                         </div>
 
                         {/* Phone Number */}
-                        <div>
-                            <label htmlFor="phone" className="block text-sm font-semibold mb-2">Phone Number</label>
-
-                            <input
-                                id="phone"
-                                {...register('phone_number', {
-                                    required: 'Phone number is required',
-                                    pattern: {
-                                        value: /^(?:\+1)?(?:\d{10})$/, // Allows both +1XXXXXXXXXX or XXXXXXXXXX
-                                        message: 'Please enter a valid phone number.',
-                                    },
-                                })}
-                                type="tel"
-                                placeholder='Phone number is used to send and receive texts to hold you accountable to the 5 day challenge.'
-                                className="w-full p-2 border border-gray-400 rounded-md bg-white text-sm placeholder:text-[9px] italic"
-                            />
-                              {errors.phone_number && (
-                                <p className="text-red-500 text-xs">{errors.phone_number.message}</p>
-                            )}
-                        </div>
-
-                        {/* Age and Sex */}
                         <div className="flex gap-4">
+                            <div className="w-1/2">
+                                <label htmlFor="phone" className="block text-sm font-semibold mb-2">Phone Number</label>
+
+                                <input
+                                    id="phone"
+                                    {...register('phone_number', {
+                                        required: 'Phone number is required',
+                                        pattern: {
+                                            value: /^(?:\+1)?(?:\d{10})$/, // Allows both +1XXXXXXXXXX or XXXXXXXXXX
+                                            message: 'Please enter a valid phone number.',
+                                        },
+                                    })}
+                                    type="tel"
+                                    placeholder='Phone number is used to send and receive texts to hold you accountable to the 5 day challenge.'
+                                    className="w-full p-2 border border-gray-400 rounded-md bg-white text-sm placeholder:text-[9px] italic"
+                                />
+                                {errors.phone_number && (
+                                    <p className="text-red-500 text-xs">{errors.phone_number.message}</p>
+                                )}
+                            </div>
+
+
                             <div className="w-1/2">
                                 <label htmlFor="age" className="block text-sm font-semibold mb-2">Age</label>
                                 <input
@@ -124,20 +128,8 @@ function LocationAndBiometrics({ onComplete }: { onComplete: () => void }) {
                                     className="w-full p-2 border border-gray-400 rounded-md bg-white text-sm"
                                 />
                             </div>
-                            <div className="w-1/2">
-                                <label htmlFor="sex" className="block text-sm font-semibold mb-2">Sex</label>
-                                <select
-                                    id="sex"
-                                    {...register('sex')}
-                                    className="w-full p-2 border border-gray-400 rounded-md bg-white text-sm"
-                                >
-                                    <option value="">Select</option>
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
-                                    <option value="other">Other</option>
-                                </select>
-                            </div>
                         </div>
+                        {/* Age and Sex */}
 
                         {/* Weight Information */}
                         <div className="flex gap-4">
@@ -167,6 +159,38 @@ function LocationAndBiometrics({ onComplete }: { onComplete: () => void }) {
                             </div>
                         </div>
 
+
+                        <div className="flex gap-4">
+                            <div className="w-1/2">
+                                <label htmlFor="sex" className="block text-sm font-semibold mb-2">Sex</label>
+                                <select
+                                    id="sex"
+                                    {...register('sex')}
+                                    className="w-full p-2 border border-gray-400 rounded-md bg-white text-sm"
+                                >
+                                    <option value="">Select</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+
+                            {/*Strictness Level*/}
+                            <div className="w-1/2">
+                                <label htmlFor="sex" className="block text-sm font-semibold mb-2">Strictness Level</label>
+                                <select
+                                    id="strictness_level"
+                                    {...register('strictness_level')}
+                                    className="w-full p-2 border border-gray-400 rounded-md bg-white text-sm"
+                                >
+                                    <option value={0}>Select</option>
+                                    <option value={1}>Chill: General meal guidelines (no tracking)</option>
+                                    <option value={2}>Balanced: Macro targets with suggested portions</option>
+                                    <option value={3}>Strict: Precise calorie/macro tracking with specific food weights</option>
+                                </select>
+                            </div>
+                            {/*Strictness Level*/}
+                        </div>
 
                         <div className="flex gap-4">
                             {/* Fitness Level */}

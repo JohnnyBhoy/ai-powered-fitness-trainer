@@ -21,6 +21,7 @@ class GpfBiometric extends Model
         'fitness_level',
         'equipment_access',
         'food_allergies',
+        'strictness_level',
     ];
 
     public function user() {

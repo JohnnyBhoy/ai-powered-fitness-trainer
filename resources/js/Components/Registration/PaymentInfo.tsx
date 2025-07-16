@@ -1,4 +1,5 @@
 import { loadStripe } from '@stripe/stripe-js';
+import Promocode from './Promocode';
 
 function PaymentInfo({ onComplete }: { onComplete: () => void }) {
   const stripePromise = loadStripe(import.meta.env.STRIPE_KEY);
@@ -71,6 +72,8 @@ function PaymentInfo({ onComplete }: { onComplete: () => void }) {
                     Start 5-day challenge for $1
                 </button>
               </a>
+
+              <Promocode />
                     
             
               <div className="mt-4">
@@ -127,7 +130,7 @@ function PaymentInfo({ onComplete }: { onComplete: () => void }) {
 
             <img 
                 src="/images/hardtruthstar.png" 
-                alt="Rating Image" 
+                alt="Rating Images" 
                 className="rounded-xl h-16 absolute bottom-[-80px] right-[-50px] transform -translate-x-1/2"
             />
 

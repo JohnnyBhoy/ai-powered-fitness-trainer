@@ -12,7 +12,7 @@ const FreeTrialBadge = () => {
 
     useEffect(() => {
         const trialStart = new Date(user?.created_at);
-        const trialDuration = 5;
+        const trialDuration = user.is_promo == 1 ? 30 : 5;
 
         const end = new Date(trialStart);
         end.setDate(trialStart.getDate() + trialDuration);

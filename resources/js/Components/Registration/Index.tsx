@@ -1,15 +1,14 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import Header from "../Header";
+import { Toaster } from 'sonner';
 import Footer from "../Footer";
+import RegHeader from "../RegistrationHeader";
+import ConsentForm from "./ConsentForm";
 import CreateAccount from "./CreateAccount";
 import LocationAndBiometrics from "./LocationAndBiometrics";
-import TheGoal from "./TheGoal";
 import PaymentInfo from "./PaymentInfo";
-import { Toaster } from 'sonner'
 import PhoneVerification from "./PhoneVerification";
-import ConsentForm from "./ConsentForm";
-import RegHeader from "../RegistrationHeader";
+import TheGoal from "./TheGoal";
 
 function Registration() {
     const [step, setStep] = useState(1);
@@ -19,13 +18,13 @@ function Registration() {
         { id: 2, component: <ConsentForm onComplete={() => setStep(3)} /> },
         { id: 3, component: <LocationAndBiometrics onComplete={() => setStep(4)} /> },
         { id: 4, component: <PhoneVerification onComplete={() => setStep(5)} /> },
-        { id: 5, component: <TheGoal onComplete={() =>  setStep(6)}/> },
-        { id: 6, component: <PaymentInfo onComplete={() =>  console.log("test")}/> },
+        { id: 5, component: <TheGoal onComplete={() => setStep(6)} /> },
+        { id: 6, component: <PaymentInfo onComplete={() => console.log("test")} /> },
     ];
 
     return (
         <>
-        <Toaster richColors position="top-center" />
+            <Toaster richColors position="top-center" />
             <div className="flex flex-col min-h-screen">
                 <RegHeader />
                 <main className="flex-grow">
@@ -44,7 +43,7 @@ function Registration() {
                 <Footer />
             </div>
         </>
-       
+
     );
 }
 

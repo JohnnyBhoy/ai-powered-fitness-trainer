@@ -20,6 +20,7 @@ class BiometricRequest extends FormRequest
             'current_weight'    => 'required|numeric|min:0',
             'goal_weight'       => 'required|numeric|min:0',
             'fitness_level'     => 'required|string|max:100',
+            'strictness_level'  => 'required|numeric|min:0',
             'equipment_access'  => 'required|string|max:100',
             'food_allergies'    => 'required|string',
             'user_id'    => 'required|integer',

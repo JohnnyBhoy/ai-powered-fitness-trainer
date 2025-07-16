@@ -47,6 +47,12 @@
                         {{ request(key: 'amount') == '1' ? 'Start 5-day challenge for $1' : 'Personalized 1-on-1 coaching for just $49/month.' }}
                     </button>
 
+                    <a
+                        href="{{ route('promo.challenge',['user_id' =>request()->get('id')]) }}"
+                        class="mt-6 w-full inline-block text-center border border-gray-700 py-2 font-alfarn rounded-md font-semibold hover:bg-[#1b9bb6] transition">
+                        Start 30-Day Challenge Using Promo Code
+                    </a>
+
 
                     <div class="mt-4">
                         <h3 class="text-xs font-semibold">RECURRING BILLING & TRIALS</h3>
