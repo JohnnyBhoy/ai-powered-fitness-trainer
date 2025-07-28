@@ -127,11 +127,11 @@ class WorkoutTrainerController extends Controller
             $daysDifference = $interval->days;
 
             // We check if the free trial is already in 5 days since user signup
-            if ($daysDifference >= 5 && $user->is_promo == 0) {
+            if ($daysDifference == 5 && $user->is_promo == 0) {
                 $this->sendSms($user->phone_number, 'You already reached your 5-days GPF Trail Plan, we are now charging you $49 usd monthly to continue our workout and diet plan. you can stop or unsubscribe anytime you want. Thank you.');
                 return;
             }
-            if ($daysDifference >= 30 && $user->is_promo == 1) {
+            if ($daysDifference == 30 && $user->is_promo == 1) {
                 $this->sendSms($user->phone_number, 'You already reached your 30-days GPF Trail Plan, Thank you for trying our GOPEAKFIT Program.');
                 return;
             } else {

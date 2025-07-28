@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import { useUserStore } from '@/stores/useUserStore'
 import { toast } from 'sonner'
+import { ArrowClockwise } from 'react-bootstrap-icons'
 
 type BiometricsFormData = {
     city: string
@@ -36,10 +37,10 @@ function LocationAndBiometrics({ onComplete }: { onComplete: () => void }) {
             toast.success(`Location and biometrics updated.`)
             onComplete();
         },
-        onError: (error: any) => { 
+        onError: (error: any) => {
             submitBtn.classList.remove('disabled');
             submitBtn.disabled = false;
-            
+
             toast.error(error.response?.data?.message ?? 'Biomertrics failed.')
         },
     })
@@ -229,9 +230,14 @@ function LocationAndBiometrics({ onComplete }: { onComplete: () => void }) {
                         <button
                             type="submit"
                             id="submitBtn"
-                            className="w-full bg-[#23B5D3] text-white py-2 rounded-md font-semibold hover:bg-[#1b9bb6] transition mt-6"
+                            className="w-full bg-[#23B5D3] text-white py-2 rounded-md font-semibold hover:bg-[#1b9bb6] transition mt-6 flex gap-1 place-items-center items-center content-center justify-center"
                         >
-                            {mutation.isPending ? 'Submitting...' : 'CONTINUE'}
+                            {mutation.isPending ? (
+                                <>
+                                    <ArrowClockwise className='animate-spin'/>
+                                    Submitting...
+                                </>
+                            ) : 'CONTINUE'}
                         </button>
 
                         {mutation.isSuccess && (

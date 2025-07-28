@@ -16,7 +16,7 @@ interface RegisterFormData {
 }
 
 function CreateAccount({ onComplete }: { onComplete: () => void }) {
-  const {setUserId} = useUserStore();
+  const { setUserId } = useUserStore();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [form, setForm] = useState<RegisterFormData>({
@@ -30,10 +30,10 @@ function CreateAccount({ onComplete }: { onComplete: () => void }) {
 
   const mutation = useMutation({
     mutationFn: (data: RegisterFormData) => axios.post('/register', data),
-    onSuccess: (res:any) => {
+    onSuccess: (res: any) => {
       const userId = res.data.id
       setUserId(userId);
-      toast.success(`Account created successfully! Your user ID is ${userId}`)
+      toast.success(`Account created successfully! Please provide us more details about you.`)
       onComplete();
     },
     onError: (error: any) => {
@@ -45,13 +45,21 @@ function CreateAccount({ onComplete }: { onComplete: () => void }) {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    mutation.mutate(form)
+  const handleSubmit = (e: React.FormEvent) => {    e.preventDefault();
+
+    //Browser permission, user needs to accept to proceed
+    fetch('https://ipapi.co/json/')
+      .then(res => res.json())
+      .then(data => {
+        //Accept only users from US
+        if (data.country == 'US') {
+          mutation.mutate(form);
+        } else {
+          toast.error('Unable to create account!, Please try again.');
+        }
+      })
+      .catch(err => console.error("Location lookup failed:", err));
   }
-
-
-
 
   return (
     <div className="flex flex-col items-center px-4 bg-white text-black text-center py-10">
@@ -185,17 +193,17 @@ function CreateAccount({ onComplete }: { onComplete: () => void }) {
 
             {/* Notification Image */}
             <img
-                  src="/images/main-subimg1.png"
-                  alt="Workout Notification Images"
-                  className="rounded-xl h-22 w-[160px] md:h-22 md:w-[220px] absolute top-20 md:left-36 transform translate-x-[-110px] translate-y-[20px]"
-              />
+              src="/images/main-subimg1.png"
+              alt="Workout Notification Images"
+              className="rounded-xl h-22 w-[160px] md:h-22 md:w-[220px] absolute top-20 md:left-36 transform translate-x-[-110px] translate-y-[20px]"
+            />
 
             {/* Rating Image */}
-             <img 
-                  src="/images/main-subimg2.png" 
-                  alt="Rating Images" 
-                  className="rounded-xl h-[60px] w-[160px] md:h-[80px] md:w-[180px] absolute bottom-0 md:right-26 transform translate-x-[50px] translate-y-[-10px]"
-              />
+            <img
+              src="/images/main-subimg2.png"
+              alt="Rating Images"
+              className="rounded-xl h-[60px] w-[160px] md:h-[80px] md:w-[180px] absolute bottom-0 md:right-26 transform translate-x-[50px] translate-y-[-10px]"
+            />
           </div>
         </div>
       </div>

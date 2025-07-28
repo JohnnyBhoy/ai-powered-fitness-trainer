@@ -130,7 +130,7 @@ export default function ConsentForm({ onComplete }: { onComplete: () => void }) 
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+          className="w-full bg-[#23B5D3] text-white py-2 rounded hover:bg-blue-700 transition"
         >
           Submit Consent
         </button>

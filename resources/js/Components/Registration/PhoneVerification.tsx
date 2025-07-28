@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useUserStore } from '@/stores/useUserStore'
 import { toast } from 'sonner'
 import { useRef, useState } from 'react'
+import { ArrowClockwise } from 'react-bootstrap-icons'
 
 type PhoneVerificationData = {
     user_id: number | null
@@ -48,7 +49,7 @@ function PhoneVerification({ onComplete }: { onComplete: () => void }) {
             setOtpCode(''); // Clear OTP code
             reset({ phone_number: '' }); // Optionally reset the phone number in the form
 
-             // Manually clear the OTP input fields
+            // Manually clear the OTP input fields
             inputsRef.current.forEach(input => {
                 if (input) {
                     input.value = ''; // Clear input values
@@ -140,10 +141,16 @@ function PhoneVerification({ onComplete }: { onComplete: () => void }) {
                 </div>
 
                 <button
-                    className="mt-4 bg-[#23B5D3] text-white px-6 py-2 rounded-lg transition"
                     type="submit"
-                    id="submitBtn">
-                    Verify
+                    id="submitBtn"
+                    className="w-full bg-[#23B5D3] text-white py-2 rounded-md font-semibold hover:bg-[#1b9bb6] transition mt-6 flex gap-1 place-items-center items-center content-center justify-center"
+                >
+                    {mutation.isPending ? (
+                        <>
+                            <ArrowClockwise className='animate-spin' />
+                            Verifying...
+                        </>
+                    ) : 'Verify'}
                 </button>
 
                 {mutation.isSuccess && (
