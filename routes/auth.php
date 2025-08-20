@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
@@ -40,13 +41,13 @@ Route::middleware('guest')->group(function () {
         ->name('biometrics');
 
     Route::post('/goals', [GoalsController::class, 'store'])
-    ->name('goals');
+        ->name('goals');
 
     Route::post('/verify', [BiometricController::class, 'verifyPhoneNumber'])
-    ->name('verify');
+        ->name('verify');
 
     Route::post('/resend-otp', [BiometricController::class, 'resendOtp'])
-    ->name('resend');
+        ->name('resend');
 });
 
 Route::middleware('auth')->group(function () {

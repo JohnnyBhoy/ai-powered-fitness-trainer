@@ -24,7 +24,7 @@ class User extends Authenticatable
         'password',
         'is_active',
         'is_promo',
-        'is_admin',
+        'role',
     ];
 
     /**
@@ -47,7 +47,6 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'is_admin' => 'boolean',
         ];
     }
 
@@ -59,5 +58,15 @@ class User extends Authenticatable
     public function gpfbiometric()
     {
         return $this->hasOne(GpfBiometric::class);
+    }
+
+    public function trainer()
+    {
+        return $this->belongsTo(User::class, 'trainer_id');
+    }
+
+    public function biometrics()
+    {
+        return $this->hasOne(GpfBiometric::class, 'user_id');
     }
 }

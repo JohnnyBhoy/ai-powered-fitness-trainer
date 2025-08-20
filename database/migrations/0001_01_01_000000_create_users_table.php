@@ -20,6 +20,9 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->tinyInteger('is_active')->default(1);
+            $table->tinyInteger('is_promo')->default(0);
+            $table->tinyInteger('role')->default(3);
+            $table->integer('trainer_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

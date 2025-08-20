@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->string('fitness_level')->nullable();
             $table->string('equipment_access')->nullable();
             $table->text('food_allergies')->nullable();
+            $table->tinyInteger('strictness_level')->default(0);
             $table->timestamps();
         });
     }

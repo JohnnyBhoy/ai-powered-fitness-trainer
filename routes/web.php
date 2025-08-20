@@ -1,9 +1,7 @@
 <?php
+
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Api\PromoController;
-use App\Http\Controllers\MealController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ProgressController;
-use App\Http\Controllers\WorkoutController;
 use App\Http\Controllers\WorkoutTrainerController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -32,19 +30,6 @@ Route::get('/terms-and-conditions', function () {
     return Inertia::render('Terms/Index');
 })->name('terms-and-conditions');
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {return Inertia::render('Dashboard');})->name('dashboard');
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/progess', [ProfileController::class, 'destroy'])->name('progress');
-    Route::get('/conversation', [ProfileController::class, 'destroy'])->name('conversation');
-    Route::get('/workout', [WorkoutController::class, 'index'])->name('workout');
-    Route::get('/meals', [MealController::class, 'index'])->name('meals');
-    Route::get('/progress', [ProgressController::class, 'index'])->name('progress');
-});
-
-
 // Stripe payment
 Route::get('/checkout', [StripePaymentController::class, 'checkout'])->name('checkout');
 Route::post('/session', [StripePaymentController::class, 'createSession'])->name('session');
@@ -67,10 +52,25 @@ Route::get('/send-encouragement', [WorkoutTrainerController::class, 'sendWorkout
 
 // Twilio proof of consent
 Route::get('/consent', function () {
-  return Inertia::render('ConsentForm');
+    return Inertia::render('ConsentForm');
 })->name('consent.form');
 
 //30-Day Promo Code
 Route::get('promocode', [PromoController::class, 'index'])->name('promo.challenge');
 
-require __DIR__.'/auth.php';
+
+
+//Admin Route
+Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('admin.login');
+Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.submit');
+
+//Routing for GoPeakFitAdmin
+Route::middleware(['auth', 'role:1'])->prefix('/admin')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/gpf-trainees', [AdminController::class, 'indexOfGpfTrainees'])->name('admin.gpf-trainees');
+    Route::get('/trainers', [AdminController::class, 'indexOfTrainers'])->name('admin.trainers');
+    Route::get('/trainees', [AdminController::class, 'indexOfTrainees'])->name('admin.trainees');
+});
+
+
+require __DIR__ . '/auth.php';
