@@ -1,16 +1,15 @@
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import Checkbox from '@/Components/Checkbox';
 import Footer from '@/Components/Footer';
-import Header from '@/Components/Header';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
+import RegHeader from '@/Components/RegistrationHeader';
 import SecondaryButton from '@/Components/SecondaryButton';
 import TextInput from '@/Components/TextInput';
 import { Link, useForm } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
 import { Toaster } from 'sonner';
-import RegHeader from '@/Components/RegistrationHeader';
 
 export default function Login({
     status,

@@ -4,6 +4,7 @@ export type Cards = {
     count: trainerCount,
     text: string,
     icon: string,
+    link: string,
 }
 
 export type Users = {

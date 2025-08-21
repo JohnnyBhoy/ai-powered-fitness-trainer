@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Api\PromoController;
+use App\Http\Controllers\TraineeController;
 use App\Http\Controllers\WorkoutTrainerController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -64,12 +65,18 @@ Route::get('promocode', [PromoController::class, 'index'])->name('promo.challeng
 Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.submit');
 
+//Routing for GoPeakFit Trainees
+Route::middleware(['auth', 'role:3'])->prefix('/trainee')->group(function () {
+    Route::get('/dashboard', [TraineeController::class, 'index'])->name('dashboard');
+});
+
+
 //Routing for GoPeakFitAdmin
 Route::middleware(['auth', 'role:1'])->prefix('/admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/gpf-trainees', [AdminController::class, 'indexOfGpfTrainees'])->name('admin.gpf-trainees');
     Route::get('/trainers', [AdminController::class, 'indexOfTrainers'])->name('admin.trainers');
-    Route::get('/trainees', [AdminController::class, 'indexOfTrainees'])->name('admin.trainees');
+    Route::get('/non-gpf-trainees', [AdminController::class, 'indexOfNonGpfTrainees'])->name('admin.trainees');
 });
 
 

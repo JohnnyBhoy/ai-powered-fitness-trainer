@@ -73,61 +73,112 @@ class AdminController extends Controller
 
     /**
      * Table page for Gopeakfit Trainees
-     * @param int $pageNumber
-     * @param int $perPage
-     * @return  Response
+     * @param Request $request
+     * @return  Response || Illuminate\Http\JsonResponse
      */
-    public function indexOfGpfTrainees(Int $pageNumber = 0, Int $perPage = 10)
+    public function indexOfGpfTrainees(Request $request): JsonResponse|Response
     {
+        $pageNumber = $request->get('page_number') ?? 1;
+        $perPage = $request->get('per_page') ?? 10;
+        $strictnessLevel = $request->get('strictness_level') ?? 0;
+
         try {
-            $result =  $this->userService->getPaginateGoPeakFitUsers($pageNumber, $perPage);
+            $result =  $this->userService->getPaginateGoPeakFitUsers($pageNumber, $perPage, $strictnessLevel);
         } catch (\Throwable $th) {
             throw $th;
         }
 
+        // If API call (like "Load more"), return JSON
+        if (request()->wantsJson() || $pageNumber != 1) {
+            return response()->json([
+                'success' => true,
+                'data' => $result,
+                'pagination' => [
+                    'page' => $pageNumber,
+                    'per_page' => $perPage,
+                    'total' => $result->total() ?? null, // if using LengthAwarePaginator
+                ],
+            ]);
+        }
+
+        // Otherwise, render Inertia for the initial page
         return Inertia::render('Trainee/GpfTrainee/GpfTrainee', [
             'data' => $result,
         ]);
     }
 
     /**
-     * Table page for Non Gopeakfit Trainees
-     * @param int $pageNumber
-     * @param int $perPage
-     * @return  Response
+     * Table page for Gopeakfit Trainees
+     * @param Request $request
+     * @return  Response || Illuminate\Http\JsonResponse
      */
-    public function indexOfTrainees(Int $pageNumber, Int $perPage)
+    public function indexOfNonGpfTrainees(Request $request): JsonResponse|Response
     {
+        $pageNumber = $request->get('page_number') ?? 1;
+        $perPage = $request->get('per_page') ?? 10;
+        $strictnessLevel = $request->get('strictness_level') ?? 0;
+
         try {
-            $result =  $this->getPaginateNonGoPeakFitUsers($pageNumber, $perPage);
+            $result =  $this->userService->getPaginateNonGoPeakFitUsers($pageNumber, $perPage, $strictnessLevel);
         } catch (\Throwable $th) {
             throw $th;
         }
 
-        return Inertia::render('NonGpfTrainee/Index', [
+        // If API call (like "Load more"), return JSON
+        if (request()->wantsJson() || $pageNumber != 1) {
+            return response()->json([
+                'success' => true,
+                'data' => $result,
+                'pagination' => [
+                    'page' => $pageNumber,
+                    'per_page' => $perPage,
+                    'total' => $result->total() ?? null, // if using LengthAwarePaginator
+                ],
+            ]);
+        }
+
+        // Otherwise, render Inertia for the initial page
+        return Inertia::render('Trainee/NonGpfTrainee/NonGpfTrainee', [
             'data' => $result,
         ]);
     }
 
     /**
-     * Table page for Non Gopeakfit Trainees
-     * @param int $pageNumber
-     * @param int $perPage
-     * @return  Response
+     * Table page for Trainers
+     * @param Request $request
+     * @return  Response || Illuminate\Http\JsonResponse
      */
-    public function getPaginateTrainers(Int $pageNumber, Int $perPage)
+    public function indexOfTrainers(Request $request): JsonResponse|Response
     {
+        $pageNumber = $request->get('page_number') ?? 1;
+        $perPage = $request->get('per_page') ?? 10;
+
         try {
-            $result =  $this->getPaginatedGoPeakFitUsers($pageNumber, $perPage);
+            $result =  $this->userService->getPaginateTrainers($pageNumber, $perPage);
         } catch (\Throwable $th) {
             throw $th;
         }
 
-        return Inertia::render('Trainers/Index', [
+        // If API call (like "Load more"), return JSON
+        if (request()->wantsJson() || $pageNumber != 1) {
+            return response()->json([
+                'success' => true,
+                'data' => $result,
+                'pagination' => [
+                    'page' => $pageNumber,
+                    'per_page' => $perPage,
+                    'total' => $result->total() ?? null, // if using LengthAwarePaginator
+                ],
+            ]);
+        }
+
+        // Otherwise, render Inertia for the initial page
+        return Inertia::render('Trainer/Trainer', [
             'data' => $result,
         ]);
     }
-    //Trainees Page
+
+    //Counter based on role
     public function getUserCountByMonthBaseOnRole(Int $role, Int|null $trainerId)
     {
         $currentYear = Carbon::now()->year;

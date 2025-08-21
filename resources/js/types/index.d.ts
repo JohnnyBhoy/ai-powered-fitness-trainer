@@ -9,7 +9,7 @@ export interface User {
     is_active: number;
     is_promo: number;
     trainer_id: number | null;
-    role: number;
+    role: number | null;
     strictness_level: number;
     trainer_first_name: string,
     trainer_last_name: string,

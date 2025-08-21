@@ -1,10 +1,12 @@
 import { Cards } from '@/types/admin'
+import { Link } from '@inertiajs/react'
 
 const Stats = ({ cards }: { cards: Cards[] }) => {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 lg:p-6 p-2 lg:gap-6 gap-2">
-            {cards.map((e) => (
-                <div
+            {cards.map((e:Cards) => (
+                <Link href={e.link}>
+                     <div
                     key={e.id}
                     className="lg:p-6 p-2 shadow-sm border border-slate-200 bg-white rounded-lg flex justify-between">
                     <div className="">
@@ -19,7 +21,9 @@ const Stats = ({ cards }: { cards: Cards[] }) => {
                         className='lg:h-16 h-10 lg:w-16'
                     />
 
-                </div>
+                </div> 
+                </Link>
+              
             ))}
         </div>
 

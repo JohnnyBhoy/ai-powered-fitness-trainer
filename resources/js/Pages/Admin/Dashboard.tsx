@@ -30,19 +30,22 @@ const Dashboard = ({ monthlyGpfTrainerCount, monthlyTrainerCount, monthlyTrainee
     title: 'Trainers',
     count: trainerCount,
     text: 'Trainers with Trainees',
-    icon: '/images/trainers/trainer.png'
+    icon: '/images/trainers/trainer.png',
+    link: '/admin/trainers',
   }, {
     id: 2,
     title: 'Trainees Under Trainer',
     count: traineeCount,
     text: 'Trainee Under Trainers Program',
-    icon: '/images/trainee/trainee.png'
+    icon: '/images/trainee/trainee.png',
+     link: '/admin/non-gpf-trainees',
   }, {
     id: 3,
     title: 'Trainees Under GoPeakFit AI',
     count: gpfUsersCount,
     text: 'Trainees Under GPF Program',
-    icon: '/images/gpf_trainee/gpf_trainee.jpg'
+    icon: '/images/gpf_trainee/gpf_trainee.jpg',
+     link: '/admin/gpf-trainees',
   }];
 
   return (

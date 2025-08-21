@@ -13,11 +13,12 @@ class UserRepository
      * Paginated Lists of GoPeakFit Users
      * @param  int $pageNumber Page number in table
      * @param  int $perPage     Rows to be shown per page in table
+     * @param  int $strictnessLevel     Chill, Strict
      * @return LengthAwarePaginator
      */
-    public function getPaginatedGoPeakFitUsers(Int $pageNumber, Int $perPage): LengthAwarePaginator
+    public function getPaginatedGoPeakFitUsers(Int $pageNumber, Int $perPage, Int $strictnessLevel): LengthAwarePaginator
     {
-        $goPeakFitUsers = DB::table('users as u1')
+        $query = DB::table('users as u1')
             ->leftJoin('gpf_biometrics as gb', 'u1.id', '=', 'gb.user_id')
             ->leftJoin('gpf_goals as g', 'u1.id', '=', 'g.user_id')
             ->select(
@@ -26,8 +27,13 @@ class UserRepository
                 'g.*'
             )
             ->where('role', 3)
-            ->whereNull('trainer_id')
-            ->orderBy('u1.created_at', 'desc')
+            ->whereNull('trainer_id');
+
+        if ($strictnessLevel != 0) {
+            $query = $query->where('gb.strictness_level', $strictnessLevel);
+        }
+
+        $goPeakFitUsers = $query->orderBy('u1.created_at', 'desc')
             ->paginate($perPage, ['*'], 'page', $pageNumber);
 
         return  $goPeakFitUsers;
@@ -37,27 +43,30 @@ class UserRepository
      * Paginated lists of non GoPeakFit Users, user added by trainer
      * @param  int $pageNumber Page number in table
      * @param  int $perPage     Rows to be shown per page in table
+     * @param  int $strictnessLevel     Chill, Strict
      * @return LengthAwarePaginator
      */
-    public function getPaginatedNonGoPeakFitUsers(Int $pageNumber, Int $perPage): LengthAwarePaginator
+    public function getPaginatedNonGoPeakFitUsers(Int $pageNumber, Int $perPage, Int $strictnessLevel): LengthAwarePaginator
     {
-        $usersAddedByTrainer = DB::table('users as u1')
+        $query = DB::table('users as u1')
             ->leftJoin('gpf_biometrics as gb', 'u1.id', '=', 'gb.user_id')
-            ->leftJoin('users as u2', 'u1.trainer_id', '=', 'u2.id')
-            ->leftJoin('gpf_goals as g', 'u1.user_id', '=', 'g.user_id')
+            ->leftJoin('gpf_goals as g', 'u1.id', '=', 'g.user_id')
             ->select(
                 'u1.*',
-                'u2.first_name as trainer_first_name',
-                'u2.last_name as trainer_last_name',
                 'gb.*',
                 'g.*'
             )
             ->where('role', 3)
-            ->whereNotNull('trainer_id')
-            ->orderBy('u1.created_at', 'desc')
+            ->whereNotNull('trainer_id');
+
+        if ($strictnessLevel != 0) {
+            $query = $query->where('gb.strictness_level', $strictnessLevel);
+        }
+
+        $nonGoPeakFitUsers = $query->orderBy('u1.created_at', 'desc')
             ->paginate($perPage, ['*'], 'page', $pageNumber);
 
-        return  $usersAddedByTrainer;
+        return  $nonGoPeakFitUsers;
     }
 
     /**
@@ -68,11 +77,15 @@ class UserRepository
      */
     public function getPaginatedTrainers(Int $pageNumber, Int $perPage): LengthAwarePaginator
     {
-        $trainer = User::where('role', 2)
+        $trainers = User::where('role', 2)
+            ->with(['trainees' => function ($query) {
+                $query->select('id', 'first_name', 'last_name', 'trainer_id');
+            }])
             ->orderBy('created_at', 'desc')
             ->paginate($perPage, ['*'], 'page', $pageNumber);
 
-        return  $trainer;
+
+        return  $trainers;
     }
 
     /**
@@ -101,7 +114,9 @@ class UserRepository
      */
     public function countGoPeakFitTrainees(): int
     {
-        return User::where('role', 3)->where('trainer_id', null)->count();
+        return User::where('role', 3)
+            ->where('trainer_id', null)
+            ->count();
     }
 
     /**
@@ -110,7 +125,9 @@ class UserRepository
      */
     public function countTraineesAddedByTrainer(): int
     {
-        return User::where('role', 2)->count();
+        return User::where('role', 3)
+            ->whereNot('trainer_id', null)
+            ->count();
     }
 
     /**
@@ -119,8 +136,6 @@ class UserRepository
      */
     public function countTrainer(): int
     {
-        return  User::where('role', 3)
-            ->whereNot('trainer_id', null)
-            ->count();
+        return  User::where('role', 2)->count();
     }
 }

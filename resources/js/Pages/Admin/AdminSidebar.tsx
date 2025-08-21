@@ -11,8 +11,8 @@ type SidebarProps = {
 
 const navItems = [
     { name: "GPF Trainees", icon: UserGroupIcon, link: "gpf-trainees" },
+    { name: "Trainees w/ Trainer", icon: UserPlusIcon, link: "non-gpf-trainees" },
     { name: "Trainers", icon: UserCircleIcon, link: "trainers" },
-    { name: "Trainees w/ Trainer", icon: UserPlusIcon, link: "trainees" },
 ];
 
 const AdminSidebar = ({ isOpen, onClose }: SidebarProps) => {

@@ -11,17 +11,27 @@ const LatestUsers = ({ users }: { users: Users[] }) => {
     const [filter, setFilter] = useState<string>('');
     const [activeUser, setActiveUser] = useState<User>({
         id: 0,
-        first_name: '',
-        last_name: '',
-        user_name: '',
-        email:'',
-        email_verified_at: '',
-        created_at: '',
+        first_name: "",
+        last_name: "",
+        user_name: "",
+        email: "",
+        email_verified_at: undefined,
+        created_at: new Date().toISOString(), // sets to current date
         is_active: 0,
         is_promo: 0,
-        trainer_id: 0,
-        role: 0,
+        trainer_id: null,
+        role: null,
         strictness_level: 0,
+        trainer_first_name: "",
+        trainer_last_name: "",
+        current_weight: 0,
+        goal_weight: 0,
+        city: "",
+        state: "",
+        age: 0,
+        equipment_access: "",
+        food_allergies: "",
+        sex: "",
     });
     const [showTrainerInfo, setShowTrainerInfo] = useState<boolean>(false);
 
@@ -115,7 +125,7 @@ const LatestUsers = ({ users }: { users: Users[] }) => {
                 </table>
 
                 <Modal show={showTrainerInfo} maxWidth='5xl' onClose={() => setShowTrainerInfo(false)}>
-                    <TraineeInfo user={activeUser}onClose={() => setShowTrainerInfo(false)} />
+                    <TraineeInfo user={activeUser} onClose={() => setShowTrainerInfo(false)} />
                 </Modal>
             </div>
         </div>

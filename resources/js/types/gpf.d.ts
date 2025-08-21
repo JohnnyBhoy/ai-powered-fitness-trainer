@@ -35,3 +35,23 @@ export type GpfTraineeProps = {
   created_at: string;
   updated_at: string;
 };
+
+export type TrainersProps = {
+  id: number;
+  first_name: string;
+  last_name: string;
+  user_name: string;
+  email: string;
+  email_verified_at: string;
+  trainer_id: number | null;
+  role: number;        // 1 = Admin, 2 = Trainer, 3 = Trainee
+  is_active: number;   // 1 = Active, 0 = Inactive
+  is_promo: number;    // 1 = Promo, 0 = No Promo
+  created_at: string;
+  updated_at: string;
+  trainees : {
+    id: number;
+    first_name: string;
+    last_name: string;
+  }[]
+};

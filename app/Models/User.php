@@ -69,4 +69,10 @@ class User extends Authenticatable
     {
         return $this->hasOne(GpfBiometric::class, 'user_id');
     }
+
+    public function trainees()
+    {
+        return $this->hasMany(User::class, 'trainer_id', 'id')
+            ->select('id', 'first_name', 'last_name', 'trainer_id');
+    }
 }

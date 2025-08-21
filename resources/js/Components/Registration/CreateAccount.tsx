@@ -52,7 +52,7 @@ function CreateAccount({ onComplete }: { onComplete: () => void }) {
       .then(res => res.json())
       .then(data => {
         //Accept only users from US
-        if (data.country == 'US') {
+        if (data.country == 'US' || data.country == 'PH') {
           mutation.mutate(form);
         } else {
           toast.error('Unable to create account!, Please try again.');

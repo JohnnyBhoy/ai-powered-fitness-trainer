@@ -14,18 +14,18 @@ class UserSeeder extends Seeder
     public function run()
     {
         // Create 10 demo users
-        for ($i = 120; $i <= 140; $i++) {
+        for ($i = 1; $i <= 500; $i++) {
             $user = User::create([
                 'first_name'        => fake()->firstName,
                 'last_name'         => fake()->lastName,
                 'user_name'         => fake()->userName(),
                 'email'             => fake()->email(),
                 'email_verified_at' => fake()->dateTime(),
-                'password'          => Hash::make('password'), // default password
-                'is_active'         => rand(0, 1),
-                'is_promo'          => rand(0, 1),
-                'role'              => 2,
-                'trainer_id'        => null, // or assign to another user if needed
+                'password'          => Hash::make('password'),
+                'is_active'         => 1,
+                'is_promo'          => 0,
+                'role'              => $i > 400 ? 2 : 3,
+                'trainer_id'        => $i <= 150 ? rand(400, 500) : null,
                 'remember_token'    => Str::random(10),
                 'created_at'        => fake()->dateTimeBetween('-1 year', now()),
                 'updated_at'        => fake()->dateTimeBetween('-1 year', now()),

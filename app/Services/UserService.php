@@ -19,12 +19,13 @@ class UserService
      * Summary of getPaginatedGoPeakFitUsers
      * @param  int $pageNumber Page number in table
      * @param  int $perPage     Rows to be shown per page in table
+     * @param  int $strictnessLevel     Chill, Strict
      */
-    public function getPaginateGoPeakFitUsers(Int $pageNumber, Int $perPage): LengthAwarePaginator
+    public function getPaginateGoPeakFitUsers(Int $pageNumber, Int $perPage, Int $strictnessLevel): LengthAwarePaginator
     {
 
         try {
-            return $this->userRepository->getPaginatedGoPeakFitUsers($pageNumber, $perPage);
+            return $this->userRepository->getPaginatedGoPeakFitUsers($pageNumber, $perPage, $strictnessLevel);
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -34,11 +35,12 @@ class UserService
      * Paginated lists of Users added by trainer
      * @param  int $pageNumber Page number in table
      * @param  int $perPage     Rows to be shown per page in table
+     * @param  int $strictnessLevel     Chill, Strict
      */
-    public function getPaginateNonGoPeakFitUsers(Int $pageNumber, Int $perPage): LengthAwarePaginator
+    public function getPaginateNonGoPeakFitUsers(Int $pageNumber, Int $perPage, Int $strictnessLevel): LengthAwarePaginator
     {
         try {
-            return $this->userRepository->getPaginatedNonGoPeakFitUsers($pageNumber, $perPage);
+            return $this->userRepository->getPaginatedNonGoPeakFitUsers($pageNumber, $perPage, $strictnessLevel);
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -70,7 +72,7 @@ class UserService
         }
     }
 
-     /**
+    /**
      * Count of the GoPeakFit Trainees
      * @return int
      */
@@ -83,7 +85,7 @@ class UserService
         }
     }
 
-     /**
+    /**
      * Count of Trainees Added By Trainer
      * @return int
      */
@@ -96,7 +98,7 @@ class UserService
         }
     }
 
-     /**
+    /**
      * Count of the Trainer
      * @return int
      */

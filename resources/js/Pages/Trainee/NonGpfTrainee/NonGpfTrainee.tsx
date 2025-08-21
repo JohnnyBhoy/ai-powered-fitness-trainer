@@ -46,8 +46,7 @@ const TABS = [
 ];
 
 
-const GpfTrainee = ({ data }: { data: any }) => {
-
+const NonGpfTrainee = ({ data }: { data: any }) => {
   //Local states
   const [strictnessLevel, setStrictnessLevel] = useState<number>(0);
   const [perPage, setPerPage] = useState<number>(data?.per_page);
@@ -76,8 +75,8 @@ const GpfTrainee = ({ data }: { data: any }) => {
 
   //Fetch new set of data based on filter
   const newData = async () => {
-    const GET_GPF_TRAINEES = import.meta.env.VITE_GET_GPF_TRAINEES;
-    const response = await axios.get(GET_GPF_TRAINEES, {
+    const GET_NON_GPF_TRAINEES = import.meta.env.VITE_GET_NON_GPF_TRAINEES;
+    const response = await axios.get(GET_NON_GPF_TRAINEES, {
       params: {
         per_page: perPage,
         page_number: pageNumber,
@@ -118,10 +117,10 @@ const GpfTrainee = ({ data }: { data: any }) => {
             <div className="mb-3 flex items-center justify-between gap-6">
               <div>
                 <Typography variant="h5" color="blue-gray">
-                  GoPeakFit Trainees list
+                  Non GoPeakFit Trainees list
                 </Typography>
                 <Typography color="gray" className="mt-1 font-normal">
-                  See information about all members under GoPeakFit
+                  See information about all members under Trainer
                 </Typography>
               </div>
               <div className="flex flex-col gap-2 sm:flex-row">
@@ -170,7 +169,7 @@ const GpfTrainee = ({ data }: { data: any }) => {
               <div className="w-full md:w-72">
                 <Input
                   value={filter}
-                  onChange={(e: any) => setFilter(e.target.value)}
+                  onChange={(e:any) => setFilter(e.target.value)}
                   label="Search"
                   icon={<MagnifyingGlassIcon className="h-5 w-5" />}
                 />
@@ -321,4 +320,4 @@ const GpfTrainee = ({ data }: { data: any }) => {
   )
 }
 
-export default GpfTrainee
+export default NonGpfTrainee
