@@ -1,10 +1,9 @@
-import React from 'react'
-import { useForm } from 'react-hook-form'
+import { useUserStore } from '@/stores/useUserStore'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
-import { useUserStore } from '@/stores/useUserStore'
+import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { ArrowClockwise } from 'react-bootstrap-icons'
+import Loading from '../Loading'
 
 type BiometricsFormData = {
     city: string
@@ -45,15 +44,18 @@ function LocationAndBiometrics({ onComplete }: { onComplete: () => void }) {
         },
     })
 
-    const onSubmit = (data: BiometricsFormData) => {
+    const onSubmit = async (data: BiometricsFormData) => {
+        data = { ...data, user_id: userId };
 
-        if (submitBtn) {
-            submitBtn.classList.add('disabled');
-            submitBtn.disabled = true;
+        try {
+            if (submitBtn) {
+                submitBtn.classList.add('disabled');
+                submitBtn.disabled = true;
+            }
+            mutation.mutate(data);
+        } catch (error) {
+            toast.error('Something went wrong, please try again.');
         }
-
-        data = { ...data, user_id: userId }
-        mutation.mutate(data)
     }
 
     return (
@@ -232,12 +234,10 @@ function LocationAndBiometrics({ onComplete }: { onComplete: () => void }) {
                             id="submitBtn"
                             className="w-full bg-[#23B5D3] text-white py-2 rounded-md font-semibold hover:bg-[#1b9bb6] transition mt-6 flex gap-1 place-items-center items-center content-center justify-center"
                         >
-                            {mutation.isPending ? (
-                                <>
-                                    <ArrowClockwise className='animate-spin'/>
-                                    Submitting...
-                                </>
-                            ) : 'CONTINUE'}
+                            {!mutation.isPending
+                                ? 'CONTINUE'
+                                : <Loading text="Please wait, saving location and biomertics." />
+                            }
                         </button>
 
                         {mutation.isSuccess && (

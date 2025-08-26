@@ -3,7 +3,7 @@ import { Link } from '@inertiajs/react'
 
 const Stats = ({ cards }: { cards: Cards[] }) => {
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-3 lg:p-6 p-2 lg:gap-6 gap-2">
+        <div className="grid grid-cols-1 lg:grid-cols-3 lg:gap-6 gap-2">
             {cards.map((e:Cards) => (
                 <Link href={e.link}>
                      <div

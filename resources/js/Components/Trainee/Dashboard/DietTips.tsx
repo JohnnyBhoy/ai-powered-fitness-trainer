@@ -1,9 +1,13 @@
 import React from 'react'
 
-const DietTips = () => {
+interface Props {
+  className?: string;
+}
+
+
+const DietTips : React.FC<Props> = ({ className }) => {
     return (
-        <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-lg font-semibold mb-2">AI Diet Recommendations</h2>
+         <div className={className}>
             <ul className="list-disc list-inside text-gray-700 space-y-1">
                 <li>Increase protein intake</li>
                 <li>Drink 3L of water daily</li>

@@ -18,7 +18,7 @@ export default function Authenticated({
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
-    const { post } = useForm()
+    const { post } = useForm();
     const trialEnds = new Date('2025-05-20'); // trial ends in 5 days
     const today = new Date();
     const remainingDays = Math.ceil((trialEnds.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
@@ -27,9 +27,6 @@ export default function Authenticated({
     const role = getRole();
 
     console.log('role:', role);
-
-    const [showingNavigationDropdown, setShowingNavigationDropdown] =
-        useState(false);
 
     // Close dropdown if clicked outside
     useEffect(() => {
@@ -82,12 +79,8 @@ export default function Authenticated({
                         </button>
 
                         {/* Header Title */}
-                        <div className="flex items-center space-x-4">
-                            <h1 className="text-xl font-semibold text-gray-700">
-                                {role == 1 ? ''
-                                    : capitalizeFirstLetter(page.url?.replace('/', ''))}
-                            </h1>
-                            {role == 1 ? null :
+                        <div className="hidden lg:flex items-center space-x-4">
+                            {role !=3 ? null :
                                 subscriptions?.includes('premium') ?
                                     null : <FreeTrialBadge />}
                         </div>

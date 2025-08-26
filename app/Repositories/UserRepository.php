@@ -21,10 +21,12 @@ class UserRepository
         $query = DB::table('users as u1')
             ->leftJoin('gpf_biometrics as gb', 'u1.id', '=', 'gb.user_id')
             ->leftJoin('gpf_goals as g', 'u1.id', '=', 'g.user_id')
+            ->leftJoin('gpf_messages as gm', 'u1.id', '=', 'gm.user_id')
             ->select(
                 'u1.*',
                 'gb.*',
-                'g.*'
+                'g.*',
+                'gm.conversations',
             )
             ->where('role', 3)
             ->whereNull('trainer_id');
@@ -34,7 +36,7 @@ class UserRepository
         }
 
         $goPeakFitUsers = $query->orderBy('u1.created_at', 'desc')
-            ->paginate($perPage, ['*'], 'page', $pageNumber);
+            ->paginate($perPage, ['*'], 'page', page: $pageNumber);
 
         return  $goPeakFitUsers;
     }

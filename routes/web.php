@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Api\PromoController;
 use App\Http\Controllers\TraineeController;
+use App\Http\Controllers\TrainerController;
 use App\Http\Controllers\WorkoutTrainerController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -68,6 +69,12 @@ Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.logi
 //Routing for GoPeakFit Trainees
 Route::middleware(['auth', 'role:3'])->prefix('/trainee')->group(function () {
     Route::get('/dashboard', [TraineeController::class, 'index'])->name('dashboard');
+});
+
+//Routing for GoPeakFit Trainees
+Route::middleware(['auth', 'role:2'])->prefix('/trainer')->group(function () {
+    Route::get('/dashboard', [TrainerController::class, 'index'])->name('trainer.dashboard');
+    Route::get('/trainees', [TrainerController::class, 'show'])->name('trainer.trainees');
 });
 
 

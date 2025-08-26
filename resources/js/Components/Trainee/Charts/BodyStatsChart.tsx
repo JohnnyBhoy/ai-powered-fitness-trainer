@@ -1,26 +1,73 @@
-import { Radar } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, Title, Tooltip, Legend } from 'chart.js';
+import {
+  ArcElement,
+  CategoryScale,
+  Chart as ChartJS,
+  Legend,
+  LinearScale,
+  Title,
+  Tooltip,
+  RadialLinearScale, // ✅ Correct scale for radar charts
+} from "chart.js";
+import { Radar } from "react-chartjs-2";
+import React from "react";
 
-ChartJS.register(ArcElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
+ChartJS.register(
+  ArcElement,
+  CategoryScale,
+  LinearScale,
+  Title,
+  Tooltip,
+  Legend,
+  RadialLinearScale
+);
 
-const BodyStatsChart = () => {
+interface BodyStatsChartProps {
+  className?: string;
+}
+
+const BodyStatsChart: React.FC<BodyStatsChartProps> = ({ className }) => {
   const data = {
-    labels: ['Weight (kg)', 'Body Fat (%)', 'Muscle Mass (%)', 'Water Percentage (%)'], // Example metrics
+    labels: ["Arms", "Legs", "Chest", "Back", "Core", "Cardio"],
     datasets: [
       {
-        label: 'Body Stats',
-        data: [75, 15, 35, 65], // Example body stats data
-        backgroundColor: 'rgba(66, 165, 245, 0.2)',
-        borderColor: '#42a5f5',
+        label: "Current Stats",
+        data: [8, 7, 6, 7, 5, 8],
+        backgroundColor: "rgba(54, 162, 235, 0.2)",
+        borderColor: "rgba(54, 162, 235, 1)",
         borderWidth: 2,
+        pointBackgroundColor: "rgba(54, 162, 235, 1)",
       },
     ],
   };
 
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      r: {
+        angleLines: {
+          color: "#e5e7eb", // Tailwind gray-200
+        },
+        grid: {
+          color: "#e5e7eb",
+        },
+        pointLabels: {
+          color: "#374151", // Tailwind gray-700
+        },
+        suggestedMin: 0,
+        suggestedMax: 10,
+      },
+    },
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+  };
+
   return (
-    <div className="bg-white p-6 rounded-lg shadow">
-      <h2 className="text-lg font-semibold mb-4">Body Stats</h2>
-      <Radar data={data} />
+    <div className={className}>
+      <Radar data={data} options={options} />
     </div>
   );
 };

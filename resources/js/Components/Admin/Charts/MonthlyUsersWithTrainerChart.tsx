@@ -28,10 +28,7 @@ const MonthlyUsersWithoutTrainerChart = ({trainees} : {trainees: number[]}) => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow">
-      <h2 className="text-lg font-semibold mb-4">GoPeakFit Trainees</h2>
       <Line data={data} />
-    </div>
   );
 };
 

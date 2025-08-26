@@ -34,6 +34,9 @@ export type GpfTraineeProps = {
 
   created_at: string;
   updated_at: string;
+
+  //Messages b/w ai and trainee
+  conversations: string;
 };
 
 export type TrainersProps = {

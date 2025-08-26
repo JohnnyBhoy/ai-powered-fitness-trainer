@@ -5,6 +5,7 @@ import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import { useUserStore } from '@/stores/useUserStore'
 import { toast } from 'sonner'
+import Loading from '../Loading';
 
 interface RegisterFormData {
   firstName: string
@@ -45,20 +46,24 @@ function CreateAccount({ onComplete }: { onComplete: () => void }) {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = (e: React.FormEvent) => {    e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
     //Browser permission, user needs to accept to proceed
-    fetch('https://ipapi.co/json/')
-      .then(res => res.json())
-      .then(data => {
-        //Accept only users from US
-        if (data.country == 'US' || data.country == 'PH') {
-          mutation.mutate(form);
-        } else {
-          toast.error('Unable to create account!, Please try again.');
-        }
-      })
-      .catch(err => console.error("Location lookup failed:", err));
+    try {
+      await fetch('https://ipapi.co/json/')
+        .then(res => res.json())
+        .then(data => {
+          //Accept only users from US
+          if (data.country == 'US' || data.country == 'PH') {
+            mutation.mutate(form);
+          } else {
+            toast.error('Unable to create account!, Please try again.');
+          }
+        })
+    } catch (error) {
+      toast.error('Something went wrong saving you data.');
+    }
   }
 
   return (
@@ -176,7 +181,10 @@ function CreateAccount({ onComplete }: { onComplete: () => void }) {
               disabled={mutation.isPending}
               className="w-full bg-[#23B5D3] text-white py-2 rounded-md font-semibold hover:bg-[#1b9bb6] transition"
             >
-              {mutation.isPending ? 'Submitting...' : 'CONTINUE'}
+              {!mutation.isPending
+                ? 'CONTINUE'
+                : <Loading text="Please wait, were saving your account" />
+              }
             </button>
           </form>
         </div>

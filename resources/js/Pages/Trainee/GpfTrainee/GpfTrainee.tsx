@@ -70,6 +70,8 @@ const GpfTrainee = ({ data }: { data: any }) => {
     setTraineeData(trainee);
   }
 
+  console.log(traineeDataArray);
+
   const TABLE_HEAD = ["Name / Email", "Address", "Phone Number", "Age", "Fitness Level", "Strictness Level", "Action"];
 
   const TABLE_ROWS = traineeDataArray;
@@ -113,7 +115,7 @@ const GpfTrainee = ({ data }: { data: any }) => {
       <Head title="GoPeakFit Trainees" />
 
       <div className="bg-slate-300 p-6">
-        <Card className="h-full w-full">
+        <Card className={`h-full w-full ${open ? 'hidden' : ''}`}>
           <CardHeader floated={false} shadow={false} className="rounded-none">
             <div className="mb-3 flex items-center justify-between gap-6">
               <div>
@@ -183,7 +185,7 @@ const GpfTrainee = ({ data }: { data: any }) => {
                 <tr>
                   {TABLE_HEAD.map((head, index) => (
                     <th
-                      key={head}
+                      key={index}
                       className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50"
                     >
                       <Typography
@@ -217,7 +219,7 @@ const GpfTrainee = ({ data }: { data: any }) => {
                         : "py-2 px-4 border-b border-blue-gray-50";
 
                       return (
-                        <tr key={trainee.id}>
+                        <tr key={index}>
                           <td className={classes}>
                             <div className="flex flex-col">
                               <Typography
@@ -255,7 +257,7 @@ const GpfTrainee = ({ data }: { data: any }) => {
                                 color="blue-gray"
                                 className="font-normal"
                               >
-                                {trainee.phone_number}
+                                {trainee.phone_number ?? "Not specify"}
                               </Typography>
                             </div>
                           </td>
@@ -267,7 +269,7 @@ const GpfTrainee = ({ data }: { data: any }) => {
                                 color="blue-gray"
                                 className="font-normal"
                               >
-                                {trainee.age}
+                                {trainee.age ?? 0}
                               </Typography>
                             </div>
                           </td>
@@ -277,7 +279,7 @@ const GpfTrainee = ({ data }: { data: any }) => {
                               <Chip
                                 variant="ghost"
                                 size="sm"
-                                value={trainee.fitness_level}
+                                value={trainee.fitness_level ?? 'Not specify'}
                                 color={"green"}
                               />
                             </div>
@@ -288,7 +290,7 @@ const GpfTrainee = ({ data }: { data: any }) => {
                               <Chip
                                 variant="ghost"
                                 size="sm"
-                                value={getStrictnessLevel(trainee.strictness_level)}
+                                value={getStrictnessLevel(trainee.strictness_level) ?? 'Chill'}
                                 color={"blue-gray"}
                               />
                             </div>
@@ -309,13 +311,14 @@ const GpfTrainee = ({ data }: { data: any }) => {
           </CardBody>
         </Card>
 
-        <Update
+        {open && <Update
           open={open}
           handleOpen={handleOpen}
           traineeData={traineeData}
           setReload={setReload}
           reload={reload}
-        />
+        />}
+
       </div>
     </Authenticated >
   )

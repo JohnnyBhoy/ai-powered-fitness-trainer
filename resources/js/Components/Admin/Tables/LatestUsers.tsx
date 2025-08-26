@@ -46,7 +46,7 @@ const LatestUsers = ({ users }: { users: Users[] }) => {
 
     return (
 
-        <div className="lg:p-6 p-3 rounded-lg">
+        <div className="rounded-lg">
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg bg-white border">
                 <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white p-6">
 
@@ -88,6 +88,7 @@ const LatestUsers = ({ users }: { users: Users[] }) => {
                             </tr>
                         ) : (
                             users
+                                ?.slice(0, 5)
                                 ?.filter((user) => user.first_name.includes(filter)
                                     || user.last_name?.includes(filter)
                                     || user.trainer_first_name?.includes(filter)

@@ -12,7 +12,11 @@ import {
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Title, Tooltip, Legend);
 
-const WorkoutProgressChart = () => {
+interface Props {
+  className?: string;
+}
+
+const WorkoutProgressChart : React.FC<Props> = ({ className }) => {
   const data = {
     labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'], // Example labels (weeks)
     datasets: [
@@ -28,8 +32,7 @@ const WorkoutProgressChart = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow">
-      <h2 className="text-lg font-semibold mb-4">Workout Progress</h2>
+    <div className={className}>
       <Line data={data} />
     </div>
   );

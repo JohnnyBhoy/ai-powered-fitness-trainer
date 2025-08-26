@@ -3,7 +3,11 @@ import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Title, Toolti
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
 
-const DietProgressChart = () => {
+interface Props {
+  className?: string;
+}
+
+const DietProgressChart  : React.FC<Props> = ({ className }) => {
   const data = {
     labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5'], // Example days
     datasets: [
@@ -21,8 +25,7 @@ const DietProgressChart = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow">
-      <h2 className="text-lg font-semibold mb-4">Diet Progress</h2>
+    <div className={className}>
       <Bar data={data} />
     </div>
   );

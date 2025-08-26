@@ -9,12 +9,8 @@ type InputProps = {
 
 const MtTextInput = ({name, data, type ="text"} : InputProps) => {
     return (
-        <div className="w-full">
-            <Typography
-                variant="small"
-                color="blue-gray"
-                className="mb-0 text-left font-medium"
-            >
+         <div className="mb-1 flex flex-col gap-6">
+             <Typography variant="h6" color="blue-gray" className="-mb-3">
                 {name}
             </Typography>
             <Input
@@ -25,7 +21,7 @@ const MtTextInput = ({name, data, type ="text"} : InputProps) => {
                 onChange={() => {}}
                 placeholder="Name of Trainee"
                 name="name"
-                className="focus:!border-t-gray-900 border-t-gray-500"
+                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
                 containerProps={{
                     className: "!min-w-full",
                 }}

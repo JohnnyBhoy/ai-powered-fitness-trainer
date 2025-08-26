@@ -3,7 +3,11 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const CaloriesChart = () => {
+interface Props {
+  className?: string;
+}
+
+const CaloriesChart: React.FC<Props> = ({ className }) => {
   const data = {
     labels: ['Calories Consumed', 'Calories Burned'],
     datasets: [
@@ -15,8 +19,7 @@ const CaloriesChart = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow">
-      <h2 className="text-lg font-semibold mb-4">Calories Burned vs Consumed</h2>
+     <div className={className}>
       <Doughnut data={data} />
     </div>
   );

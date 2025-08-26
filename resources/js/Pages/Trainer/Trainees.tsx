@@ -4,27 +4,26 @@ import { GpfTraineeProps } from '@/types/gpf';
 import { TraineeData } from '@/utils/data/trainee/gpf/trainee';
 import { getStrictnessLevel } from '@/utils/functions/helperFunctions';
 import {
-  ChevronUpDownIcon,
-  MagnifyingGlassIcon,
+    ChevronUpDownIcon,
+    MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 import { PencilIcon } from "@heroicons/react/24/solid";
 import { Head } from '@inertiajs/react';
 import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Chip,
-  IconButton,
-  Input,
-  Tab,
-  Tabs,
-  TabsHeader,
-  Tooltip,
-  Typography
+    Button,
+    Card,
+    CardBody,
+    CardHeader,
+    Chip,
+    IconButton,
+    Input,
+    Tab,
+    Tabs,
+    TabsHeader,
+    Tooltip,
+    Typography
 } from "@material-tailwind/react";
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const TABS = [
   {
@@ -46,14 +45,14 @@ const TABS = [
 ];
 
 
-const NonGpfTrainee = ({ data }: { data: any }) => {
+const Trainees = ({ trainees }: { trainees: any }) => {
   //Local states
   const [strictnessLevel, setStrictnessLevel] = useState<number>(0);
-  const [perPage, setPerPage] = useState<number>(data?.per_page);
-  const [pageNumber, setPageNumber] = useState<number>(data?.current_page);
+  const [perPage, setPerPage] = useState<number>(10);
+  const [pageNumber, setPageNumber] = useState<number>(1);
   const [open, setOpen] = useState<boolean>(false);
   const [traineeData, setTraineeData] = useState<GpfTraineeProps>(TraineeData);
-  const [traineeDataArray, setTraineeDataArray] = useState<GpfTraineeProps[]>(data?.data);
+  const [traineeDataArray, setTraineeDataArray] = useState<GpfTraineeProps[]>([]);
   const [filter, setFilter] = useState<string>('');
   const [reload, setReload] = useState<boolean>(false);
   const [page, setPage] = useState({
@@ -73,54 +72,18 @@ const NonGpfTrainee = ({ data }: { data: any }) => {
 
   const TABLE_ROWS = traineeDataArray;
 
-  //Fetch new set of data based on filter
-  const newData = async () => {
-    const GET_NON_GPF_TRAINEES = import.meta.env.VITE_GET_NON_GPF_TRAINEES;
-    const response = await axios.get(GET_NON_GPF_TRAINEES, {
-      params: {
-        per_page: perPage,
-        page_number: pageNumber,
-        strictness_level: strictnessLevel,
-      }
-    });
-
-    if (response?.data?.success) {
-      const data = response?.data?.data;
-
-      setTraineeDataArray(data?.data);
-      setPerPage(data?.per_page);
-      setPageNumber(data?.current_page);
-
-      setPage({
-        ...page, from: data?.from,
-        to: data?.to,
-        total: data?.total,
-        currentPage: data.current_page,
-        lastPage: data.last_page,
-      })
-    }
-  }
-
-  //Get new data everytime filter strictnes level, and pagination change
-  useEffect(() => {
-    newData();
-  }, [perPage, pageNumber, strictnessLevel, reload]);
-
   return (
     <Authenticated>
 
       <Head title="GoPeakFit Trainees" />
 
       <div className="bg-slate-300 p-6">
-        <Card className={`h-full w-full ${open ? 'hidden' : ''}`}>
+        <Card className="h-full w-full">
           <CardHeader floated={false} shadow={false} className="rounded-none">
             <div className="mb-3 flex items-center justify-between gap-6">
               <div>
                 <Typography variant="h5" color="blue-gray">
-                  Non GoPeakFit Trainees list
-                </Typography>
-                <Typography color="gray" className="mt-1 font-normal">
-                  See information about all members under Trainer
+                 My Trainees
                 </Typography>
               </div>
               <div className="flex flex-col gap-2 sm:flex-row">
@@ -159,7 +122,7 @@ const NonGpfTrainee = ({ data }: { data: any }) => {
 
 
               <Typography variant="small" color="blue-gray" className="font-normal">
-                Showing {page.from}-{page.to} of {page.total} Trainees
+                Showing {page.from}-{page.to} of {trainees?.length} Trainees
               </Typography>
 
               <Typography variant="small" color="blue-gray" className="font-normal">
@@ -169,7 +132,7 @@ const NonGpfTrainee = ({ data }: { data: any }) => {
               <div className="w-full md:w-72">
                 <Input
                   value={filter}
-                  onChange={(e: any) => setFilter(e.target.value)}
+                  onChange={(e:any) => setFilter(e.target.value)}
                   label="Search"
                   icon={<MagnifyingGlassIcon className="h-5 w-5" />}
                 />
@@ -200,7 +163,7 @@ const NonGpfTrainee = ({ data }: { data: any }) => {
                 </tr>
               </thead>
               <tbody>
-                {TABLE_ROWS
+                {trainees
                   ?.filter((trainee: GpfTraineeProps) => trainee?.first_name?.includes(filter)
                     || trainee?.email?.includes(filter)
                     || trainee?.last_name?.includes(filter)
@@ -308,16 +271,16 @@ const NonGpfTrainee = ({ data }: { data: any }) => {
           </CardBody>
         </Card>
 
-        {open && <Update
+        <Update
           open={open}
           handleOpen={handleOpen}
           traineeData={traineeData}
           setReload={setReload}
           reload={reload}
-        />}
+        />
       </div>
     </Authenticated >
   )
 }
 
-export default NonGpfTrainee
+export default Trainees

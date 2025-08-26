@@ -1,5 +1,5 @@
 import { GpfTraineeProps } from "@/types/gpf";
-import { AcademicCapIcon, ChatBubbleBottomCenterIcon, ComputerDesktopIcon, FingerPrintIcon, FolderArrowDownIcon, ListBulletIcon, PencilSquareIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import { AcademicCapIcon, ChatBubbleBottomCenterIcon, FingerPrintIcon, FolderArrowDownIcon, ListBulletIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import {
     Tab,
     TabPanel,
@@ -15,9 +15,6 @@ import Goals from "../../Forms/Goals";
 import Messages from "../../Forms/Messages";
 import Program from "../../Forms/Program";
 import Nutrition from "../../Forms/Nutrition";
-import Prompt from "../../Forms/Prompt";
-import { Apple, MinecartLoaded } from "react-bootstrap-icons";
-import { Brain } from "lucide-react";
 
 
 type UpdateProps = {
@@ -67,13 +64,13 @@ export default function Update({ open, handleOpen, traineeData, setReload, reloa
             label: "Nutrition",
             value: "nutrition",
             desc: <Nutrition data={traineeData} />,
-            icon: PencilSquareIcon,
+            icon: FolderArrowDownIcon,
         },
         {
             label: "AI Prompt",
             value: "prompt",
             desc: <Prompt data={traineeData} />,
-            icon: Brain,
+            icon: FolderArrowDownIcon,
         },
     ];
 

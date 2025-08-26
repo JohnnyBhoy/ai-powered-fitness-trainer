@@ -1,10 +1,10 @@
-import { useForm } from 'react-hook-form'
+import { useUserStore } from '@/stores/useUserStore'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
-import { useUserStore } from '@/stores/useUserStore'
-import { toast } from 'sonner'
 import { useRef, useState } from 'react'
-import { ArrowClockwise } from 'react-bootstrap-icons'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import Loading from '../Loading'
 
 type PhoneVerificationData = {
     user_id: number | null
@@ -77,29 +77,37 @@ function PhoneVerification({ onComplete }: { onComplete: () => void }) {
     })
 
     // Submit send code
-    const onSubmit = (data: PhoneVerificationData) => {
+    const onSubmit = async (data: PhoneVerificationData) => {
         const submitBtn = document.getElementById('submitBtn') as HTMLButtonElement;
 
-        if (submitBtn) {
-            submitBtn.classList.add('disabled');
-            submitBtn.disabled = true;
-        }
+        try {
+            if (submitBtn) {
+                submitBtn.classList.add('disabled');
+                submitBtn.disabled = true;
+            }
 
-        data = { ...data, user_id: userId, otp: otpCode }
-        mutation.mutate(data)
+            data = { ...data, user_id: userId, otp: otpCode }
+            mutation.mutate(data)
+        } catch (error) {
+            toast.error('Semething went wrong, please try again.')
+        }
     }
 
     // Submit resend code
-    const onSubmitResend = (data: ResendPhoneVerificationData) => {
+    const onSubmitResend = async (data: ResendPhoneVerificationData) => {
         const submitResendBtn = document.getElementById('submitResendBtn') as HTMLButtonElement;
 
-        if (submitResendBtn) {
-            submitResendBtn.classList.add('disabled');
-            submitResendBtn.disabled = true;
-        }
+        try {
+            if (submitResendBtn) {
+                submitResendBtn.classList.add('disabled');
+                submitResendBtn.disabled = true;
+            }
 
-        data = { ...data, user_id: userId }
-        mutationResend.mutate(data)
+            data = { ...data, user_id: userId }
+            mutationResend.mutate(data)
+        } catch (error) {
+            toast.error('Something went wrong, please try again.')
+        }
     }
 
     const length = 6;
@@ -123,7 +131,7 @@ function PhoneVerification({ onComplete }: { onComplete: () => void }) {
 
     return (
         <div className="flex flex-col items-center gap-6 mt-[10%]">
-            <h4 className="text-lg font-semibold text-gray-800">Phone number verification, enter OTP we sent you in your phone.</h4>
+            <h4 className="text-lg font-semibold text-gray-800">Please enter OTP we sent to your phone number</h4>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 flex flex-col items-center gap-6 mt-10">
                 <div className="flex gap-3">
                     {Array.from({ length }).map((_, i) => (
@@ -145,12 +153,10 @@ function PhoneVerification({ onComplete }: { onComplete: () => void }) {
                     id="submitBtn"
                     className="w-full bg-[#23B5D3] text-white py-2 rounded-md font-semibold hover:bg-[#1b9bb6] transition mt-6 flex gap-1 place-items-center items-center content-center justify-center"
                 >
-                    {mutation.isPending ? (
-                        <>
-                            <ArrowClockwise className='animate-spin' />
-                            Verifying...
-                        </>
-                    ) : 'Verify'}
+                    {!mutation.isPending
+                        ? 'Verify'
+                        : <Loading text="Please wait, were verifying your phone number." />
+                    }
                 </button>
 
                 {mutation.isSuccess && (

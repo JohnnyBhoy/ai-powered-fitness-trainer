@@ -8,7 +8,8 @@ import RegHeader from '@/Components/RegistrationHeader';
 import SecondaryButton from '@/Components/SecondaryButton';
 import TextInput from '@/Components/TextInput';
 import { Link, useForm } from '@inertiajs/react';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useState } from 'react';
+import { Eye, EyeSlashFill } from 'react-bootstrap-icons';
 import { Toaster } from 'sonner';
 
 export default function Login({
@@ -18,6 +19,7 @@ export default function Login({
     status?: string;
     canResetPassword: boolean;
 }) {
+    const [showPassword, setShowPassword] = useState<boolean>(false);
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -62,9 +64,9 @@ export default function Login({
                                 />
 
                                 {/* Rating Image */}
-                                <img 
-                                    src="/images/main-subimg2.png" 
-                                    alt="Rating Images" 
+                                <img
+                                    src="/images/main-subimg2.png"
+                                    alt="Rating Images"
                                     className="rounded-xl h-[60px] w-[160px] md:h-[80px] md:w-[180px] absolute bottom-0 md:right-26 transform translate-x-[50px] translate-y-[-10px]"
                                 />
                             </div>
@@ -95,12 +97,24 @@ export default function Login({
                                     <InputError message={errors.email} className="mt-2" />
                                 </div>
 
-                                <div className="mt-4">
+                                <div className="mt-4 relative">
                                     <InputLabel htmlFor="password" value="Password" />
+                                    {showPassword ? (
+                                        <EyeSlashFill
+                                            className='absolute ml-[25.5rem] mt-4'
+                                            size={20}
+                                            onClick={() => setShowPassword(false)}
+                                        />
+                                    ) : (
+                                        <Eye className='absolute ml-[25.5rem] mt-4'
+                                            size={20}
+                                            onClick={() => setShowPassword(true)}
+                                        />
+                                    )}
 
                                     <TextInput
                                         id="password"
-                                        type="password"
+                                        type={showPassword ? "text" : "password"}
                                         name="password"
                                         value={data.password}
                                         className="mt-1 block w-full"

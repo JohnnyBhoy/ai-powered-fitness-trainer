@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import Loading from "../Loading";
 
 // Normalize phone number (adding country code +1 for US)
 const normalizeUSPhone = (input: string): string => {
@@ -31,6 +32,7 @@ export default function ConsentForm({ onComplete }: { onComplete: () => void }) 
   const [status, setStatus] = useState("");
   const [formatted, setFormatted] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const formatPhone = (raw: string): string => {
     let digits = raw.replace(/\D/g, "");
@@ -53,19 +55,20 @@ export default function ConsentForm({ onComplete }: { onComplete: () => void }) 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus("Submitting...");
+    setLoading(true);
 
     try {
       await axios.post("/api/consent", { phone, consent });
-      setStatus("✅ Consent recorded. Thank you!");
       onComplete();
     } catch (error: any) {
       setStatus("❌ Submission failed: " + (error.response?.data?.message ?? "Unknown error"));
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleBlur = () => {
-     const normalized = normalizeUSPhone(phone); // Normalize the input number
+    const normalized = normalizeUSPhone(phone); // Normalize the input number
 
     if (!normalized) {
       setError("Please enter a valid U.S. phone number (e.g., 4155551234).");
@@ -83,7 +86,7 @@ export default function ConsentForm({ onComplete }: { onComplete: () => void }) 
     setError("");
   };
 
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Only allow numbers (and prevent entering non-numeric characters)
     const value = e.target.value.replace(/\D/g, "");
@@ -99,7 +102,7 @@ export default function ConsentForm({ onComplete }: { onComplete: () => void }) 
         <h2 className="text-xl font-semibold mb-4 text-center">GoPeakFit SMS Consent</h2>
 
         <div className="max-w-md mx-auto p-4">
-          <label className="block text-sm font-medium mb-1">Phone Number</label>
+          <label className="block text-sm font-medium mb-1">Please enter your phone number</label>
           <input
             type="tel"
             required
@@ -132,10 +135,11 @@ export default function ConsentForm({ onComplete }: { onComplete: () => void }) 
           type="submit"
           className="w-full bg-[#23B5D3] text-white py-2 rounded hover:bg-blue-700 transition"
         >
-          Submit Consent
+          {!loading
+            ? 'Submit Consent'
+            : <Loading text="Sending consent, please check your phone." />
+          }
         </button>
-
-        {status && <p className="mt-4 text-sm text-center">{status}</p>}
       </form>
     </div>
   );

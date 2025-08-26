@@ -1,9 +1,9 @@
 import { useUserStore } from '@/stores/useUserStore'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
-import { ArrowClockwise } from 'react-bootstrap-icons'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+import Loading from '../Loading'
 
 
 type GoalFormData = {
@@ -17,12 +17,14 @@ type GoalFormData = {
 function TheGoal({ onComplete }: { onComplete: () => void }) {
   const { userId } = useUserStore();
 
+  //Data form preparation
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<GoalFormData>()
 
+  //Save Goals Mutation
   const mutation = useMutation({
     mutationFn: (data: GoalFormData) => axios.post('/goals', data),
     onSuccess: (res) => {
@@ -34,9 +36,15 @@ function TheGoal({ onComplete }: { onComplete: () => void }) {
     },
   })
 
-  const onSubmit = (data: GoalFormData) => {
-    data = { ...data, user_id: userId }
-    mutation.mutate(data)
+  //Save goals to db (useful in dynamic prompting)
+  const onSubmit = async (data: GoalFormData) => {
+
+    try {
+      data = { ...data, user_id: userId }
+      mutation.mutate(data)
+    } catch (error) {
+      toast.error('Something went wrong, please try again');
+    }
   }
 
 
@@ -99,12 +107,10 @@ function TheGoal({ onComplete }: { onComplete: () => void }) {
             id="submitBtn"
             className="w-auto px-6 bg-[#23B5D3] text-white py-2 rounded-md font-semibold hover:bg-[#1b9bb6] transition mt-6 flex gap-1 place-items-center items-center content-center justify-center"
           >
-            {mutation.isPending ? (
-              <>
-                <ArrowClockwise className='animate-spin' />
-                Saving Goals...
-              </>
-            ) : 'CONTINUE'}
+            {!mutation.isPending
+              ? 'CONTINUE'
+              : <Loading text="Please wait while were saving your goals." />
+            }
           </button>
         </div>
 

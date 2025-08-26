@@ -34,4 +34,6 @@ export const TraineeData = {
 
     created_at: "",
     updated_at: "",
+
+    conversations: "",
   }

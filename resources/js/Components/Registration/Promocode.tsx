@@ -6,6 +6,7 @@ import { toast, Toaster } from 'sonner';
 import Footer from "../Footer";
 import RegHeader from "../RegistrationHeader";
 import { router } from "@inertiajs/react";
+import Loading from "../Loading";
 
 function Promocode() {
     //Local state
@@ -33,20 +34,25 @@ function Promocode() {
         }
     });
 
-    const handleSubmit = (e: React.FormEvent) => {
+    //Verifying promo code
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (!code.trim()) return;
 
-        if (validatePromoCode(code)) {
-            mutation.mutate();
-        } else {
-            toast.error('The Promo Code you enter is invalid!');
+        try {
+            if (validatePromoCode(code)) {
+                mutation.mutate();
+            } else {
+                toast.error('The Promo Code you enter is invalid!');
 
-            setTimeout(() => {
-                setCode('');
-            }, 2000);
-        };
+                setTimeout(() => {
+                    setCode('');
+                }, 2000);
+            };
+        } catch (error) {
+            toast.error('Something went wrong, please try again.');
+        }
     };
 
     //Promocode validation
@@ -87,7 +93,11 @@ function Promocode() {
                                 className="w-full bg-[#23B5D3] text-white py-2 rounded-lg transition duration-200"
                                 disabled={mutation.isPending}
                             >
-                                {mutation.isPending ? 'Submitting...' : 'Apply'}
+                                {
+                                    !mutation.isPending
+                                        ? 'Apply Code'
+                                        : <Loading text="Applying your promo code, please wait" />
+                                }
                             </button>
                         </form>
                     </div>
