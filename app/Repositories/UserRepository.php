@@ -6,9 +6,26 @@ use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserRepository
 {
+    /**
+     * Summary of create
+     * @param mixed $request
+     * @return User
+     */
+    public function store($request): User
+    {
+        return  User::create([
+            'first_name' => $request->firstName,
+            'last_name'  => $request->lastName,
+            'email'      => $request->email,
+            'user_name'   => $request->username,
+            'password'   => Hash::make($request->password),
+        ]);
+    }
+
     /**
      * Paginated Lists of GoPeakFit Users
      * @param  int $pageNumber Page number in table
@@ -139,5 +156,37 @@ class UserRepository
     public function countTrainer(): int
     {
         return  User::where('role', 2)->count();
+    }
+
+    /**
+     * Summary of getUserDataByPhoneNumber
+     * Return users info with the given phone number during sms
+     * @param mixed $userPhone
+     * @return object|null
+     */
+    public function getUserDataByPhoneNumber($userPhone)
+    {
+        return  DB::table('users as u')
+            ->leftJoin('gpf_messages as gm', 'u.id', '=', 'gm.user_id')
+            ->leftJoin('gpf_biometrics as b', 'u.id', '=', 'b.user_id')
+            ->leftJoin('gpf_goals as g', 'u.id', '=', 'g.user_id')
+            ->where('gm.phone_number', $userPhone)
+            ->first();
+    }
+
+    /**
+     * Summary of getAllUsersGoalsAndBiometric
+     * Return user's info such as location, biometrics and fitness goals
+     * @return \Illuminate\Support\Collection<int, \stdClass>
+     */
+    public function getAllUsersGoalsAndBiometric()
+    {
+        return DB::table('users as u')
+            ->leftJoin('gpf_messages as gm', 'u.id', '=', 'gm.user_id')
+            ->leftJoin('gpf_biometrics as b', 'u.id', '=', 'b.user_id')
+            ->leftJoin('gpf_goals as g', 'u.id', '=', 'g.user_id')
+            ->leftJoin('gpf_subscriptions as gs', 'u.id', '=', 'gs.user_id')
+            ->where('is_active', 1)
+            ->get();
     }
 }

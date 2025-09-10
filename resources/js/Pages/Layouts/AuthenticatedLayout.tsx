@@ -23,10 +23,7 @@ export default function Authenticated({
     const today = new Date();
     const remainingDays = Math.ceil((trialEnds.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
     const [subscriptions, setSubscriptions] = useState<string[]>([]);
-    const page = usePage();
     const role = getRole();
-
-    console.log('role:', role);
 
     // Close dropdown if clicked outside
     useEffect(() => {
@@ -46,13 +43,11 @@ export default function Authenticated({
             .catch(console.error);
     }, [user?.id]);
 
+
+    // End Session
     const handleLogout = () => {
         post('/logout');
     };
-
-    const capitalizeFirstLetter = (text: string) => {
-        return text.charAt(0).toUpperCase() + text.slice(1);
-    }
 
     return (
         <div className="min-h-screen bg-gray-100">

@@ -34,6 +34,7 @@ function PhoneVerification({ onComplete }: { onComplete: () => void }) {
         onSuccess: (res) => {
             toast.success(`Your phone number verified successfully.`)
             onComplete();
+            localStorage.setItem('currentStep', '5');
         },
         onError: (error: any) => {
             const submitBtn = document.getElementById('submitBtn') as HTMLButtonElement;

@@ -1,0 +1,1 @@
+export const TABLE_HEAD = ["Name / Email", "Address", "Phone Number", "Age", "Fitness Level", "Strictness Level", "Action"];

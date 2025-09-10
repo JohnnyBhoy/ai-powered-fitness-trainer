@@ -34,8 +34,10 @@ function CreateAccount({ onComplete }: { onComplete: () => void }) {
     onSuccess: (res: any) => {
       const userId = res.data.id
       setUserId(userId);
-      toast.success(`Account created successfully! Please provide us more details about you.`)
+      toast.success(`Account created successfully! Please check the box and enter your phone number.`)
       onComplete();
+      localStorage.setItem('currentStep', '2');
+      localStorage.setItem('user_id', userId);
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message ?? 'Registration failed.')

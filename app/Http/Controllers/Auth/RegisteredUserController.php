@@ -5,17 +5,26 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
+use App\Repositories\UserRepository;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class RegisteredUserController extends Controller
 {
+    protected $user;
+
+    /**
+     * Summary of __construct
+     * @param \App\Repositories\UserRepository $user
+     */
+    public function __construct(UserRepository $user)
+    {
+        $this->user = $user;
+    }
+
     /**
      * Display the registration view.
      */
@@ -34,18 +43,12 @@ class RegisteredUserController extends Controller
         $request->validate([
             'firstName' => 'required|string|max:255',
             'lastName' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
             'username' => 'required|string|max:255',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
-            'first_name' => $request->firstName,
-            'last_name'  => $request->lastName,
-            'email'      => $request->email,
-            'user_name'   => $request->username,
-            'password'   => Hash::make($request->password),
-        ]);
+        $user = $this->user->store($request);
 
         event(new Registered($user));
 
@@ -53,6 +56,6 @@ class RegisteredUserController extends Controller
 
         return response()->json(['id' => $user->id], 201);
 
-       // return redirect(route('dashboard', absolute: false));
+        // return redirect(route('dashboard', absolute: false));
     }
 }

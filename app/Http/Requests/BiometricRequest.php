@@ -23,7 +23,7 @@ class BiometricRequest extends FormRequest
             'strictness_level'  => 'required|numeric|min:0',
             'equipment_access'  => 'required|string|max:100',
             'food_allergies'    => 'required|string',
-            'user_id'    => 'required|integer',
+            'user_id'           => 'required|integer',
         ];
     }
 }

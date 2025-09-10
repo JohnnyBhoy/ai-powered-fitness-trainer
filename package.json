@@ -40,6 +40,7 @@
         "react-bootstrap-icons": "^1.11.6",
         "react-chartjs-2": "^5.3.0",
         "react-hook-form": "^7.56.1",
+        "recharts": "^3.1.2",
         "sonner": "^2.0.3",
         "zustand": "^5.0.3"
     }

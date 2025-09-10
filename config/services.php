@@ -39,10 +39,13 @@ return [
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],
-    
+
     'openai' => [
         'api_key' => env('OPENAI_API_KEY'),
     ],
 
-
+    'twilio' => [
+        'sid' => env('TWILIO_ACCOUNT_SID'),
+        'token' => env('TWILIO_AUTH_TOKEN'),
+    ],
 ];

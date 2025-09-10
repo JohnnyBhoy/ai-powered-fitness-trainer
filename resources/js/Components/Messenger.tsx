@@ -1,5 +1,4 @@
-import { useState, useRef, useEffect } from "react";
-import { Send } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 
 type MessengerProps = {
@@ -8,16 +7,28 @@ type MessengerProps = {
 }
 
 export default function Messenger({ name, conversations }: MessengerProps) {
-    const [messages, setMessages] = useState([
-        { id: 1, text: "Hey there! 👋", sender: "trainer" },
-        { id: 2, text: "Hi! How are you?", sender: "trainee" },
-    ]);
+
+    const message: any = conversations.split(/(?=\s*GPF:|\s*Johnny:)/)
+        .map((line, index) => {
+            const [sender, text] = line.split(":").map(s => s.trim());
+
+            //text.replace('', '|');
+
+            return {
+                id: index + 1,
+               text,
+                sender: sender === "GPF" ? "trainer" : "trainee"
+            };
+        })?.filter(m => m.text != undefined);
+
+    const [messages, setMessages] = useState(message);
     const [newMessage, setNewMessage] = useState("");
     const messagesEndRef: any = useRef(null);
 
+    // Add new type message to messages lists
     const handleSend = () => {
         if (!newMessage.trim()) return;
-        setMessages((prev) => [
+        setMessages((prev: any) => [
             ...prev,
             { id: Date.now(), text: newMessage, sender: "trainee" },
         ]);
@@ -34,9 +45,9 @@ export default function Messenger({ name, conversations }: MessengerProps) {
     }, [messages]);
 
     return (
-        <div className="flex flex-col h-screen bg-gray-100">
+        <div className="flex flex-col h-auto bg-gray-100 ">
             {/* Header */}
-            <div className="flex items-center px-4 py-3 bg-white border-b shadow">
+            <div className="flex items-center sticky px-4 py-3 bg-white border-b shadow">
                 <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold text-lg">
                     {name?.charAt(0)}
                 </div>
@@ -47,8 +58,8 @@ export default function Messenger({ name, conversations }: MessengerProps) {
             </div>
 
             {/* Messages area */}
-            <div className="flex-1 p-4 space-y-2 h-[10rem]">
-                {messages.map((msg) => (
+            <div className="flex-1 p-4 space-y-2 h-[2rem] overflow-y-scroll">
+                {messages.map((msg: any) => (
                     <div
                         key={msg.id}
                         className={`flex ${msg.sender === "trainee" ? "justify-end" : "justify-start"
@@ -77,24 +88,6 @@ export default function Messenger({ name, conversations }: MessengerProps) {
                     </div>
                 ))}
                 <div ref={messagesEndRef} />
-            </div>
-
-            {/* Input area */}
-            <div className="flex items-center p-3 bg-white border-t">
-                <input
-                    type="text"
-                    placeholder="Type a message..."
-                    className="flex-1 border rounded-full px-4 py-2 focus:outline-none"
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    onKeyDown={handleKeyPress}
-                />
-                <button
-                    className="ml-2 bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600"
-                    onClick={handleSend}
-                >
-                    <Send className="w-5 h-5" />
-                </button>
             </div>
         </div>
     );

@@ -5,6 +5,7 @@ import moment from 'moment';
 import { useState } from 'react';
 import TraineeInfo from '../Forms/TraineeInfo';
 import { User } from '@/types';
+import NoRecordFound from '@/Components/NoRecordFound';
 
 const LatestUsers = ({ users }: { users: Users[] }) => {
     //Local state
@@ -81,11 +82,7 @@ const LatestUsers = ({ users }: { users: Users[] }) => {
                     </thead>
                     <tbody>
                         {users?.length == 0 ? (
-                            <tr>
-                                <td colSpan={7} className='text-center'>
-                                    <h1 className='py-6 font-semibold text-md animate-pulse'>No Users found in our records...</h1>
-                                </td>
-                            </tr>
+                            <NoRecordFound />
                         ) : (
                             users
                                 ?.slice(0, 5)

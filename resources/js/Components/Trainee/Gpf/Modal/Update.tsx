@@ -79,7 +79,7 @@ export default function Update({ open, handleOpen, traineeData, setReload, reloa
 
     return (
         <Tabs id="custom-animation" value="account">
-            <div className="">
+            <div>
                 <TabsHeader>
                     {data.map(({ label, value, icon }) => (
                         <Tab key={value} value={value}>

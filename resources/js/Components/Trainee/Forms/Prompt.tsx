@@ -60,6 +60,7 @@ User Profile:
 - Motivation (Why): ${user.why}
 - Past Obstacles: ${user.past_obstacles}
 - Current Struggles: ${user.current_struggles}
+- Strictness Level: ${user.strictness_level}
 
 Instructions:
 1. Personalize the workout and nutrition advice for ${user.first_name}.
@@ -70,7 +71,7 @@ Instructions:
 6. Emphasize sustainability and consistency over intensity.
 7. Respond in a conversational, coach-like tone.
 8. Keep responses concise and text-message-friendly (under 300 characters when possible).
-9. Use a ${user.strictness_level} approach for their training plan.
+9. Use a ${user.strictness_level} strictness level kind of approach for their training plan.
 
 Always prioritize safety, and never suggest dangerous practices.
 `;
@@ -83,8 +84,8 @@ Always prioritize safety, and never suggest dangerous practices.
 
 return (
   <Card color="white" className="p-6 mt-3" shadow={false}>
-      <div className="max-w-4xl mx-auto p-6">
-        <h1 className="text-2xl font-bold mb-4 text-center">GoPeakFit Prompt Preview</h1>
+      <div className="max-w-4xl\ mx-auto p-6">
+        <h1 className="text-2xl font-bold mb-4 text-center">GoPeakFit 3x Daily Update Prompt Preview</h1>
 
         <div className="bg-gray-100 rounded-xl shadow-md p-4 relative">
           <pre className="whitespace-pre-wrap text-sm font-mono text-gray-800">

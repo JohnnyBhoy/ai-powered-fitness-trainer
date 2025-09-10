@@ -1,25 +1,23 @@
-import Authenticated from '@/Layouts/AuthenticatedLayout';
+import TableContainer from '@/Components/Admin/Tables/TableContainer';
+import TableContent from '@/Components/Admin/Tables/TableContent';
+import Authenticated from '@/Pages/Layouts/AuthenticatedLayout';
 import { TrainersProps } from '@/types/gpf';
 import { trainer } from '@/utils/data/trainer/trainer';
 import {
-    ChevronUpDownIcon,
-    MagnifyingGlassIcon,
+    MagnifyingGlassIcon
 } from "@heroicons/react/24/outline";
-import { PencilIcon } from "@heroicons/react/24/solid";
 import { Head } from '@inertiajs/react';
 import {
     Button,
     Card,
     CardBody,
     CardHeader,
-    IconButton,
     Input,
-    Tooltip,
     Typography
 } from "@material-tailwind/react";
 import axios from 'axios';
-import moment from 'moment';
 import { useEffect, useState } from 'react';
+import { ChevronLeft, ChevronRight } from 'react-bootstrap-icons';
 
 const TABS = [
     {
@@ -95,14 +93,12 @@ const Trainer = ({ data }: { data: any }) => {
         newData();
     }, [perPage, pageNumber]);
 
-    console.log('trainerDataArray', trainerDataArray);
-
     return (
         <Authenticated>
 
             <Head title="GoPeakFit trainers" />
 
-            <div className="bg-slate-300 p-6">
+            <TableContainer>
                 <Card className="h-full w-full">
                     <CardHeader floated={false} shadow={false} className="rounded-none">
                         <div className="mb-3 flex items-center justify-between gap-6">
@@ -122,18 +118,20 @@ const Trainer = ({ data }: { data: any }) => {
                                     className='rounded-lg border border-1 border-slate-900 w-auto'
                                     onChange={(e: any) => setPerPage(e.target.value)}
                                 >
-                                    <option value={perPage}>{perPage} per page</option>
-                                    <option value={10}>10 per page</option>
-                                    <option value={50}>50 per page</option>
-                                    <option value={100}>100 per page</option>
-                                    <option value={page.total}>Show all {page.total} </option>
+                                    <option value={perPage}>{perPage}</option>
+                                    <option value={10}>10</option>
+                                    <option value={50}>50</option>
+                                    <option value={100}>100</option>
+                                    {page?.total > 100
+                                        && <option value={page.total}></option>
+                                    }
                                 </select>
 
                                 <Button variant="outlined" size="sm" onClick={() => setPageNumber(page.currentPage == 1 ? 1 : page.currentPage - 1)}>
-                                    Previous
+                                    <ChevronLeft />
                                 </Button>
                                 <Button variant="outlined" size="sm" onClick={() => setPageNumber(page.currentPage == page.lastPage ? page.currentPage : page.currentPage + 1)}>
-                                    Next
+                                    <ChevronRight />
                                 </Button>
                             </div>
                         </div>
@@ -150,7 +148,7 @@ const Trainer = ({ data }: { data: any }) => {
                             <div className="w-full md:w-72">
                                 <Input
                                     value={filter}
-                                    onChange={(e:any) => setFilter(e.target.value)}
+                                    onChange={(e: any) => setFilter(e.target.value)}
                                     label="Search"
                                     icon={<MagnifyingGlassIcon className="h-5 w-5" />}
                                 />
@@ -158,154 +156,15 @@ const Trainer = ({ data }: { data: any }) => {
                         </div>
                     </CardHeader>
                     <CardBody className="overflow-scroll px-2">
-                        <table className=" w-full min-w-max table-auto text-left">
-                            <thead>
-                                <tr>
-                                    {TABLE_HEAD.map((head, index) => (
-                                        <th
-                                            key={head}
-                                            className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50"
-                                        >
-                                            <Typography
-                                                variant="small"
-                                                color="blue-gray"
-                                                className="flex items-center justify-between gap-2 font-normal leading-none opacity-70"
-                                            >
-                                                {head}{" "}
-                                                {index !== TABLE_HEAD.length - 1 && (
-                                                    <ChevronUpDownIcon strokeWidth={2} className="h-4 w-4" />
-                                                )}
-                                            </Typography>
-                                        </th>
-                                    ))}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {TABLE_ROWS
-                                    ?.filter((trainer: TrainersProps) => trainer?.first_name?.includes(filter)
-                                        || trainer?.email?.includes(filter)
-                                        || trainer?.last_name?.includes(filter)
-                                        || trainer?.user_name?.includes(filter)
-                                    )
-                                    ?.map(
-                                        (trainer: TrainersProps, index: number) => {
-                                            const isLast = index === TABLE_ROWS.length - 1;
-                                            const classes = isLast
-                                                ? "py-2 px-4"
-                                                : "py-2 px-4 border-b border-blue-gray-50";
-
-                                            return (
-                                                <tr key={trainer.id}>
-                                                    <td className={classes}>
-                                                        <div className="flex flex-col">
-                                                            <Typography
-                                                                variant="small"
-                                                                color="blue-gray"
-                                                                className="font-normal"
-                                                            >
-                                                                {trainer.id}
-                                                            </Typography>
-                                                        </div>
-                                                    </td>
-                                                    <td className={classes}>
-                                                        <div className="flex flex-col">
-                                                            <Typography
-                                                                variant="small"
-                                                                color="blue-gray"
-                                                                className="font-semibold"
-                                                            >
-                                                                {trainer.first_name} {trainer.last_name}
-                                                            </Typography>
-                                                            <Typography
-                                                                variant="small"
-                                                                color="blue-gray"
-                                                                className="font-normal opacity-70"
-                                                            >
-                                                                {trainer.email}
-                                                            </Typography>
-                                                        </div>
-                                                    </td>
-                                                    <td className={classes}>
-                                                        <div className="flex flex-col">
-                                                            <Typography
-                                                                variant="small"
-                                                                color="blue-gray"
-                                                                className="font-normal"
-                                                            >
-                                                                {trainer.user_name}
-                                                            </Typography>
-                                                        </div>
-                                                    </td>
-
-                                                    <td className={classes}>
-                                                        <div className="flex flex-col">
-                                                            <Typography
-                                                                variant="small"
-                                                                color="blue-gray"
-                                                                className="font-normal"
-                                                            >
-                                                                {trainer?.trainees?.length}
-                                                            </Typography>
-                                                        </div>
-                                                    </td>
-
-                                                    <td className={classes}>
-                                                        <div className="flex flex-col">
-                                                            <Typography
-                                                                variant="small"
-                                                                color="blue-gray"
-                                                                className="font-normal"
-                                                            >
-                                                                {trainer?.trainees?.length == 0 ? (
-                                                                        <h4 className='text-xs'>No trainee added</h4>
-                                                                ) : trainer?.trainees?.map((trainee: any) => (
-                                                                    <h4 className='text-xs'>{trainee.first_name} {trainee.last_name}</h4>
-                                                                ))}
-                                                            </Typography>
-                                                        </div>
-                                                    </td>
-
-                                                    <td className={classes}>
-                                                        <div className="flex flex-col">
-                                                            <Typography
-                                                                variant="small"
-                                                                color="blue-gray"
-                                                                className="font-normal"
-                                                            >
-                                                                N/A
-                                                            </Typography>
-                                                        </div>
-                                                    </td>
-
-                                                    <td className={classes}>
-                                                        <div className="flex flex-col">
-                                                            <Typography
-                                                                variant="small"
-                                                                color="blue-gray"
-                                                                className="font-normal"
-                                                            >
-                                                                {moment(trainer?.created_at).format('MMMM D, YYYY hA')}
-                                                            </Typography>
-                                                        </div>
-                                                    </td>
-
-                                                    <td className={classes}>
-                                                        <Tooltip content="Edit trainer">
-                                                            <IconButton variant="text" onClick={() => handleOpen(trainer)} >
-                                                                <PencilIcon className="h-4 w-4" />
-                                                            </IconButton>
-                                                        </Tooltip>
-                                                    </td>
-                                                </tr>
-                                            );
-                                        },
-                                    )}
-                            </tbody>
-                        </table>
+                        <TableContent
+                            TABLE_HEAD={TABLE_HEAD}
+                            TABLE_ROWS={TABLE_ROWS}
+                            handleOpen={handleOpen}
+                            filter={filter}
+                        />
                     </CardBody>
                 </Card>
-
-            </div>
+            </TableContainer>
         </Authenticated >
     )
 }

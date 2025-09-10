@@ -4,7 +4,7 @@ import DietProgressChart from "@/Components/Trainee/Charts/DietProgressChart";
 import WorkoutProgressChart from "@/Components/Trainee/Charts/WorkoutProgressChart";
 import DietTips from "@/Components/Trainee/Dashboard/DietTips";
 import TraineeSummary from "@/Components/Trainee/Dashboard/TraineeSummary";
-import Authenticated from '@/Layouts/AuthenticatedLayout';
+import Authenticated from '@/Pages/Layouts/AuthenticatedLayout';
 import Chart from "chart.js/auto";
 import { useEffect, useRef } from "react";
 

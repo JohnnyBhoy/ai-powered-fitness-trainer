@@ -9,12 +9,13 @@ import {
 } from "@material-tailwind/react";
 import { handler } from "@material-tailwind/react/types/components/dialog";
 import React from "react";
-import AccountInfo from "../../Forms/AccountInfo";
-import Biometrics from "../../Forms/Biometrics";
-import Goals from "../../Forms/Goals";
-import Messages from "../../Forms/Messages";
-import Program from "../../Forms/Program";
-import Nutrition from "../../Forms/Nutrition";
+import Prompt from "./Prompt";
+import AccountInfo from "./AccountInfo";
+import Biometrics from "./Biometrics";
+import Goals from "./Goals";
+import Messages from "./Messages";
+import Program from "./Program";
+import Nutrition from "./Nutrition";
 
 
 type UpdateProps = {

@@ -35,6 +35,7 @@ function LocationAndBiometrics({ onComplete }: { onComplete: () => void }) {
         onSuccess: (res) => {
             toast.success(`Location and biometrics updated.`)
             onComplete();
+            localStorage.setItem('currentStep', '4');
         },
         onError: (error: any) => {
             submitBtn.classList.remove('disabled');
@@ -142,6 +143,7 @@ function LocationAndBiometrics({ onComplete }: { onComplete: () => void }) {
                                     <input
                                         id="current-weight"
                                         type="number"
+                                        step="0.01"
                                         {...register('current_weight')}
                                         className="w-full p-2 border border-gray-400 rounded-md bg-white text-sm pr-10"
                                     />
@@ -154,6 +156,7 @@ function LocationAndBiometrics({ onComplete }: { onComplete: () => void }) {
                                     <input
                                         id="goal-weight"
                                         type="number"
+                                        step="0.01"
                                         {...register('goal_weight')}
                                         className="w-full p-2 border border-gray-400 rounded-md bg-white text-sm pr-10"
                                     />

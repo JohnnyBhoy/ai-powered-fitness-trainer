@@ -1,4 +1,4 @@
-import Authenticated from '@/Layouts/AuthenticatedLayout';
+import Authenticated from '@/Pages/Layouts/AuthenticatedLayout';
 import { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 import { Users, Dumbbell, Activity, Flame, ClipboardList, CheckSquare, CheckCircle } from "lucide-react";

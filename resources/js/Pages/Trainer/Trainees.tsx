@@ -1,5 +1,5 @@
 import Update from '@/Components/Trainee/Gpf/Modal/Update';
-import Authenticated from '@/Layouts/AuthenticatedLayout';
+import Authenticated from '@/Pages/Layouts/AuthenticatedLayout';
 import { GpfTraineeProps } from '@/types/gpf';
 import { TraineeData } from '@/utils/data/trainee/gpf/trainee';
 import { getStrictnessLevel } from '@/utils/functions/helperFunctions';

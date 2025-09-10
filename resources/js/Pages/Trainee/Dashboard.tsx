@@ -4,7 +4,7 @@ import DietProgressChart from "@/Components/Trainee/Charts/DietProgressChart";
 import WorkoutProgressChart from "@/Components/Trainee/Charts/WorkoutProgressChart";
 import DietTips from "@/Components/Trainee/Dashboard/DietTips";
 import TraineeSummary from "@/Components/Trainee/Dashboard/TraineeSummary";
-import Authenticated from "@/Layouts/AuthenticatedLayout";
+import Authenticated from "@/Pages/Layouts/AuthenticatedLayout";
 import { Dumbbell, Flame, Scale, Award, Calendar, Bell, Activity, Apple } from "lucide-react";
 
 const Dashboard = () => {

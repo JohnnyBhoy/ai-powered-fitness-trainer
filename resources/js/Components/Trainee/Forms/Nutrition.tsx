@@ -1,7 +1,5 @@
+import { Card } from '@/Components/UI/Card';
 import { GpfTraineeProps } from '@/types/gpf';
-import {
-  Card
-} from "@material-tailwind/react";
 import { useState } from 'react';
 
 type Meal = {
@@ -109,7 +107,7 @@ const Nutrition = ({ data }: { data: GpfTraineeProps }) => {
   console.log(data);
 
   return (
-    <Card color="white" className="p-6 mt-3" shadow={false}>
+    <Card className="p-6 mt-3">
 
         <div className="flex flex-col h-screen bg-gray-50">
           {/* Header */}

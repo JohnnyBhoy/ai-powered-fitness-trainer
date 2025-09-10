@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
     public function run()
     {
         // Create 10 demo users
-        for ($i = 1; $i <= 500; $i++) {
+        for ($i = 1; $i <= 100; $i++) {
             $user = User::create([
                 'first_name'        => fake()->firstName,
                 'last_name'         => fake()->lastName,
@@ -24,11 +24,11 @@ class UserSeeder extends Seeder
                 'password'          => Hash::make('password'),
                 'is_active'         => 1,
                 'is_promo'          => 0,
-                'role'              => $i > 400 ? 2 : 3,
-                'trainer_id'        => $i <= 150 ? rand(400, 500) : null,
+                'role'              => 3,
+                'trainer_id'        => null,
                 'remember_token'    => Str::random(10),
-                'created_at'        => fake()->dateTimeBetween('-1 year', now()),
-                'updated_at'        => fake()->dateTimeBetween('-1 year', now()),
+                'created_at'        => fake()->dateTimeBetween('-5 days', 'now'),
+                'updated_at'        => fake()->dateTimeBetween('-5 days', 'now'),
             ]);
 
             // Create related biometric entry
@@ -56,8 +56,8 @@ class UserSeeder extends Seeder
                 'why'               => 'To be healthier',
                 'past_obstacles'    => 'Lack of time',
                 'current_struggles' => 'Consistency',
-                'created_at'        => fake()->dateTimeBetween('-1 year', now()),
-                'updated_at'        => fake()->dateTimeBetween('-1 year', now()),
+                'created_at'        => fake()->dateTimeBetween('-5 days',  'now'),
+                'updated_at'        => fake()->dateTimeBetween('-5 days', 'now'),
             ]);
         }
     }

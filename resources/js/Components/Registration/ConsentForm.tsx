@@ -27,32 +27,15 @@ const isValidUSNumber = (formatted: string): boolean => {
 
 
 export default function ConsentForm({ onComplete }: { onComplete: () => void }) {
+  localStorage.setItem('currentStep', '3');
+
   const [phone, setPhone] = useState("");
   const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState("");
   const [formatted, setFormatted] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const formatPhone = (raw: string): string => {
-    let digits = raw.replace(/\D/g, "");
-
-    // Mistakenly typed "4..." thinking it's full number, assume it's area code
-    if (digits.length === 10 && digits.startsWith("4")) {
-      digits = "1" + digits;
-    }
-
-    if (digits.length === 11 && digits.startsWith("1")) {
-      return "+1" + digits.slice(1);
-    }
-
-    if (digits.length === 10) {
-      return "+1" + digits;
-    }
-
-    return raw;
-  };
-
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -60,6 +43,7 @@ export default function ConsentForm({ onComplete }: { onComplete: () => void }) 
     try {
       await axios.post("/api/consent", { phone, consent });
       onComplete();
+      localStorage.setItem('currentStep', '3');
     } catch (error: any) {
       setStatus("❌ Submission failed: " + (error.response?.data?.message ?? "Unknown error"));
     } finally {

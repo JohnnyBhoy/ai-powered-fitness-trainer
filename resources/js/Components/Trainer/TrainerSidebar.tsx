@@ -1,15 +1,14 @@
 import ApplicationLogo from "@/Components/ApplicationLogo";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Link, useForm, usePage } from "@inertiajs/react";
 import {
-  LayoutDashboard,
-  Users,
-  Dumbbell,
   BarChart3,
   ClipboardList,
+  Dumbbell,
+  LayoutDashboard,
   Settings,
-  LogOut,
+  Users
 } from "lucide-react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
 
 type SidebarProps = {
   isOpen: boolean;
@@ -51,9 +50,9 @@ const TrainerSidebar = ({ isOpen, onClose }: SidebarProps) => {
 
   const isActive = (link: string) => url.startsWith(link);
 
-   const handleLogout = () => {
-        post('/logout');
-    };
+  const handleLogout = () => {
+    post('/logout');
+  };
 
   return (
     <>
@@ -90,18 +89,16 @@ const TrainerSidebar = ({ isOpen, onClose }: SidebarProps) => {
                 <Link
                   key={name}
                   href={link}
-                  className={`group flex items-center px-3 py-2 rounded-lg mb-1 transition-colors ${
-                    isActive(link)
+                  className={`group flex items-center px-3 py-2 rounded-lg mb-1 transition-colors ${isActive(link)
                       ? "bg-blue-50 text-blue-600"
                       : "text-gray-600 hover:bg-blue-50 hover:text-blue-600"
-                  }`}
+                    }`}
                 >
                   <Icon
-                    className={`h-5 w-5 mr-3 ${
-                      isActive(link)
+                    className={`h-5 w-5 mr-3 ${isActive(link)
                         ? "text-blue-600"
                         : "text-gray-400 group-hover:text-blue-500"
-                    }`}
+                      }`}
                   />
                   <span className="text-sm font-medium">{name}</span>
                 </Link>
@@ -109,17 +106,12 @@ const TrainerSidebar = ({ isOpen, onClose }: SidebarProps) => {
             </div>
           ))}
 
-          {/* Logout Button */}
-          <Link
-            href="/logout"
-            method="post"
-            as="button"
-            className="group flex items-center px-3 py-2 mt-4 text-gray-600 hover:bg-red-50 hover:text-red-600 rounded-lg w-full transition-colors"
-          >
-            <LogOut className="h-5 w-5 mr-3 text-gray-400 group-hover:text-red-500" onClick={handleLogout}/>
-            <span className="text-sm font-medium">Logout</span>
-          </Link>
         </nav>
+
+        {/* Footer */}
+        <div className="absolute bottom-0 left-0 w-full border-t p-4 text-xs text-gray-400 text-center">
+          © {new Date().getFullYear()} GoPeakFit Trainer
+        </div>
       </aside>
     </>
   );

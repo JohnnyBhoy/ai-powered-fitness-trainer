@@ -7,8 +7,12 @@
 </head>
 <body class="bg-gray-100 text-gray-900">
 <div class="min-h-screen bg-white flex items-center justify-center px-4 py-16">
+
+     <div id="react-root" class="p-6">
+        <!-- React will render the invoice here -->
+    </div>
+
     <div class="bg-white border rounded-2xl shadow-lg p-8 max-w-lg text-center space-y-6">
-        
         <!-- Success Animation -->
         <div class="flex justify-center">
             <img src="https://media.giphy.com/media/111ebonMs90YLu/giphy.gif" alt="Success" class="h-32 rounded-md">

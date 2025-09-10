@@ -1,7 +1,6 @@
 import MtTextArea from '@/Components/MtTextArea';
 import { GpfTraineeProps } from '@/types/gpf';
 import {
-  Button,
   Card
 } from "@material-tailwind/react";
 
@@ -19,12 +18,6 @@ const Goals = ({ data }: { data: GpfTraineeProps }) => {
           <MtTextArea name="What stopped you from reaching your goals in the past?" data={data.past_obstacles}  row={5} />
 
           <MtTextArea name="What's the biggest struggle you face when trying to stay on track?" data={data.current_struggles}  row={5} />
-        </div>
-
-        <div className="flex justify-end place-items-end">
-          <Button className="mt-6 lg:w-[8rem]" fullWidth>
-            Update
-          </Button>
         </div>
       </form>
     </Card>

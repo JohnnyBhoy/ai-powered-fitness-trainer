@@ -11,12 +11,12 @@ class AdminSeeder extends Seeder
     public function run(): void
     {
         User::updateOrCreate(
-            ['email' => 'admin@gmail.com'],
+            ['email' => 'gopeakfitadmin2025@gmail.com'],
             [
                 'first_name' => 'Go Peak Fit',
                 'last_name' => 'Admin',
                 'user_name' => 'GoPeakFit Admin',
-                'password' => Hash::make('gopeakfitadmin2025'),
+                'password' => Hash::make('QgU+U966N6rA?mE2'),
                 'role' => 1,
             ]
         );

@@ -1,14 +1,17 @@
-import { useState } from "react";
 import ApplicationLogo from "@/Components/ApplicationLogo";
-import { Link, usePage } from "@inertiajs/react";
 import {
-  ChartBarIcon, Cog6ToothIcon, CalendarDaysIcon, BanknotesIcon,
-  UserGroupIcon, UserCircleIcon, UserPlusIcon, ClipboardDocumentListIcon,
-  ChartPieIcon, ClipboardDocumentCheckIcon, ChevronDownIcon, ChevronRightIcon,
+  ChartBarIcon,
+  ChevronDownIcon, ChevronRightIcon,
+  ClipboardDocumentListIcon,
+  UserCircleIcon,
+  UserGroupIcon,
+  UserPlusIcon,
   XMarkIcon
 } from "@heroicons/react/24/outline";
-import { Grid1x2 } from "react-bootstrap-icons";
+import { Link, usePage } from "@inertiajs/react";
 import clsx from "clsx";
+import { useState } from "react";
+import { Grid1x2 } from "react-bootstrap-icons";
 
 type SidebarProps = {
   isOpen: boolean;
@@ -23,49 +26,24 @@ const navSections = [
   {
     title: "Members",
     items: [
-      { name: "All Members", icon: UserGroupIcon, link: "/admin/gpf-trainees" },
       { name: "GPF Trainees", icon: UserGroupIcon, link: "/admin/gpf-trainees" },
       { name: "Trainees w/ Trainer", icon: UserPlusIcon, link: "/admin/non-gpf-trainees" },
       { name: "Trainers", icon: UserCircleIcon, link: "/admin/trainers" },
     ],
   },
   {
-    title: "Scheduling",
-    items: [
-      { name: "Class Schedule", icon: CalendarDaysIcon, link: "/admin/class-schedule" },
-      { name: "Trainer Availability", icon: ClipboardDocumentCheckIcon, link: "/admin/trainer-availability" },
-      { name: "Bookings", icon: ClipboardDocumentListIcon, link: "/admin/bookings" },
-    ],
-  },
-  {
     title: "Programs & Workouts",
     items: [
-      { name: "Workout Programs", icon: ClipboardDocumentListIcon, link: "/admin/workout-programs" },
-      { name: "Meal Plans", icon: ClipboardDocumentListIcon, link: "/admin/meal-plans" },
+      { name: "5-Days Trial Program", icon: ClipboardDocumentListIcon, link: "/admin/five-days-trail" },
+      { name: "Nutrition Plans", icon: ClipboardDocumentListIcon, link: "/admin/nutrition-plans" },
       { name: "Progress Tracking", icon: ChartBarIcon, link: "/admin/progress-tracking" },
     ],
-  },
-  {
-    title: "Reports & Analytics",
-    items: [
-      { name: "Attendance Reports", icon: ChartBarIcon, link: "/admin/attendance-reports" },
-      { name: "Revenue & Payments", icon: BanknotesIcon, link: "/admin/revenue" },
-      { name: "Trainer Performance", icon: ChartPieIcon, link: "/admin/trainer-performance" },
-      { name: "Member Progress", icon: ChartPieIcon, link: "/admin/member-progress" },
-    ],
-  },
-  {
-    title: "Administration",
-    items: [
-      { name: "User Roles & Permissions", icon: Cog6ToothIcon, link: "/admin/roles" },
-      { name: "Settings", icon: Cog6ToothIcon, link: "/admin/settings" },
-    ],
-  },
+  }
 ];
 
 const AdminSidebar = ({ isOpen, onClose }: SidebarProps) => {
   const { url } = usePage();
-  const [openSections, setOpenSections] = useState<string[]>(["Dashboard", "Members"]);
+  const [openSections, setOpenSections] = useState<string[]>(["Dashboard", "Members", "Programs & Workouts"]);
 
   const toggleSection = (title: string) => {
     setOpenSections((prev) =>

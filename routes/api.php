@@ -8,16 +8,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PromoController;
 use App\Http\Controllers\TraineeController;
 
-Route::post('/sms', [WorkoutTrainerController::class, 'handleIncomingSms']);  // Handle SMS replies
+Route::post('/sms', [WorkoutTrainerController::class, 'handleIncomingSms']); //Handle SMS coming from Trainees
+
 Route::get('/subscriptions', [SubscriptionController::class, 'getValues']);
 
 Route::post('/consent', [ConsentController::class, 'store']);
 
-//SMS Test
-//Route::post('/send-sms/{to}/{message}', [WorkoutTrainerController::class, 'sendSms']);
-
-//PROMO CODE
-Route::post('/promocode/apply', [PromoController::class, 'update']);
+Route::post('/promocode/apply', [PromoController::class, 'update']); // For promo users / trainees
 
 
 // Api routes for rep-searcher's admin

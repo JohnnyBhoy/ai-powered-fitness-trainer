@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Api\PromoController;
+use App\Http\Controllers\NutritionPlanController;
+use App\Http\Controllers\ProgramController;
+use App\Http\Controllers\ProgressRecordController;
 use App\Http\Controllers\TraineeController;
 use App\Http\Controllers\TrainerController;
 use App\Http\Controllers\WorkoutTrainerController;
@@ -9,6 +12,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\StripePaymentController;
+use App\Http\Controllers\TraineeProgressController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -84,6 +88,22 @@ Route::middleware(['auth', 'role:1'])->prefix('/admin')->group(function () {
     Route::get('/gpf-trainees', [AdminController::class, 'indexOfGpfTrainees'])->name('admin.gpf-trainees');
     Route::get('/trainers', [AdminController::class, 'indexOfTrainers'])->name('admin.trainers');
     Route::get('/non-gpf-trainees', [AdminController::class, 'indexOfNonGpfTrainees'])->name('admin.trainees');
+    Route::get('/trainers/create', [TrainerController::class, 'create'])->name('admin.trainer.create');
+    Route::post('/trainers/store', [TrainerController::class, 'store'])->name('admin.trainers.store');
+
+    // Program and workouts
+    Route::get('/five-days-trail', [ProgramController::class, 'index'])->name('admin.five-days-trials');
+    Route::get('/trainees-in-trial-by-day/{id}', [ProgramController::class, 'show'])
+        ->name('admin.trainees-in-trial-by-day.show');
+    Route::patch('/programs/{program}', [ProgramController::class, 'update'])
+        ->name('programs.update');
+
+    // Nutrition plan
+    Route::resource('nutrition-plans', NutritionPlanController::class);
+
+    // Progress tracking
+     Route::get('/progress-tracking', [TraineeProgressController::class, 'index'])
+        ->name('trainee-progress.index');
 });
 
 

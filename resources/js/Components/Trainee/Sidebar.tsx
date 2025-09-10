@@ -1,20 +1,14 @@
 import {
-    HomeIcon,
-    FireIcon,
-    ClipboardIcon,
     ArrowTrendingUpIcon,
+    ClipboardIcon,
     Cog6ToothIcon,
-    ChartBarIcon,
-    UsersIcon,
-    ChatBubbleLeftRightIcon,
-    DocumentTextIcon,
-    XMarkIcon,
-    ArrowRightOnRectangleIcon,
-    ChevronDownIcon,
+    FireIcon,
+    HomeIcon,
+    XMarkIcon
 } from "@heroicons/react/24/outline";
-import ApplicationLogo from "../ApplicationLogo";
 import { Link, usePage } from "@inertiajs/react";
 import { useState } from "react";
+import ApplicationLogo from "../ApplicationLogo";
 
 type SidebarProps = {
     isOpen: boolean;
@@ -33,20 +27,9 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     const navItems = [
         { name: "Dashboard", icon: HomeIcon, link: "/trainee/dashboard" },
         { name: "Workouts", icon: FireIcon, link: "/trainee/workout" },
-        { name: "Meals", icon: ClipboardIcon, link: "/trainee/meals" },
+        { name: "Nutrition", icon: ClipboardIcon, link: "/trainee/nutrition" },
         { name: "Progress", icon: ArrowTrendingUpIcon, link: "/trainee/progress" },
         { name: "Settings", icon: Cog6ToothIcon, link: "/trainee/profile" },
-    ];
-
-    const reportItems = [
-        { name: "Workout Reports", link: "/trainee/reports/workouts", icon: ChartBarIcon },
-        { name: "Meal Reports", link: "/trainee/reports/meals", icon: DocumentTextIcon },
-        { name: "Progress Charts", link: "/trainee/reports/progress", icon: ArrowTrendingUpIcon },
-    ];
-
-    const communityItems = [
-        { name: "Trainers", link: "/trainee/community/trainers", icon: UsersIcon },
-        { name: "Forums", link: "/trainee/community/forums", icon: ChatBubbleLeftRightIcon },
     ];
 
     return (
@@ -92,97 +75,29 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                                 key={name}
                                 href={link}
                                 className={`group flex items-center px-4 py-2.5 mb-2 rounded-lg font-medium transition-all relative
-                                    ${
-                                        active
-                                            ? "bg-blue-50 text-blue-600"
-                                            : "text-gray-600 hover:bg-blue-50 hover:text-blue-600"
+                                    ${active
+                                        ? "bg-blue-50 text-blue-600"
+                                        : "text-gray-600 hover:bg-blue-50 hover:text-blue-600"
                                     }`}
                             >
                                 {active && (
                                     <span className="absolute left-0 top-0 h-full w-1 bg-blue-600 rounded-r"></span>
                                 )}
                                 <Icon
-                                    className={`h-5 w-5 mr-3 transition-colors ${
-                                        active
+                                    className={`h-5 w-5 mr-3 transition-colors ${active
                                             ? "text-blue-600"
                                             : "text-gray-400 group-hover:text-blue-500"
-                                    }`}
+                                        }`}
                                 />
                                 <span className="text-sm">{name}</span>
                             </Link>
                         );
                     })}
+                </div>
 
-                    {/* Reports dropdown */}
-                    <button
-                        onClick={() => setReportsOpen(!reportsOpen)}
-                        className="flex items-center justify-between w-full px-4 py-2.5 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg mb-2 transition"
-                    >
-                        <span className="flex items-center">
-                            <ChartBarIcon className="h-5 w-5 mr-3 text-gray-400 group-hover:text-blue-500" />
-                            <span className="text-sm font-medium">Reports</span>
-                        </span>
-                        <ChevronDownIcon
-                            className={`h-4 w-4 transform transition-transform ${
-                                reportsOpen ? "rotate-180" : ""
-                            }`}
-                        />
-                    </button>
-                    {reportsOpen && (
-                        <div className="ml-6 mb-2">
-                            {reportItems.map(({ name, link, icon: Icon }) => (
-                                <Link
-                                    key={name}
-                                    href={link}
-                                    className="flex items-center px-2 py-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md text-sm"
-                                >
-                                    <Icon className="h-4 w-4 mr-2 text-gray-400" />
-                                    {name}
-                                </Link>
-                            ))}
-                        </div>
-                    )}
-
-                    {/* Community dropdown */}
-                    <button
-                        onClick={() => setCommunityOpen(!communityOpen)}
-                        className="flex items-center justify-between w-full px-4 py-2.5 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg mb-2 transition"
-                    >
-                        <span className="flex items-center">
-                            <UsersIcon className="h-5 w-5 mr-3 text-gray-400 group-hover:text-blue-500" />
-                            <span className="text-sm font-medium">Community</span>
-                        </span>
-                        <ChevronDownIcon
-                            className={`h-4 w-4 transform transition-transform ${
-                                communityOpen ? "rotate-180" : ""
-                            }`}
-                        />
-                    </button>
-                    {communityOpen && (
-                        <div className="ml-6 mb-2">
-                            {communityItems.map(({ name, link, icon: Icon }) => (
-                                <Link
-                                    key={name}
-                                    href={link}
-                                    className="flex items-center px-2 py-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md text-sm"
-                                >
-                                    <Icon className="h-4 w-4 mr-2 text-gray-400" />
-                                    {name}
-                                </Link>
-                            ))}
-                        </div>
-                    )}
-
-                    {/* Logout */}
-                    <Link
-                        href="/logout"
-                        method="post"
-                        as="button"
-                        className="group flex items-center px-4 py-2.5 mt-6 text-gray-600 hover:bg-red-50 hover:text-red-600 rounded-lg transition-all relative"
-                    >
-                        <ArrowRightOnRectangleIcon className="h-5 w-5 mr-3 text-gray-400 group-hover:text-red-500" />
-                        <span className="text-sm font-medium">Logout</span>
-                    </Link>
+                {/* Footer */}
+                <div className="absolute bottom-0 left-0 w-full border-t p-4 text-xs text-gray-400 text-center">
+                    © {new Date().getFullYear()} GoPeakFit Trainee
                 </div>
             </aside>
         </>

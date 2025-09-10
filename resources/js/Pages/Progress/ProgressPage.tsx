@@ -1,6 +1,6 @@
 import React from 'react';
 import { Head } from '@inertiajs/react';
-import Authenticated from '@/Layouts/AuthenticatedLayout';
+import Authenticated from '@/Pages/Layouts/AuthenticatedLayout';
 
 type Props = {
     progress: {

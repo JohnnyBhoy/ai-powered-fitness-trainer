@@ -1,7 +1,6 @@
 import MtTextInput from '@/Components/MtTextInput';
 import { GpfTraineeProps } from '@/types/gpf';
 import {
-  Button,
   Card,
   Switch,
   Typography
@@ -13,14 +12,11 @@ const AccountInfo = ({ data }: { data: GpfTraineeProps }) => {
 
   return (
     <Card color="white" className="p-6 mt-3" shadow={false}>
-      <form className="mb-2 space-y-8">
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <MtTextInput name="Name" data={`${data.first_name} ${data.last_name}`} type="text" />
-
           <MtTextInput name="Email" data={data.email} type="text" />
-
           <MtTextInput name="Username" data={data.user_name} type="text" />
-
           <MtTextInput name="User Type" data={data.role == 3 ? 'Trainee' : 'Trainer'} type="text" />
 
           <div className="w-full grid">
@@ -45,20 +41,11 @@ const AccountInfo = ({ data }: { data: GpfTraineeProps }) => {
             <Switch color="blue" defaultChecked={data?.is_promo == 1} />
           </div>
 
-
           <MtTextInput name="Trainer" data={data.trainer_id == null ? 'GoPeakFit AI' : 'Trainer'} type="text" />
-
           <MtTextInput name="Email Verified At" data={data?.email_verified_at != null ? moment(data.email_verified_at).format('MMMM D, YYYY hA') : 'Not veified'} type="text" />
-
           <MtTextInput name="Date Created" data={moment(data.created_at).format('MMMM D, YYYY hA')} type="text" />
         </div>
 
-        <div className="flex justify-end place-items-end">
-          <Button className="mt-6 lg:w-[8rem]" fullWidth>
-            Update
-          </Button>
-        </div>
-      </form>
     </Card>
   )
 }

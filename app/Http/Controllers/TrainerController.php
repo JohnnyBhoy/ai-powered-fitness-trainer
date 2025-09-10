@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TrainerRequest;
+use App\Models\Trainer;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -57,5 +60,40 @@ class TrainerController extends Controller
         } catch (\Throwable $th) {
             throw $th;
         }
+    }
+
+    /**
+     * Summary of create
+     * @return \Inertia\Response
+     */
+    public function create()
+    {
+        return Inertia::render('Admin/Trainer/Create');
+    }
+
+    /**
+     * Summary of store
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store(TrainerRequest $request)
+    {
+        // Step 1: Create the user first
+        $user = User::create([
+            'first_name'     => explode($request->full_name, "")[0],
+            'last_name'     => explode($request->full_name, "")[1],
+            'email'    => $request->email,
+            'password' => Hash::make('gpftrainer2025'),
+        ]);
+
+        // Step 2: Create the trainer profile linked to the user
+        Trainer::create(array_merge(
+            $request->validated(),
+            ['user_id' => $user->id]
+        ));
+
+        return redirect()
+            ->route('trainers.index')
+            ->with('success', 'Trainer registered successfully!');
     }
 }

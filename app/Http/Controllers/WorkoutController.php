@@ -9,8 +9,6 @@ class WorkoutController extends Controller
 {
     public function index(Request $request)
     {
-        $userId = $request->user()->id;
-
         // Example static data — replace with real DB queries
         $workoutPlan = [
             'Monday' => 'Chest & Triceps',

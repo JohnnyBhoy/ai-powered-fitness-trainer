@@ -18,25 +18,23 @@ class ProgramController extends Controller
      */
     public function index()
     {
-        $programs = GpfFiveDaysProgram::all();
+        $today = Carbon::today();
 
-        $users = User::select(DB::raw('DATEDIFF(CURDATE(), DATE(created_at)) as days_ago'), DB::raw('COUNT(*) as count'))
-            ->where('role', 3)
-            ->whereNull('trainer_id')
-            ->where('created_at', '>=', Carbon::now()->subDays(5)->startOfDay())
-            ->groupBy('days_ago')
-            ->orderBy('days_ago')
-            ->get();
+        // Count trainees by the day they joined (Day 1 to Day 5)
+        $traineeCounts = [];
+        for ($day = 1; $day <= 5; $day++) {
+            $targetDate = $today->copy()->subDays($day - 1);
 
-        $dayCounts = collect(range(1, 5))->mapWithKeys(function ($day) use ($users) {
-            $count = $users->firstWhere('days_ago', $day)['count'] ?? 0;
-            return [$day => $count];
-        });
+            $traineeCounts["day_{$day}"] = User::where('role', 3)->whereDate('created_at', $targetDate)->count();
+        }
+
+        // Retrieve program details
+        $program = GpfFiveDaysProgram::orderBy('day')->get();
 
 
-        return Inertia::render('Programs/Index', [
-            'programs' => $programs,
-            'freeTrialTraineesCountByDays' => $dayCounts,
+        return Inertia::render('Admin/TraineeProgress/Programs/Index', [
+            'programs' => $program,
+            'freeTrialTraineesCountByDays' => $traineeCounts,
         ]);
     }
 

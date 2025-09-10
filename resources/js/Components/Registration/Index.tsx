@@ -11,7 +11,9 @@ import PhoneVerification from "./PhoneVerification";
 import TheGoal from "./TheGoal";
 
 function Registration() {
-    const [step, setStep] = useState(1);
+    // Set the current registration page to 1 on initialize, then save it for the session on creating account
+    const currentRegistrationStep = localStorage.getItem('currentStep') as string ?? '1';
+    const [step, setStep] = useState(parseInt(currentRegistrationStep));
 
     const steps = [
         { id: 1, component: <CreateAccount onComplete={() => setStep(2)} /> },
@@ -19,7 +21,7 @@ function Registration() {
         { id: 3, component: <LocationAndBiometrics onComplete={() => setStep(4)} /> },
         { id: 4, component: <PhoneVerification onComplete={() => setStep(5)} /> },
         { id: 5, component: <TheGoal onComplete={() => setStep(6)} /> },
-        { id: 6, component: <PaymentInfo onComplete={() => console.log("test")} /> },
+        { id: 6, component: <PaymentInfo onComplete={() => console.log("Payment is successfull.")} /> },
     ];
 
     return (

@@ -2,38 +2,48 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AdminLoginRequest;
 use App\Services\UserService;
-use Carbon\Carbon;
+use App\Support\HelperFunctions;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
 
     protected $userService;
+    protected $helperFunctions;
 
-    public function __construct(UserService $userService)
+    /**
+     * Summary of __construct
+     * @param \App\Services\UserService $userService
+     * @param \App\Support\HelperFunctions $helperFunctions
+     */
+    public function __construct(UserService $userService, HelperFunctions $helperFunctions)
     {
         $this->userService = $userService;
+        $this->helperFunctions = $helperFunctions;
     }
 
+    /**
+     * Summary of showLoginForm
+     * @return \Inertia\Response
+     */
     public function showLoginForm()
     {
         return Inertia::render('Admin/Login');
     }
 
-    public function login(Request $request)
+    /**
+     * Summary of login
+     * @param \App\Http\Requests\AdminLoginRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function login(AdminLoginRequest $request)
     {
-        $request->validate([
-            'email'    => 'required|email',
-            'password' => 'required',
-        ]);
-
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'role' => 1])) {
             return redirect()->route('admin.dashboard');
         }
@@ -41,25 +51,26 @@ class AdminController extends Controller
         return back()->withErrors(['email' => 'Invalid credentials or not an admin.']);
     }
 
-    //Admin dashboard
+    /**
+     * Summary of index
+     * @return \Inertia\Response
+     */
     public function index(): Response
     {
-        // Query users created on that exact date
         $latestUsers  = $this->userService->getLatestUsers();
 
-        //GoPeakFit user without Trainer
         $gpfUser =  $this->userService->countGoPeakFitTrainees();
 
-        // Get count of Trainee and Trainer
         $trainerCount = $this->userService->countTrainer();
+
         $traineeCount = $this->userService->countTraineesAddedByTrainer();
 
-        //This is for chart data count in dashboard for GPF trainee, trainer and trainee added by trainer
         $monthlyGpfTrainerCount = $this->getUserCountByMonthBaseOnRole(3, null);
+
         $monthlyTrainerCount = $this->getUserCountByMonthBaseOnRole(2, 1);
+
         $monthlyTraineeCount = $this->getUserCountByMonthBaseOnRole(3, 1);
 
-        // Render with Inertia
         return Inertia::render('Admin/Dashboard', [
             'latestUsers' => $latestUsers,
             'gpfUsersCount' => $gpfUser,
@@ -88,20 +99,10 @@ class AdminController extends Controller
             throw $th;
         }
 
-        // If API call (like "Load more"), return JSON
         if (request()->wantsJson() || $pageNumber != 1) {
-            return response()->json([
-                'success' => true,
-                'data' => $result,
-                'pagination' => [
-                    'page' => $pageNumber,
-                    'per_page' => $perPage,
-                    'total' => $result->total() ?? null, // if using LengthAwarePaginator
-                ],
-            ]);
+            $this->jsonReturn($pageNumber, $result, $perPage);
         }
 
-        // Otherwise, render Inertia for the initial page
         return Inertia::render('Trainee/GpfTrainee/GpfTrainee', [
             'data' => $result,
         ]);
@@ -124,20 +125,10 @@ class AdminController extends Controller
             throw $th;
         }
 
-        // If API call (like "Load more"), return JSON
         if (request()->wantsJson() || $pageNumber != 1) {
-            return response()->json([
-                'success' => true,
-                'data' => $result,
-                'pagination' => [
-                    'page' => $pageNumber,
-                    'per_page' => $perPage,
-                    'total' => $result->total() ?? null, // if using LengthAwarePaginator
-                ],
-            ]);
+            $this->jsonReturn($pageNumber, $result, $perPage);
         }
 
-        // Otherwise, render Inertia for the initial page
         return Inertia::render('Trainee/NonGpfTrainee/NonGpfTrainee', [
             'data' => $result,
         ]);
@@ -159,20 +150,10 @@ class AdminController extends Controller
             throw $th;
         }
 
-        // If API call (like "Load more"), return JSON
         if (request()->wantsJson() || $pageNumber != 1) {
-            return response()->json([
-                'success' => true,
-                'data' => $result,
-                'pagination' => [
-                    'page' => $pageNumber,
-                    'per_page' => $perPage,
-                    'total' => $result->total() ?? null, // if using LengthAwarePaginator
-                ],
-            ]);
+            $this->jsonReturn($pageNumber, $result, $perPage);
         }
 
-        // Otherwise, render Inertia for the initial page
         return Inertia::render('Trainer/Trainer', [
             'data' => $result,
         ]);
@@ -181,29 +162,29 @@ class AdminController extends Controller
     //Counter based on role
     public function getUserCountByMonthBaseOnRole(Int $role, Int|null $trainerId)
     {
-        $currentYear = Carbon::now()->year;
-
         // Query users created in the current year, grouped by month
-        $query =  DB::table('users')
-            ->select(DB::raw('MONTH(created_at) as month'), DB::raw('COUNT(*) as total'))
-            ->where('role', $role)
-            ->whereYear('created_at', $currentYear);
-
-        // For GoPeakFit Users, not added by trainer
-        if ($trainerId == null) {
-            $query = $query->where('trainer_id', null);
-        }
-
-        // Final Query
-        $usersByMonth = $query->groupBy(DB::raw('MONTH(created_at)'))
-            ->pluck('total', 'month');
-
-        // Create array for all 12 months initialized to 0
-        $allMonths = collect(range(1, 12))->mapWithKeys(function ($monthNumber) use ($usersByMonth) {
-            $monthName = Carbon::create()->month($monthNumber)->format('F');
-            return [$monthName => $usersByMonth[$monthNumber] ?? 0];
-        });
+        $allMonths = $this->helperFunctions->getMonthlyUserCountByRole($role, $trainerId);
 
         return response()->json($allMonths)->original;
+    }
+
+    /**
+     * Summary of jsonReturn
+     * @param mixed $pageNumber
+     * @param mixed $result
+     * @param mixed $perPage
+     * @return JsonResponse
+     */
+    private function jsonReturn($pageNumber, $result, $perPage)
+    {
+        return response()->json([
+            'success' => true,
+            'data' => $result,
+            'pagination' => [
+                'page' => $pageNumber,
+                'per_page' => $perPage,
+                'total' => $result->total() ?? null, // if using LengthAwarePaginator
+            ],
+        ]);
     }
 }
