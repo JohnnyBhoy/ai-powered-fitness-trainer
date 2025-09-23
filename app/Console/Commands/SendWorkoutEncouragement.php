@@ -8,7 +8,7 @@ use App\Http\Controllers\WorkoutTrainerController;
 class SendWorkoutEncouragement extends Command
 {
     protected $signature = 'workout:send-encouragement';
-    protected $description = 'Expert workout and diet trainer';
+    protected $description = 'Daily SMS update to GoPeakFit Trainee';
 
     protected $workoutController;
 

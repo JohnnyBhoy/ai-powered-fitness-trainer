@@ -6,6 +6,13 @@ use App\Models\GpfPhoneVerification;
 
 class PhoneVerificationRepository
 {
+    protected $phoneVerification;
+
+    public function __construct(GpfPhoneVerification $phoneVerification)
+    {
+        $this->phoneVerification = $phoneVerification;
+    }
+
     /**
      * Summary of create
      * @param mixed $userId
@@ -14,7 +21,7 @@ class PhoneVerificationRepository
      */
     public function create($userId, $otp)
     {
-        return  GpfPhoneVerification::create([
+        return  $this->phoneVerification->create([
             'user_id' => $userId,
             'otp' => $otp,
             'is_verified' => 0
@@ -28,7 +35,8 @@ class PhoneVerificationRepository
      */
     public function show($id)
     {
-        return GpfPhoneVerification::where('user_id', $id)->first();
+        return $this->phoneVerification->where('user_id', $id)
+            ->first();
     }
 
     /**
@@ -38,7 +46,19 @@ class PhoneVerificationRepository
      */
     public function update($id)
     {
-        return GpfPhoneVerification::where('user_id', $id)
+        return $this->phoneVerification->where('user_id', $id)
             ->update(['is_verified' => 1]);
+    }
+
+    /**
+     * Update OTP when resend otp is clicked
+     * @param int $userId
+     * @param int $newOtp
+     * @return bool
+     */
+    public function updateOtp($userId, $newOtp): bool
+    {
+        return $this->phoneVerification->where('user_id', $userId)
+            ->update(['otp' => $newOtp]);
     }
 }

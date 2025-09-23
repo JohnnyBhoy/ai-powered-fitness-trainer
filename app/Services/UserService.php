@@ -109,4 +109,25 @@ class UserService
             throw $th;
         }
     }
+
+    /**
+     * Summary of getUserDataByPhoneNumber
+     * Return users info with the given phone number during sms
+     * @param mixed $userPhone
+     * @return object|null
+     */
+    public function getUserDataByPhoneNumber($userPhone)
+    {
+        return $this->userRepository->getUserDataByPhoneNumber($userPhone);
+    }
+
+
+    /**
+     * Summary of getAllUsersGoalsAndBiometric
+     * @return mixed
+     */
+    public function getAllUsersGoalsAndBiometric(): mixed
+    {
+        return $this->userRepository->getAllUsersGoalsAndBiometric();
+    }
 }

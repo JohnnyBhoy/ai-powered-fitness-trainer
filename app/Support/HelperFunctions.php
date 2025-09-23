@@ -9,6 +9,7 @@ use App\Models\GpfPhoneVerification;
 use App\Models\GpfSubscription;
 use App\Models\TraineeProgress;
 use App\Repositories\MessageRepository;
+use App\Services\TrialProgramService;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Support\Facades\DB;
@@ -16,19 +17,12 @@ use Illuminate\Support\Facades\DB;
 class HelperFunctions
 {
     protected $message;
+    protected $trialProgramService;
 
-    public function __construct(MessageRepository $message)
+    public function __construct(MessageRepository $message, TrialProgramService $trialProgramService)
     {
         $this->message = $message;
-    }
-
-    /**
-     * Summary of getPhoneNumberById
-     * @param int $id
-     */
-    public function getPhoneNumberById(Int $id): mixed
-    {
-        return GpfBiometric::where('user_id', $id)->value('phone_number');
+        $this->trialProgramService = $trialProgramService;
     }
 
     /**
@@ -98,62 +92,6 @@ class HelperFunctions
         return str_pad(strval(random_int(1, 999999)), 6, '0', STR_PAD_LEFT);
     }
 
-
-    /**
-     * Summary of sendOtp
-     * @param mixed $phoneNumber
-     * @param mixed $confirmationToken
-     * @return void
-     */
-    public function sendOtp($phoneNumber, $confirmationToken)
-    {
-        // Use Twilio's API to send a confirmation SMS
-        $sid = env('TWILIO_SID');
-        $authToken = env('TWILIO_AUTH_TOKEN');
-        $twilio = new \Twilio\Rest\Client($sid, $authToken);
-
-        $twilio->messages->create(
-            $phoneNumber,
-            [
-                'from' => env('TWILIO_PHONE_NUMBER'),
-                'body' => "Thank you for opting in to receive workout messages, here is your confirmation code : $confirmationToken",
-            ]
-        );
-    }
-
-    /**
-     * Summary of resendOtp
-     * @param mixed $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function resendOtp($request)
-    {
-        $newOtp = $this->generateOTP();
-        $userId = $request->input('user_id');
-
-        // Validate the form data
-        $request->validate([
-            'user_id' => 'required', // Ensure the user id is entered
-        ]);
-
-        // Get phone number based in user id
-        $phoneNumber = GpfBiometric::where('user_id', $userId)->value('phone_number');
-
-        // Update new confirm token
-        $user = GpfPhoneVerification::where('user_id', $userId)->update(['otp' => $newOtp]);
-
-        // Optionally, send a confirmation message to the user's phone number using Twilio
-        $this->sendOtp($phoneNumber, $newOtp);
-
-        // Compare
-        if ($user) {
-            // Redirect the user to a thank you or confirmation page
-            return response()->json(['message' => 'You have successfully resend new OTP, please check your inbox.'], 200);
-        }
-
-        // Redirect the user to a thank you or confirmation page
-        return response()->json(['message' => 'Failed sending verification OTP, try again later.'], 500);
-    }
 
     /**
      * Summary of prependPlusOneIfNumberHasNo
@@ -232,7 +170,7 @@ class HelperFunctions
     {
         $strictnessLevel = $this->getStrictnessLevel($user->strictness_level);
         $daysSinceAccountCreated = $this->getDaysSinceAccountCreated($user);
-        $trialPogramData = $this->message->getTrialProgramByDay($daysSinceAccountCreated);
+        $trialPogramData = $this->trialProgramService->find($daysSinceAccountCreated);
         $workout = implode(",", $trialPogramData->workout);
 
         $ubscribedInstruction = "1. Personalize the workout and nutrition advice for {$user->first_name}.
@@ -367,19 +305,6 @@ class HelperFunctions
     }
 
     /**
-     * Summary of createTwilioReply
-     * @param mixed $botResponse
-     * @return string
-     */
-    public function createTwilioReply($botResponse)
-    {
-        return '<?xml version="1.0" encoding="UTF-8"?>
-                    <Response>
-                        <Message>' . htmlspecialchars($botResponse) . '</Message>
-                    </Response>';
-    }
-
-    /**
      * Summary of getDayBeforeTrialExpired
      * @param mixed $isPromo
      * @return int
@@ -387,5 +312,27 @@ class HelperFunctions
     public function getDayBeforeTrialExpired($isPromo): int|string
     {
         return $isPromo == 1 ?  29 : 4;
+    }
+
+    /**
+     * Summary of geteNewWeightQuestion
+     * @return string
+     */
+    public function getNewWeightQuestion()
+    {
+        return "As your weekly program comes to end, we’d like to record your current weight. This will help us assess your progress and determine the next steps to support you in achieving your desired weight. Please reply with your weight in lbs.";
+    }
+
+    /**
+     * Summary of getNewWeight
+     * @param mixed $id
+     * @param mixed $currentWeight
+     * @return float|int
+     */
+    public function getNewWeight($id, $currentWeight): float|int
+    {
+        $newWeight = TraineeProgress::where('user_id', $id)->value('weight_lbs');
+
+        return $currentWeight - $newWeight;
     }
 }

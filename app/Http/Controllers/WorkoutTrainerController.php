@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\MessageRepository;
 use App\Repositories\UserRepository;
+use App\Services\AiService;
+use App\Services\MessageService;
+use App\Services\TwilioService;
+use App\Services\UserService;
 use App\Support\HelperFunctions;
 use Illuminate\Http\Request;
 
@@ -11,32 +14,29 @@ class WorkoutTrainerController extends Controller
 {
 
     protected $helpers;
-    protected $message;
-    protected $user;
+    protected $messageService;
+    protected $aiService;
+    protected $twilioService;
+    protected $userService;
 
     /**
      * Summary of __construct
      * @param \App\Support\HelperFunctions $helpers
-     * @param \App\Repositories\MessageRepository $message
-     * @param \App\Repositories\UserRepository $user
+     * @param \App\Services\MessageService $messageService
      */
-    public function __construct(HelperFunctions $helpers, MessageRepository $message, UserRepository $user)
-    {
+    public function __construct(
+        HelperFunctions $helpers,
+        MessageService $messageService,
+        UserService $userService,
+        AiService $aiService,
+        TwilioService $twilioService,
+    ) {
         $this->helpers = $helpers;
-        $this->message = $message;
-        $this->user = $user;
+        $this->messageService = $messageService;
+        $this->userService = $userService;
+        $this->aiService = $aiService;
+        $this->twilioService = $twilioService;
     }
-
-
-    // Method to get response from OpenAI
-    public function getOpenAIResponse($userMessage, $userData = null)
-    {
-        $response = $this->message->getAiResponse($userData, $userMessage);
-        $data = json_decode($response->getBody()->getContents(), true);
-
-        return $data['choices'][0]['message']['content'] ?? 'Sorry, I did not get that.';
-    }
-
 
     // Method to handle incoming SMS from User
     public function handleIncomingSms(Request $request)
@@ -46,7 +46,7 @@ class WorkoutTrainerController extends Controller
         $userPhone = $request->input('From');
 
         // Get user based on phone number
-        $userData = $this->user->getUserDataByPhoneNumber($userPhone);
+        $userData = $this->userService->getUserDataByPhoneNumber($userPhone);
 
         // Save the latest weight of the trainee in 5-day trial when its about to end
         $timeOfTheDay = $this->helpers->getTimeOfTheDay();
@@ -54,7 +54,11 @@ class WorkoutTrainerController extends Controller
         $dayBeforeTrialExpire = $this->helpers->getDayBeforeTrialExpired($userData->is_promo);
 
         // Save new weight progress day before it ended
-        if ($timeOfTheDay == 'evening' && $daysSinceAccountCreated == $dayBeforeTrialExpire && $this->helpers->replyIsNewWeight($userMessage)) {
+        if (
+            $timeOfTheDay == 'evening'
+            && ($daysSinceAccountCreated == $dayBeforeTrialExpire || $userData->subscription === 'premium')
+            && $this->helpers->replyIsNewWeight($userMessage)
+        ) {
             $this->helpers->saveNewWeight($userData->user_id, $userMessage);
         }
 
@@ -62,13 +66,10 @@ class WorkoutTrainerController extends Controller
         $systemPropmt = $this->helpers->generatePrompt($userData);
 
         // Continue conversation
-        $botResponse = $this->getOpenAIResponse($userMessage, $systemPropmt);
-        $newConversation = "$userData->conversations |$userData->first_name : $userMessage |GPF : $botResponse";
+        $botResponse = $this->aiService->getOpenAIResponse($userMessage, $systemPropmt);
+        $this->messageService->appendBotMessageToConversation($userData, $botResponse);
 
-        // Update conversation
-        $this->message->update($userData->user_id, $newConversation);
-
-        $twiml = $this->helpers->createTwilioReply($botResponse);
+        $twiml = $this->twilioService->createTwilioReply($botResponse);
 
         return response($twiml, 200)
             ->header('Content-Type', 'application/xml');
@@ -84,62 +85,95 @@ class WorkoutTrainerController extends Controller
     public function sendWorkoutEncouragement(): void
     {
         $timeOfDay = $this->helpers->getTimeOfTheDay();
-        $users = $this->user->getAllUsersGoalsAndBiometric();
+        $users = $this->userService->getAllUsersGoalsAndBiometric();
 
         foreach ($users as $user) {
             $daysSinceAccountCreated = $this->helpers->getDaysSinceAccountCreated($user);
             $trialDay = $this->helpers->getTrialDay($user->is_promo);
-
             $askLatestWeight = $this->helpers->getLatestWeightQuestion($trialDay);
 
-            if ($daysSinceAccountCreated == 4 && $timeOfDay == 'evening' && $user->is_promo == 0) { // Track latest weight to know the progress
-                $this->message->sendSms(
-                    $user->phone_number,
-                    $askLatestWeight
-                );
-            } elseif ($daysSinceAccountCreated == 29 && $timeOfDay == 'evening' && $user->is_promo == 1) { // Track latest weight to know the progress
-                $this->message->sendSms(
+            if ($this->timeToUpdateCurrentWeight($daysSinceAccountCreated, $timeOfDay, $user)) {
+                $this->messageService->sendSms(
                     $user->phone_number,
                     $askLatestWeight
                 );
             } elseif ($daysSinceAccountCreated < 5) { // Executes if trainee is still in 5-Day Trial
-                $this->message->sendDailyUpdateForTrialProgram(
-                    $user,
+                $message = $this->messageService->dailyMessageUpdates(
+                    $user->user_id,
+                    $user->subscription,
                     $daysSinceAccountCreated,
-                    $timeOfDay
+                    $user->first_name,
+                    $user->phone_number,
+                    $user->current_weight
                 );
-            } elseif ($daysSinceAccountCreated == 5 && $user->is_promo == 0 && $user->subscription == 'trial') { //Executes if 5-Day trial expired
-                $this->message->sendExpirationMessageToTrial(
+
+                $this->messageService->appendBotMessageToConversation($user, $message);
+                $this->messageService->sendSms($user->phone_number, $message);
+            } elseif ($this->isTrialExpire($daysSinceAccountCreated, $user)) {
+                $this->messageService->sendExpirationMessageToTrial(
                     $user->phone_number,
                     $user->first_name,
                     0,
                     $user->current_weight,
                     $user->user_id,
                 );
-            } elseif ($daysSinceAccountCreated == 30 && $user->is_promo == 1) { // Executes if trainee is in promo account expired
-                $this->message->sendExpirationMessageToTrial(
-                    $user->phone_number,
-                    $user->first_name,
-                    1,
-                    $user->current_weight,
-                    $user->user_id,
-                );
             } else { // Executes if the trainee is paid to premium and subscribed to our program
-                if (($user->subscription != 'trial' && $user->payment_status == 'paid') || ($user->is_promo == 1 && $daysSinceAccountCreated < 30)) {
-                    $messages = $this->message->dailyMessageUpdates();
+                if ($this->isPremiumOrPromo($user, $daysSinceAccountCreated)) {
+                    $message = $this->messageService->dailyMessageUpdates(
+                        $user->user_id,
+                        $user->subscription,
+                        $daysSinceAccountCreated,
+                        $user->first_name,
+                        $user->phone_number,
+                        $user->current_weight
+                    );
 
-                    // Generate message udpate to trainee about the daily progress
-                    $botMessage = $this->message->getBotMessage($user, $messages, $timeOfDay);
+                    // Guard if no message generated
+                    if ($message === 'Happy Workout') {
+                        continue;
+                    }
 
-                    // Add latest converstation to message log
-                    $this->message->appendBotMessageToConversation($user, $botMessage);
-
-                    // Send daily updates (3x per day)
-                    $this->message->sendSms($user->phone_number, $botMessage);
+                    $this->messageService->appendBotMessageToConversation($user, $message);
+                    $this->messageService->sendSms($user->phone_number, $message);
                 }
-
-                return;
             }
         }
+    }
+
+    /**
+     * Summary of timeToUpdateCurrentWeight
+     * @param mixed $daysSinceAccountCreated
+     * @param mixed $timeOfDay
+     * @param mixed $user
+     * @return bool
+     */
+    private function timeToUpdateCurrentWeight($daysSinceAccountCreated, $timeOfDay, $user): bool
+    {
+        return ($daysSinceAccountCreated == 4 && $timeOfDay == 'evening' && $user->is_promo == 0)
+            || ($daysSinceAccountCreated == 29 && $timeOfDay == 'evening' && $user->is_promo == 1);
+    }
+
+
+    /**
+     * Summary of isTrialExpire
+     * @param mixed $daysSinceAccountCreated
+     * @param mixed $user
+     * @return bool
+     */
+    private function isTrialExpire($daysSinceAccountCreated, $user): bool
+    {
+        return ($daysSinceAccountCreated == 5 && $user->is_promo == 0 && $user->subscription == 'trial')
+            || ($daysSinceAccountCreated == 30 && $user->is_promo == 1);
+    }
+
+    /**
+     * Summary of isPremiumOrPromo
+     * @param mixed $user
+     * @param mixed $daysSinceAccountCreated
+     * @return bool
+     */
+    private function isPremiumOrPromo($user, $daysSinceAccountCreated)
+    {
+        return ($user->subscription != 'trial' && $user->payment_status == 'paid') || ($user->is_promo == 1 && $daysSinceAccountCreated < 30);
     }
 }

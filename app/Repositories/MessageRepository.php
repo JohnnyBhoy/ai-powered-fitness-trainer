@@ -2,27 +2,29 @@
 
 namespace App\Repositories;
 
-use App\Models\GpfFiveDaysProgram;
 use App\Models\GpfMessage;
-use App\Models\TraineeProgress;
-use Illuminate\Support\Facades\DB;
-use GuzzleHttp\Client as GuzzleClient;
+use App\Services\TraineeProgressService;
 use Twilio\Rest\Client;
 
 class MessageRepository
 {
+    protected $message;
+    protected $traineeProgessService;
+
+    public function __construct(GpfMessage $message, TraineeProgressService $traineeProgressService)
+    {
+        $this->message = $message;
+        $this->traineeProgressService = $traineeProgressService;
+    }
+
     /**
      * Summary of create
-     * @param mixed $userId
-     * @param mixed $phone
+     * @param array $data
      * @return GpfMessage
      */
-    public function create($userId, $phone)
+    public function create(array $data)
     {
-        return GpfMessage::create([
-            'user_id' => $userId,
-            'phone_number' => $phone,
-        ]);
+        return $this->message->create($data);
     }
 
     /**
@@ -34,41 +36,10 @@ class MessageRepository
      */
     public function update($id, $newConversation)
     {
-        return GpfMessage::where('user_id', $id)
+        return $this->message->where('user_id', $id)
             ->update([
                 'conversations' => $newConversation,
             ]);
-    }
-
-    /**
-     * Summary of getAiResponse
-     * Return a response from openAI, when the trainee ask via sms
-     * @param mixed $userData
-     * @param mixed $userMessage
-     * @return \Psr\Http\Message\ResponseInterface
-     */
-    public function getAiResponse($userData, $userMessage)
-    {
-
-        $apiKey = config('services.openai.api_key');
-        $client = new GuzzleClient();
-
-        $response = $client->post('https://api.openai.com/v1/chat/completions', [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $apiKey,
-                'Content-Type' => 'application/json',
-            ],
-            'json' => [
-                'model' => 'gpt-3.5-turbo',
-                'messages' => [
-                    ['role' => 'system', 'content' => $userData],
-                    ['role' => 'user', 'content' => $userMessage],
-                ],
-                'max_tokens' => 300,
-            ]
-        ]);
-
-        return $response;
     }
 
     /**
@@ -96,7 +67,7 @@ class MessageRepository
      */
     public function appendBotMessageToConversation($user, $botMessage): bool
     {
-        return GpfMessage::where('user_id', operator: $user->user_id)
+        return $this->message->where('user_id', operator: $user->user_id)
             ->update(['conversations' => "$user->conversations ,| GPF: $botMessage"]);
     }
 
@@ -154,7 +125,7 @@ class MessageRepository
      */
     public function sendExpirationMessageToTrial($phoneNumber, $firstName, $isPromo, $currentWeight, $userId)
     {
-        $newWeight = $this->getNewWeight($userId, $currentWeight);
+        $newWeight = $this->traineeProgessService->getNewWeight($userId, $currentWeight);
 
         // Evaluation greetings if the user lose weight lbs
         $newWeight > 0
@@ -194,55 +165,5 @@ class MessageRepository
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
-    }
-
-    /**
-     * Summary of sendDailyUpdateForTrialProgram
-     * @param mixed $user
-     * @param mixed $daysSinceAccountCreated
-     * @param mixed $timeOfDay
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function sendDailyUpdateForTrialProgram($user, $daysSinceAccountCreated, $timeOfDay)
-    {
-        $todaysProgram = $this->getTrialProgramByDay($daysSinceAccountCreated);
-        $todaysProgramWorkout = implode(",", $todaysProgram->workout);
-
-        if ($timeOfDay == 'morning' || $timeOfDay == 'trial') {
-            $smsToTrainee = "Hi $user->first_name, today is your Day $todaysProgram->day of GoPeakFit 5-Day Trial Program, today's focus is $todaysProgram->focus, Warm up by doing $todaysProgram->warm_up and after that here is your daily workout guide $todaysProgramWorkout , after doing your workout, dont forget to ooldown by doing $todaysProgram->cool_down, at the end of the day you will have a $todaysProgram->alignment. Stay on track and focus on your goal. We are here to help you achieve it.";
-        } elseif ($timeOfDay == 'afternoon') {
-            $smsToTrainee = "Hey $user->first_name, just an update, how your morning workout? did you able to finish it? or you have a blocker? Please let me know so i can assist you.";
-        } else {
-            $smsToTrainee = "Good evening $user->first_name, how are you? are you done with your Day $todaysProgram->day program? Today you are expected to have alignment on  $todaysProgram->alignment";
-        }
-
-        if ($timeOfDay != 'trial') {
-            $this->appendBotMessageToConversation($user, $smsToTrainee);
-        }
-
-        return $this->sendSms($user->phone_number, $smsToTrainee);
-    }
-
-    /**
-     * Summary of getTrialProgramByDay
-     * @param mixed $day
-     * @return GpfFiveDaysProgram|null
-     */
-    public function getTrialProgramByDay($day): GpfFiveDaysProgram|null
-    {
-        return GpfFiveDaysProgram::where('day', $day)->first();
-    }
-
-    /**
-     * Summary of getNewWeight
-     * @param mixed $id
-     * @param mixed $currentWeight
-     * @return float|int
-     */
-    public function getNewWeight($id, $currentWeight): float|int
-    {
-        $newWeight = TraineeProgress::where('user_id', $id)->value('weight_lbs');
-
-        return $currentWeight - $newWeight;
     }
 }

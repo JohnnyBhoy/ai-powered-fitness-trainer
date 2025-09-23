@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\GpfSubscription;
-use App\Repositories\MessageRepository;
 use App\Repositories\UserRepository;
+use App\Services\BiometricService;
+use App\Services\MessageService;
+use App\Services\ProgramService;
+use App\Services\SubscriptionService;
 use App\Support\HelperFunctions;
 use Illuminate\Http\Request;
 use Stripe\Stripe;
@@ -14,15 +16,28 @@ class StripePaymentController extends Controller
 {
     protected $workoutController;
     protected $helperFunctions;
-    protected $message;
+    protected $messageService;
     protected $user;
+    protected $programService;
+    protected $biometricService;
+    protected $subscriptionService;
 
-    public function __construct(WorkoutTrainerController $workoutController, HelperFunctions $helperFunctions, MessageRepository $message, UserRepository $user)
-    {
+    public function __construct(
+        WorkoutTrainerController $workoutController,
+        HelperFunctions $helperFunctions,
+        MessageService $messageService,
+        UserRepository $user,
+        ProgramService $programService,
+        BiometricService $biometricService,
+        SubscriptionService $subscriptionService,
+    ) {
         $this->workoutController = $workoutController;
         $this->helperFunctions = $helperFunctions;
-        $this->message = $message;
+        $this->messageService = $messageService;
         $this->user = $user;
+        $this->programService = $programService;
+        $this->biometricService = $biometricService;
+        $this->subscriptionService = $subscriptionService;
     }
 
     /**
@@ -36,38 +51,52 @@ class StripePaymentController extends Controller
     }
 
     /**
-     * Summary of createSession
+     * Create a Stripe Checkout session for the user.
+     *
      * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function createSession(Request $request)
     {
-        $userId = $request->get('user_id') ?? 0;
-        $amount = $request->get('amount') ?? 1;
-        $productName =  $amount == 1 ? 'Go Peaf Fit 5-Day Challenge' : 'Go Peaf Fit 1-on-1 Coaching';
-        $productDescription =   $amount == 1 ? 'For just $1, you’re getting 5 days of structure, accountability, and real results. No guesswork, no gimmicks—just a proven plan to jumpstart your transformation.' : 'Access to real human coaching and personalized plans for $49/month.';
-        $unitAmount = $amount == 1 ? 100 : 4900;
-        $mode = $amount == 1 ? 'payment' : 'subscription';
+        $userId = (int) $request->get('user_id', 0);
+        $amount = (int) $request->get('amount', 1);
+
+        $products = $this->getProductData();
+
+        $product = $products[$amount] ?? $products[1];
 
         Stripe::setApiKey(config('services.stripe.secret'));
 
-        // Trial Payment
-        if ($amount == 1) {
-            // Log payment transactions to gpf_subscriptions table
-            $this->logPaymentTransaction($userId, $amount);
+        try {
+            if ($amount === 1) {
+                $this->subscriptionService->create($userId, $amount);
+            } else {
+                $this->subscriptionService->updateSubscriptionToPremium($userId);
+            }
 
-            $session = $this->createPaymentSession($userId, $amount, $mode, $productName, $productDescription, $unitAmount);
-        } else {
-            // Regular Subscription (49)
-            $session = $this->createPaymentSession($userId, $amount, $mode, $productName, $productDescription, $unitAmount);
+            $session = $this->createPaymentSession(
+                $userId,
+                $amount,
+                $product['mode'],
+                $product['name'],
+                $product['description'],
+                $product['unit_amount']
+            );
 
-            //Update to premium
-            $this->updateSubscriptionToPremium($userId);
+            $this->subscriptionService->updatePaymentData($session, $userId, $product['name']);
+
+            if (empty($session->url)) {
+                return redirect()->route('checkout')->withErrors('Unable to create payment session.');
+            }
+
+            return redirect($session->url);
+        } catch (\Exception $e) {
+            \Log::error('Stripe createSession error: ' . $e->getMessage(), [
+                'user_id' => $userId,
+                'amount' => $amount,
+            ]);
+            return redirect()->route('checkout')->withErrors('There was a problem creating your payment session. Please try again.');
         }
-
-        // Store the important payment details in db
-        $this->updatePaymentData($session, $userId, $productName);
-
-        return redirect($session->url);
     }
 
     /**
@@ -79,9 +108,7 @@ class StripePaymentController extends Controller
     {
         $sessionId = $request->query('session_id');
         $userId = $request->query('user_id');
-
-        // Get the user phone number
-        $phoneNumber = $this->helperFunctions->getPhoneNumberById($userId);
+        $amount = $request->query('amount') ?: 1;
 
         if (!$sessionId) {
             abort(400, 'Missing session_id');
@@ -91,20 +118,23 @@ class StripePaymentController extends Controller
 
         try {
             $session = Session::retrieve($sessionId);
-            $welcomeMessage = "Welcome to GoPeakFit! 🙌 We're grateful to have you on board. Day 1 of your 5-Day Trial starts now — and I’m here to guide you. Let’s crush your goals together. You’ve got this! 💪";
 
-            // Update your subscription table
+            $phoneNumber = $this->biometricService->getPhoneNumberById($userId);
+
+            $welcomeMessage = $this->messageService->getWelcomeMessageOnSubscription($amount);
+
             $this->helperFunctions->updateSubscriptionOnPaymentSuccess($session);
-
-            // Create first conversation
             $this->helperFunctions->createInitialConversation($userId, $welcomeMessage);
+            $this->messageService->sendSms($phoneNumber, $welcomeMessage);
 
-            // Send welcome sms to user phone number
-            $this->message->sendSms($phoneNumber, $welcomeMessage);
-
-            // Send 1st day on 5-day trial program
             $user = $this->user->getUserDataByPhoneNumber($phoneNumber);
-            $this->message->sendDailyUpdateForTrialProgram($user, 1, 'trial');
+
+            // Log program and plan if user subscribed to premium else send daily update
+            if ((string)$amount === '49') {
+                $this->programService->create($user);
+            } else {
+                $this->messageService->sendDailyUpdateForTrialProgram($user, 1, 'trial');
+            }
 
             return view('stripe.success');
         } catch (\Exception $e) {
@@ -122,52 +152,40 @@ class StripePaymentController extends Controller
     }
 
     /**
-     * Summary of logPaymentTransaction
-     * @param mixed $userId
-     * @param mixed $amount
-     * @return GpfSubscription
-     */
-    private function logPaymentTransaction($userId, $amount): GpfSubscription
-    {
-        return  GpfSubscription::create([
-            'user_id' => $userId,
-            'subscription' => 'trial',
-            'amount' => $amount,
-            'quantity' => 1,
-            'total_amount' => $amount,
-            'payment_status' => 'pending',
-            'payment_type' => 'card',
-            'status' => 'pending',
-            'currency' => 'usd',
-            'session_id' => null,
-            'payment_intent_id' => null,
-            'days_left' => 5,
-        ]);
-    }
-
-    /**
-     * Summary of createPaymentSession
-     * @param mixed $userId
-     * @param mixed $amount
+     * Create a Stripe payment session.
+     *
+     * @param int $userId
+     * @param int $amount
+     * @param string $mode
+     * @param string $name
+     * @param string $description
+     * @param int $unitAmount
      * @return \Stripe\Checkout\Session
      */
     private function createPaymentSession($userId, $amount, $mode, $name, $description, $unitAmount): Session
     {
-        try {
-            return  Session::create([
-                'line_items' => [
-                    [
-                        'price_data' => [
-                            'currency' => 'USD',
-                            'product_data' => [
-                                'name' => $name,
-                                'description' => $description,
-                            ],
-                            'unit_amount' => $unitAmount,
-                        ],
-                        'quantity' => 1,
-                    ],
+        $lineItem = [
+            'quantity' => 1,
+            'price_data' => [
+                'currency' => 'USD',
+                'product_data' => [
+                    'name' => $name,
+                    'description' => $description,
                 ],
+                'unit_amount' => $unitAmount,
+            ],
+        ];
+
+        if ($mode === 'subscription') {
+            $lineItem['price_data']['recurring'] = [
+                'interval' => 'month',
+                'interval_count' => 1,
+            ];
+        }
+
+        try {
+            return Session::create([
+                'line_items' => [$lineItem],
                 'mode' => $mode,
                 'success_url' => route('success') . "?session_id={CHECKOUT_SESSION_ID}&user_id=$userId&amount=$amount",
                 'cancel_url' => route('checkout'),
@@ -178,32 +196,24 @@ class StripePaymentController extends Controller
     }
 
     /**
-     * Summary of updateSubscriptionToPremium
-     * @param mixed $userId
-     * @return bool
+     * Summary of getProductData
+     * @return array{description: string, mode: string, name: string, unit_amount: int[]}
      */
-    private function updateSubscriptionToPremium($userId): bool
+    public function getProductData()
     {
-        return GpfSubscription::where('user_id', $userId)->update(['subscription' => 'premium']);
-    }
-
-    /**
-     * Summary of updatePaymentData
-     * @param mixed $session
-     * @param mixed $userId
-     * @param mixed $productName
-     * @return bool
-     */
-    private function updatePaymentData($session, $userId, $productName): bool
-    {
-        $stripePaymentData = [
-            'session_id' => $session->id,
-            'currency' => $session->currency,
-            'product_name' => $productName,
-            'status' => $session->status,
-            'amount' => $session->amount_total,
+        return [
+            1 => [
+                'name' => 'Go Peaf Fit 5-Day Challenge',
+                'description' => 'For just $1, you’re getting 5 days of structure, accountability, and real results. No guesswork, no gimmicks—just a proven plan to jumpstart your transformation.',
+                'unit_amount' => 100,
+                'mode' => 'payment',
+            ],
+            49 => [
+                'name' => 'Go Peaf Fit 1-on-1 Coaching',
+                'description' => 'Access to real human coaching and personalized plans for $49/month.',
+                'unit_amount' => 4900,
+                'mode' => 'subscription',
+            ],
         ];
-
-        return GpfSubscription::where('user_id', $userId)->update($stripePaymentData);
     }
 }
