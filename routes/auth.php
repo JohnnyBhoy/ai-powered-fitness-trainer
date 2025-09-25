@@ -12,7 +12,19 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\BiometricController;
 use App\Http\Controllers\GoalsController;
+use App\Http\Controllers\MessageController;
 use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| AUTH Portal for GoPeakFit Guest or non-registered users
+|--------------------------------------------------------------------------
+|
+| This routes consist of registration and login
+| Forgot password , sent otp , biometrics, password reset
+| goals, verify otp and resend OTP verification
+|
+*/
 
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
@@ -46,9 +58,21 @@ Route::middleware('guest')->group(function () {
     Route::post('/verify', [BiometricController::class, 'verifyPhoneNumber'])
         ->name('verify');
 
-    Route::post('/resend-otp', [BiometricController::class, 'resendOtp'])
+    Route::post('/resend-otp', [MessageController::class, 'resendOtp'])
         ->name('resend');
 });
+
+
+/*
+|--------------------------------------------------------------------------
+| AUTH Portal for GoPeakFit Authenticated users
+|--------------------------------------------------------------------------
+|
+| This routes consist of email verification
+| Notification, confirm password, password reset
+| and logout to end user session
+|
+*/
 
 Route::middleware('auth')->group(function () {
     Route::get('verify-email', EmailVerificationPromptController::class)

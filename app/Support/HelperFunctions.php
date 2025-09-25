@@ -35,7 +35,7 @@ class HelperFunctions
         return GpfSubscription::where('session_id', $session->id)->update([
             'payment_status' => $session->payment_status,
             'status' => $session->status,
-            'payment_intent_id' => $session->payment_intent,
+            'payment_intent_id' => $session->payment_intent ?? $session->subscription,
             'customer_id' => $session->customer ?? $session->created,
         ]);
     }
@@ -148,14 +148,14 @@ class HelperFunctions
     /**
      * Summary of getDaysSinceAccountCreated
      * return account days old (to be use in 5 days program)
-     * @param mixed $user
+     * @param string $created The date where user is created
      * @return int
      */
-    public function getDaysSinceAccountCreated($user): mixed
+    public function getDaysSinceAccountCreated($created): mixed
     {
         $today = new DateTime();
 
-        $createdDate = new DateTime($user->created_at);
+        $createdDate = new DateTime($created);
         $interval = $today->diff($createdDate);
 
         return $interval->days + 1;
@@ -169,7 +169,7 @@ class HelperFunctions
     public function generatePrompt($user): string
     {
         $strictnessLevel = $this->getStrictnessLevel($user->strictness_level);
-        $daysSinceAccountCreated = $this->getDaysSinceAccountCreated($user);
+        $daysSinceAccountCreated = $this->getDaysSinceAccountCreated($user->created_at);
         $trialPogramData = $this->trialProgramService->find($daysSinceAccountCreated);
         $workout = implode(",", $trialPogramData->workout);
 
@@ -334,5 +334,43 @@ class HelperFunctions
         $newWeight = TraineeProgress::where('user_id', $id)->value('weight_lbs');
 
         return $currentWeight - $newWeight;
+    }
+
+    
+    /**
+     * Summary of timeToUpdateCurrentWeight
+     * @param mixed $daysSinceAccountCreated
+     * @param mixed $timeOfDay
+     * @param mixed $user
+     * @return bool
+     */
+    public function timeToUpdateCurrentWeight($daysSinceAccountCreated, $timeOfDay, $user): bool
+    {
+        return ($daysSinceAccountCreated == 4 && $timeOfDay == 'evening' && $user->is_promo == 0)
+            || ($daysSinceAccountCreated == 29 && $timeOfDay == 'evening' && $user->is_promo == 1);
+    }
+
+
+    /**
+     * Summary of isTrialExpire
+     * @param mixed $daysSinceAccountCreated
+     * @param mixed $user
+     * @return bool
+     */
+    public function isTrialExpire($daysSinceAccountCreated, $user): bool
+    {
+        return ($daysSinceAccountCreated == 5 && $user->is_promo == 0 && $user->subscription == 'trial')
+            || ($daysSinceAccountCreated == 30 && $user->is_promo == 1);
+    }
+
+    /**
+     * Summary of isPremiumOrPromo
+     * @param mixed $user
+     * @param mixed $daysSinceAccountCreated
+     * @return bool
+     */
+    public function isPremiumOrPromo($user, $daysSinceAccountCreated)
+    {
+        return ($user->subscription != 'trial' && $user->payment_status == 'paid') || ($user->is_promo == 1 && $daysSinceAccountCreated < 30);
     }
 }

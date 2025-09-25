@@ -77,7 +77,8 @@ export default function Authenticated({
                         <div className="hidden lg:flex items-center space-x-4">
                             {role !=3 ? null :
                                 subscriptions?.includes('premium') ?
-                                    null : <FreeTrialBadge />}
+                                    <button className='bg-green-400 text-white py-1 px-3 rounded-lg'>🏅 Premium ✨</button> 
+                                    : <FreeTrialBadge />}
                         </div>
 
 

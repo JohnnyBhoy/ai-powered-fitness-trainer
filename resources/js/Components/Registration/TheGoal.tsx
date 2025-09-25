@@ -28,9 +28,9 @@ function TheGoal({ onComplete }: { onComplete: () => void }) {
   const mutation = useMutation({
     mutationFn: (data: GoalFormData) => axios.post('/goals', data),
     onSuccess: (res) => {
-      toast.success('Goals updated.')
+      toast.success('Your goals has been saved.')
       window.location.href = `/checkout?id=${userId}&amount=1`;
-      localStorage.setItem('currentStep', '6');
+      localStorage.setItem('currentStep', '1');
     },
     onError: (error: any) => {
       alert(error.response?.data?.message ?? 'Goals update failed.')

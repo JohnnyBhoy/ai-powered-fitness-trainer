@@ -13,6 +13,7 @@ class MessageService
     protected $messageRepository;
     protected $trialProgramService;
     protected $traineeProgressService;
+    protected $userService;
 
     public function __construct(
         HelperFunctions $helpers,
@@ -20,13 +21,26 @@ class MessageService
         MessageRepository $messageRepository,
         TrialProgramService $trialProgramService,
         TraineeProgressService $traineeProgressService,
+        UserService $userService,
     ) {
         $this->helpers = $helpers;
         $this->programService = $programService;
         $this->messageRepository = $messageRepository;
         $this->trialProgramService = $trialProgramService;
         $this->traineeProgressService = $traineeProgressService;
+        $this->userService = $userService;
     }
+
+    /**
+     * Summary of create
+     * @param array $data
+     * @return \App\Models\GpfMessage
+     */
+    public function create(array $data)
+    {
+        return $this->messageRepository->create($data);
+    }
+
     /**
      * Summary of dailyMessageUpdates
      * @param int $userId
@@ -44,12 +58,12 @@ class MessageService
 
         if ($subscription === 'trial') {
             $todaysWorkout = $this->trialProgramService->find($day);
-            $message = $this->getMessageByDay($todaysWorkout, $firstName, $timeOfTheDay);
+            $message = $this->getDailyMessage($todaysWorkout, $firstName, $timeOfTheDay);
         }
 
         if ($subscription === 'premium') {
             $todaysWorkout = $this->programService->getProgramByDay($userId, $day);
-            $message = $this->getMessageByDay($todaysWorkout, $firstName, $timeOfTheDay);
+            $message = $this->getDailyMessage($todaysWorkout, $firstName, $timeOfTheDay);
         }
 
         // Ask the latest trainee weight in the evening on the last day of weekly program
@@ -78,9 +92,9 @@ class MessageService
      */
     public function sendSms($to, $message)
     {
-        $sid = env('TWILIO_SID');
-        $token = env('TWILIO_AUTH_TOKEN');
-        $twilioPhoneNumber = env('TWILIO_PHONE_NUMBER');
+        $sid = config('services.twilio.sid');
+        $token = config('services.twilio.token');
+        $twilioPhoneNumber = config('services.twilio.phone');
 
         $twilio = new Client($sid,  $token);
 
@@ -99,13 +113,13 @@ class MessageService
     }
 
     /**
-     * Summary of getMessageByDay
+     * Summary of getDailyMessage
      * @param mixed $todaysWorkout
      * @param string $firstName
      * @param string $timeOfTheDay
      * @return string
      */
-    private function getMessageByDay(Mixed $todaysWorkout, String $firstName, String $timeOfTheDay)
+    private function getDailyMessage(Mixed $todaysWorkout, String $firstName, String $timeOfTheDay)
     {
         $messages = '';
 
@@ -125,21 +139,15 @@ class MessageService
                 break;
 
             case 'afternoon':
-                $messages = "Good afternoon {$firstName} 🌞
-                            Hope your day is going well! Remember to stay on track with your Day {$todaysWorkout->day} program
-                            Keep pushing—you’re doing awesome 🚀";
+                $messages = "Good afternoon {$firstName} 🌞.Hope your day is going well! Remember to stay on track with your Day {$todaysWorkout->day} program. Keep pushing—you’re doing awesome 🚀";
                 break;
 
             case 'evening':
-                $messages = "Good evening {$firstName} 🌙
-                            The day’s almost over—make sure you’ve done your Day {$todaysWorkout->day} session.
-                            End the day strong 💪🔥 You got this!";
+                $messages = "Good evening {$firstName} 🌙. The day’s almost over—make sure you’ve done your Day {$todaysWorkout->day} session. End the day strong 💪🔥 You got this!";
                 break;
 
             case 'midnight':
-                $messages = "Hello {$firstName} 🌌
-                            It’s late, but consistency is key. If you missed today’s workout, you can still make it count before the day ends.
-                            Stay disciplined 🔥";
+                $messages = "Hello {$firstName} 🌌. It’s late, but consistency is key. If you missed today’s workout, you can still make it count before the day ends. Stay disciplined 🔥";
                 break;
 
             default:
@@ -264,5 +272,67 @@ class MessageService
             : "Welcome to GoPeakFit! 🙌 Your $49/month subscription is now active. You’ve unlocked full access to personalized workout programs, custom meal plans, and progress tracking tools designed to help you reach your goals faster. 🚀
 
                 Stay consistent and check your dashboard for weekly updates, tips, and new challenges tailored to your fitness journey. 💪 Remember, you’re in control—cancel or pause anytime. Thanks for choosing GoPeakFit. Let’s crush your goals together! – GoPeakFit Team";
+    }
+
+    /**
+     * 3x per day daily sms update  to trainee
+     * @return void
+     */
+    public function sendWorkoutEncouragement()
+    {
+        $timeOfDay = $this->helpers->getTimeOfTheDay();
+        $users = $this->userService->getAllUsersGoalsAndBiometric();
+
+        foreach ($users as $user) {
+            $daysSinceAccountCreated = $this->helpers->getDaysSinceAccountCreated($user->created_at);
+            $trialDay = $this->helpers->getTrialDay($user->is_promo);
+            $askLatestWeight = $this->helpers->getLatestWeightQuestion($trialDay);
+
+            if ($this->helpers->timeToUpdateCurrentWeight($daysSinceAccountCreated, $timeOfDay, $user)) {
+                $this->sendSms(
+                    $user->phone_number,
+                    $askLatestWeight
+                );
+            } elseif ($daysSinceAccountCreated < 5) { // Executes if trainee is still in 5-Day Trial
+                $message = $this->dailyMessageUpdates(
+                    $user->user_id,
+                    $user->subscription,
+                    $daysSinceAccountCreated,
+                    $user->first_name,
+                    $user->phone_number,
+                    $user->current_weight
+                );
+
+                $this->appendBotMessageToConversation($user, $message);
+                $this->sendSms($user->phone_number, $message);
+            } elseif ($this->helpers->isTrialExpire($daysSinceAccountCreated, $user)) {
+                $this->sendExpirationMessageToTrial(
+                    $user->phone_number,
+                    $user->first_name,
+                    0,
+                    $user->current_weight,
+                    $user->user_id,
+                );
+            } else { // Executes if the trainee is paid to premium and subscribed to our program
+                if ($this->helpers->isPremiumOrPromo($user, $daysSinceAccountCreated)) {
+                    $message = $this->dailyMessageUpdates(
+                        $user->user_id,
+                        $user->subscription,
+                        $daysSinceAccountCreated,
+                        $user->first_name,
+                        $user->phone_number,
+                        $user->current_weight
+                    );
+
+                    // Guard if no message generated
+                    if ($message === 'Happy Workout') {
+                        continue;
+                    }
+
+                    $this->appendBotMessageToConversation($user, $message);
+                    $this->sendSms($user->phone_number, $message);
+                }
+            }
+        }
     }
 }

@@ -48,8 +48,8 @@ class TwilioService
     public function sendOtp($phoneNumber, $confirmationToken)
     {
         // Use Twilio's API to send a confirmation SMS
-        $sid = env('TWILIO_SID');
-        $authToken = env('TWILIO_AUTH_TOKEN');
+        $sid = config('services.twilio.sid');
+        $authToken = config('services.twilio.token');
         $twilio = new \Twilio\Rest\Client($sid, $authToken);
 
         $twilio->messages->create(
@@ -64,18 +64,12 @@ class TwilioService
 
     /**
      * Summary of resendOtp
-     * @param mixed $request
+     * @param int $userId unique id of the user
      * @return \Illuminate\Http\JsonResponse
      */
-    public function resendOtp($request)
+    public function resendOtp($userId)
     {
         $newOtp = $this->helper->generateOTP();
-        $userId = $request->input('user_id');
-
-        // Validate the form data
-        $request->validate([
-            'user_id' => 'required', // Ensure the user id is entered
-        ]);
 
         // Get phone number based in user id
         $phoneNumber = $this->biometricService->getPhoneNumberById($userId);

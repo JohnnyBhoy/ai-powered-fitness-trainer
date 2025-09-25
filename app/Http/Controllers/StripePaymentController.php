@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\UserRepository;
 use App\Services\BiometricService;
 use App\Services\MessageService;
+use App\Services\NutritionService;
 use App\Services\ProgramService;
 use App\Services\SubscriptionService;
+use App\Services\UserService;
 use App\Support\HelperFunctions;
 use Illuminate\Http\Request;
 use Stripe\Stripe;
@@ -17,27 +18,30 @@ class StripePaymentController extends Controller
     protected $workoutController;
     protected $helperFunctions;
     protected $messageService;
-    protected $user;
     protected $programService;
     protected $biometricService;
     protected $subscriptionService;
+    protected $userService;
+    protected $nutritionService;
 
     public function __construct(
         WorkoutTrainerController $workoutController,
         HelperFunctions $helperFunctions,
         MessageService $messageService,
-        UserRepository $user,
         ProgramService $programService,
         BiometricService $biometricService,
         SubscriptionService $subscriptionService,
+        UserService $userService,
+        NutritionService $nutritionService,
     ) {
         $this->workoutController = $workoutController;
         $this->helperFunctions = $helperFunctions;
         $this->messageService = $messageService;
-        $this->user = $user;
         $this->programService = $programService;
         $this->biometricService = $biometricService;
         $this->subscriptionService = $subscriptionService;
+        $this->userService = $userService;
+        $this->nutritionService = $nutritionService;
     }
 
     /**
@@ -106,34 +110,40 @@ class StripePaymentController extends Controller
      */
     public function success(Request $request)
     {
+        // Get the session details id, user id and amount
         $sessionId = $request->query('session_id');
         $userId = $request->query('user_id');
         $amount = $request->query('amount') ?: 1;
 
+        // Abort if no session found
         if (!$sessionId) {
             abort(400, 'Missing session_id');
         }
 
+        // Get stripe config up
         Stripe::setApiKey(config('services.stripe.secret'));
 
         try {
+            // Get user session
             $session = Session::retrieve($sessionId);
-
-            $phoneNumber = $this->biometricService->getPhoneNumberById($userId);
-
+            $user = $this->userService->show($userId);
             $welcomeMessage = $this->messageService->getWelcomeMessageOnSubscription($amount);
 
+            // Update subscription trial = $1  / premium = $49
             $this->helperFunctions->updateSubscriptionOnPaymentSuccess($session);
+
+            // Polulate conversation with greetings to trainee
             $this->helperFunctions->createInitialConversation($userId, $welcomeMessage);
-            $this->messageService->sendSms($phoneNumber, $welcomeMessage);
 
-            $user = $this->user->getUserDataByPhoneNumber($phoneNumber);
+            // Send welcome sms via twilio
+            //$this->messageService->sendSms($user->phone_number, $welcomeMessage);
 
-            // Log program and plan if user subscribed to premium else send daily update
+            // Create weekly nutrition plan for trainee
+            $this->nutritionService->create($user);
+
+            // Create weekly program on premium subscription
             if ((string)$amount === '49') {
                 $this->programService->create($user);
-            } else {
-                $this->messageService->sendDailyUpdateForTrialProgram($user, 1, 'trial');
             }
 
             return view('stripe.success');
@@ -164,6 +174,7 @@ class StripePaymentController extends Controller
      */
     private function createPaymentSession($userId, $amount, $mode, $name, $description, $unitAmount): Session
     {
+        // Prepate line of product
         $lineItem = [
             'quantity' => 1,
             'price_data' => [
@@ -176,6 +187,7 @@ class StripePaymentController extends Controller
             ],
         ];
 
+        // Check payment mode
         if ($mode === 'subscription') {
             $lineItem['price_data']['recurring'] = [
                 'interval' => 'month',
@@ -184,6 +196,7 @@ class StripePaymentController extends Controller
         }
 
         try {
+            // Create session
             return Session::create([
                 'line_items' => [$lineItem],
                 'mode' => $mode,
@@ -196,7 +209,7 @@ class StripePaymentController extends Controller
     }
 
     /**
-     * Summary of getProductData
+     * Product to be select when user subscribe
      * @return array{description: string, mode: string, name: string, unit_amount: int[]}
      */
     public function getProductData()

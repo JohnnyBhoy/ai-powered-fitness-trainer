@@ -16,13 +16,12 @@ class PhoneVerificationService
 
     /**
      * Create new phone verification with OTP(one time password)
-     * @param mixed $userId
-     * @param mixed $otp
+     * @param array $data
      * @return \App\Models\GpfPhoneVerification
      */
-    public function create($userId, $otp)
+    public function create($data)
     {
-        return  $this->phoneVerificationRepository->create($userId, $otp);
+        return  $this->phoneVerificationRepository->create($data);
     }
 
     /**

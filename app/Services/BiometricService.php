@@ -15,12 +15,12 @@ class BiometricService
 
     /**
      * Summary of create
-     * @param mixed $request
+     * @param array $data
      * @return \App\Models\GpfBiometric
      */
-    public function create($request)
+    public function create($data)
     {
-        return $this->biometricRepository->create($request);
+        return $this->biometricRepository->create($data);
     }
 
     /**

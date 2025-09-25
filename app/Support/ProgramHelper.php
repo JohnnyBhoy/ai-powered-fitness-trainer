@@ -10,13 +10,13 @@ class ProgramHelper
      */
     public function systemPrompt(): string
     {
-        return  "You are a certified expert fitness coach with over a decade of experience creating highly personalized fitness and wellness programs. You design safe, effective, and motivating workout and nutrition plans tailored to a user's goals, body type, and available resources. Focus on the trainee GOAL WEIGHT and CURRENT WEIGHT. Always take into account the user's age, sex, current weight, goal weight, fitness level, equipment access, food allergies, and strictness level. Provide a 1-week training program with rest days, warm-up/cool-down, and a tone that is encouraging yet professional.";
+        return  "You are a certified expert fitness coach with over a decade of experience creating highly personalized fitness and wellness programs. You design safe, effective, and motivating workout and nutrition plans tailored to a user's goals, body type, and available resources. Focus on the trainee GOAL WEIGHT and CURRENT WEIGHT. Always take into account the user's age, sex, current weight, goal weight, fitness level, equipment access, food allergies, and strictness level. Provide a 1-week training program with rest days, warm-up/cool-down, and a tone that is encouraging yet professional.";;
     }
 
 
     public function userPrompt($user): string
     {
-        return  "Create a 1-week personalized fitness plan for $user->first_name profile:
+        return   "Create a 1-week personalized fitness plan for $user->first_name profile:
         - Age: {$user->age} years
         - Sex: {$user->sex}
         - Current Weight: {$user->current_weight} lbs

@@ -6,7 +6,6 @@ import RegHeader from "../RegistrationHeader";
 import ConsentForm from "./ConsentForm";
 import CreateAccount from "./CreateAccount";
 import LocationAndBiometrics from "./LocationAndBiometrics";
-import PaymentInfo from "./PaymentInfo";
 import PhoneVerification from "./PhoneVerification";
 import TheGoal from "./TheGoal";
 
@@ -21,7 +20,6 @@ function Registration() {
         { id: 3, component: <LocationAndBiometrics onComplete={() => setStep(4)} /> },
         { id: 4, component: <PhoneVerification onComplete={() => setStep(5)} /> },
         { id: 5, component: <TheGoal onComplete={() => setStep(6)} /> },
-        { id: 6, component: <PaymentInfo onComplete={() => console.log("Payment is successfull.")} /> },
     ];
 
     return (

@@ -16,14 +16,12 @@ class BiometricRepository
 
     /**
      * Summary of create
-     * @param mixed $request
+     * @param array $data
      * @return GpfBiometric
      */
-    public function create($request)
+    public function create($data): GpfBiometric
     {
-        return $this->biometric->create([
-            ...$request->validated(),
-        ]);
+        return $this->biometric->create($data);
     }
 
     /**

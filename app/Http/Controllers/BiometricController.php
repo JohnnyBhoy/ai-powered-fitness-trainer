@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BiometricRequest;
-use App\Models\GpfPhoneVerification;
-use App\Repositories\BiometricRepository;
-use App\Repositories\MessageRepository;
-use App\Repositories\PhoneVerificationRepository;
+use App\Services\BiometricService;
+use App\Services\MessageService;
+use App\Services\PhoneVerificationService;
+use App\Services\TwilioService;
 use App\Support\HelperFunctions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -15,22 +15,25 @@ class  BiometricController extends Controller
 {
     protected $biometric;
     protected $message;
-    protected $phoneVerification;
     protected $helpers;
+    protected $biometricService;
+    protected $messageService;
+    protected $phoneVerificationService;
+    protected $twilioService;
 
-    /**
-     * Summary of __construct
-     * @param \App\Repositories\BiometricRepository $biometric
-     * @param \App\Repositories\MessageRepository $message
-     * @param \App\Repositories\PhoneVerificationRepository $phoneVerification
-     * @param \App\Support\HelperFunctions $helpers
-     */
-    public function __construct(BiometricRepository $biometric, MessageRepository $message, PhoneVerificationRepository $phoneVerification, HelperFunctions $helpers)
-    {
-        $this->biometric = $biometric;
-        $this->message = $message;
-        $this->phoneVerification = $phoneVerification;
+
+    public function __construct(
+        HelperFunctions $helpers,
+        BiometricService $biometricService,
+        MessageService $messageService,
+        PhoneVerificationService $phoneVerificationService,
+        TwilioService $twilioService,
+    ) {
         $this->helpers = $helpers;
+        $this->biometricService = $biometricService;
+        $this->messageService = $messageService;
+        $this->phoneVerificationService = $phoneVerificationService;
+        $this->twilioService = $twilioService;
     }
 
     /**
@@ -45,17 +48,26 @@ class  BiometricController extends Controller
 
         $phone = $this->helpers->prependPlusOneIfNumberHasNo($phone);
 
-        $biometric = $this->biometric->create($request);
+        $biometric = $this->biometricService->create([
+            ...$request->validated(),
+        ]);
 
-        $this->message->create($request->user_id, $phone);
+        $this->messageService->create([
+            'user_id' => $request->user_id,
+            'phone_number' => $phone
+        ]);
 
-        $this->phoneVerification->create($request->user_id, $otp);
+        $this->phoneVerificationService->create([
+            'user_id' => $request->user_id,
+            'otp' => $otp,
+            'is_verified' => 0
+        ]);
 
-        $this->helpers->sendOtp($phone, $otp);
+        $this->twilioService->sendOtp($phone, $otp);
 
         return response()->json([
-            'message' => 'Biometrics saved successfully!',
-            'biometric' => $biometric
+            'message' => 'Location and Biometrics saved successfully!',
+            'biometric' => $biometric,
         ]);
     }
 
@@ -77,7 +89,7 @@ class  BiometricController extends Controller
 
 
         // Get the token based on email
-        $user = $this->phoneVerification->show($userId);
+        $user = $this->phoneVerificationService->show($userId);
 
         try {
             if ($otp !== $user->otp) {
@@ -87,7 +99,7 @@ class  BiometricController extends Controller
             }
 
             // Verified number
-            $this->phoneVerification->update($userId);
+            $this->phoneVerificationService->update($userId);
 
             // Success response
             return response()->json([

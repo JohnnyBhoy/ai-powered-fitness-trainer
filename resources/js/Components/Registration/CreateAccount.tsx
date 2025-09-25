@@ -34,7 +34,7 @@ function CreateAccount({ onComplete }: { onComplete: () => void }) {
     onSuccess: (res: any) => {
       const userId = res.data.id
       setUserId(userId);
-      toast.success(`Account created successfully! Please check the box and enter your phone number.`)
+      toast.success(`Account created, please enter your phone number for consent.`)
       onComplete();
       localStorage.setItem('currentStep', '2');
       localStorage.setItem('user_id', userId);

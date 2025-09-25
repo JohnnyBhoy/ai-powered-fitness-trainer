@@ -3,25 +3,17 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Http\Controllers\WorkoutTrainerController;
+use App\Services\MessageService;
 
 class SendWorkoutEncouragement extends Command
 {
     protected $signature = 'workout:send-encouragement';
     protected $description = 'Daily SMS update to GoPeakFit Trainee';
 
-    protected $workoutController;
-
-    public function __construct(WorkoutTrainerController $workoutController)
-    {
-        parent::__construct();
-        $this->workoutController = $workoutController;
-    }
-
-    public function handle()
+    public function handle(MessageService $messageService)
     {
         // Call the method to send the encouragement message
-        $this->workoutController->sendWorkoutEncouragement();
+        $messageService->sendWorkoutEncouragement();
 
         $this->info('Workout and diet message sent successfully!');
     }

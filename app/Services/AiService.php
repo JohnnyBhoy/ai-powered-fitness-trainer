@@ -27,7 +27,7 @@ class AiService
                     ['role' => 'system', 'content' => $systemPrompt],
                     ['role' => 'user', 'content' => $userPrompt],
                 ],
-                'max_tokens' => 300,
+                'max_tokens' => 4096,
             ]
         ]);
 
@@ -35,12 +35,15 @@ class AiService
         return  $response['choices'][0]['message']['content'];
     }
 
-    // Method to get response from OpenAI
-    public function getOpenAIResponse($userMessage, $userData = null)
+    /**
+     * Summary of extractArrayOfDataInAiResponse
+     * @param mixed $response
+     */
+    public function extractArrayOfDataInAiResponse($response): mixed
     {
-        $response = $this->get($userData, $userMessage);
-        $data = json_decode($response->getBody()->getContents(), true);
-
-        return $data['choices'][0]['message']['content'] ?? 'Sorry, I did not get that.';
+        $start = strpos($response, '[');
+        $end   = strrpos($response, ']') + 1;
+        $response = substr($response, $start, $end - $start);
+        return json_decode($response, true);
     }
 }

@@ -8,19 +8,50 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PromoController;
 use App\Http\Controllers\TraineeController;
 
-Route::post('/sms', [WorkoutTrainerController::class, 'handleIncomingSms']); //Handle SMS coming from Trainees
+/*
+|--------------------------------------------------------------------------
+| API Portal for GoPeakFit SMS with Twilio Service
+|--------------------------------------------------------------------------
+|
+| This routes consist of sms for trainee reply to daily update
+| User subscription to get what trianee subscribed plan (trial or premium)
+| Consent or user permission to particapate in program and promocode if applicable
+|
+*/
 
-Route::get('/subscriptions', [SubscriptionController::class, 'getValues']);
+Route::post('/sms', [WorkoutTrainerController::class, 'handleIncomingSms'])
+    ->name('incoming.sms');
 
-Route::post('/consent', [ConsentController::class, 'store']);
+Route::get('/subscriptions', [SubscriptionController::class, 'getValues'])
+    ->name('user.subscriptions');
 
-Route::post('/promocode/apply', [PromoController::class, 'update']); // For promo users / trainees
+Route::post('/consent', [ConsentController::class, 'store'])
+    ->name('user.consent');
+
+Route::post('/promocode/apply', [PromoController::class, 'update'])
+    ->name('promocode.apply');
 
 
-// Api routes for rep-searcher's admin
+
+/*
+|--------------------------------------------------------------------------
+| API Portal for GoPeakFit Admin
+|--------------------------------------------------------------------------
+|
+| This is route for retrieving trainees (gopeakfit user or added manually by trainer)
+| Route to Update trainee information
+|
+*/
 Route::prefix('admin')->group(function () {
-    Route::get('/get-gpf-trainees', [AdminController::class, 'indexOfGpfTrainees'])->name('admin.getGpfUsers');
-    Route::get('/get-non-gpf-trainees', [AdminController::class, 'indexOfNonGpfTrainees'])->name('admin.getNonGpfUsers');
-    Route::get('/get-trainers', [AdminController::class, 'indexOfTrainers'])->name('admin.getTrainers');
-    Route::get('/trainee-update', [TraineeController::class, 'update'])->name('admin.trainee.update');
+    Route::get('/get-gpf-trainees', [AdminController::class, 'indexOfGpfTrainees'])
+        ->name('admin.getGpfUsers');
+
+    Route::get('/get-non-gpf-trainees', [AdminController::class, 'indexOfNonGpfTrainees'])
+        ->name('admin.getNonGpfUsers');
+
+    Route::get('/get-trainers', [AdminController::class, 'indexOfTrainers'])
+        ->name('admin.getTrainers');
+
+    Route::get('/trainee-update', [TraineeController::class, 'update'])
+        ->name('admin.trainee.update');
 });

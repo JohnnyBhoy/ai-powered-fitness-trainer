@@ -22,7 +22,7 @@ class ProgramLogRepository
     public function create(array $data): GpfFitnessProgram | null
     {
         try {
-            $existing = $this->programLog->where('user_id', $data['userId'])
+            $existing = $this->programLog->where('user_id', $data['user_id'])
                 ->whereDate('created_at', Carbon::today())
                 ->first();
 

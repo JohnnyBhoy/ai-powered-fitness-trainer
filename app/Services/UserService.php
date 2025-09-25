@@ -9,9 +9,24 @@ class UserService
 {
     protected $userRepository;
 
+    /**
+     * Service Constructor
+     * @param \App\Repositories\UserRepository $userRepository
+     */
     public function __construct(UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
+    }
+
+
+    /**
+     * Retrieve user data by Id
+     * @param mixed $id
+     * @return object|null
+     */
+    public function show($id)
+    {
+        return $this->userRepository->show($id);
     }
 
     /**

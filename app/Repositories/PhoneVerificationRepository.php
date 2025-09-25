@@ -15,17 +15,12 @@ class PhoneVerificationRepository
 
     /**
      * Summary of create
-     * @param mixed $userId
-     * @param mixed $otp
+     * @param array $data
      * @return GpfPhoneVerification
      */
-    public function create($userId, $otp)
+    public function create($data)
     {
-        return  $this->phoneVerification->create([
-            'user_id' => $userId,
-            'otp' => $otp,
-            'is_verified' => 0
-        ]);
+        return  $this->phoneVerification->create($data);
     }
 
     /**

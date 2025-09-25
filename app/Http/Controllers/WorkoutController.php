@@ -2,37 +2,51 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ProgramService;
+use App\Services\TrialProgramService;
+use App\Services\UserService;
+use App\Support\HelperFunctions;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class WorkoutController extends Controller
 {
+    protected $programService;
+    protected $trialProgramService;
+    protected $userService;
+    protected $helper;
+
+    public function __construct(
+        ProgramService $programService,
+        TrialProgramService $trialProgramService,
+        HelperFunctions $helper,
+        UserService $userService
+    ) {
+        $this->programService = $programService;
+        $this->trialProgramService = $trialProgramService;
+        $this->helper = $helper;
+        $this->userService = $userService;
+    }
+
     public function index(Request $request)
     {
-        // Example static data — replace with real DB queries
-        $workoutPlan = [
-            'Monday' => 'Chest & Triceps',
-            'Tuesday' => 'Back & Biceps',
-            'Wednesday' => 'Rest',
-            'Thursday' => 'Leg Day',
-            'Friday' => 'Shoulders',
-        ];
+        $userId = auth()->user()->id;
+        $user = $this->userService->show($userId);
+        $isTrial = $user->subscription == 'trial';
+        $daySinceCreated = $this->helper->getDaysSinceAccountCreated($user->created_at);
 
-        $dietPlan = [
-            'Breakfast' => 'Oats + eggs',
-            'Lunch' => 'Chicken + rice',
-            'Dinner' => 'Salmon + salad',
-        ];
+        try {
+            if ($isTrial) {
+               $todaysWorkoutProgram =  $this->trialProgramService->find($userId);
+            } else {
+                $todaysWorkoutProgram = $this->programService->getProgramByDay($userId, $daySinceCreated);
+            }
+        } catch (\Throwable $th) {
+            throw $th;
+        }
 
-        $messages = [
-            ['sender' => 'Coach', 'text' => 'Time for leg day!'],
-            ['sender' => 'You', 'text' => 'Done with cardio 💪'],
-        ];
-
-        return Inertia::render('Workout/WorkoutPage', [
-            'workoutPlan' => $workoutPlan,
-            'dietPlan' => $dietPlan,
-            'messages' => $messages,
+        return Inertia::render('Trainee/GpfTrainee/DailyProgram', [
+            'program' => $todaysWorkoutProgram,
         ]);
     }
 }

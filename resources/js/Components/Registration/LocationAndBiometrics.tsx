@@ -33,7 +33,7 @@ function LocationAndBiometrics({ onComplete }: { onComplete: () => void }) {
     const mutation = useMutation({
         mutationFn: (data: BiometricsFormData) => axios.post('/biometrics', data),
         onSuccess: (res) => {
-            toast.success(`Location and biometrics updated.`)
+            toast.success(`Location and biometrics has been saved.`)
             onComplete();
             localStorage.setItem('currentStep', '4');
         },

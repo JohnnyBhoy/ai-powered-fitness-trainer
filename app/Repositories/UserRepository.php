@@ -10,6 +10,32 @@ use Illuminate\Support\Facades\Hash;
 
 class UserRepository
 {
+    protected $user;
+
+    /**
+     * Repository constructor
+     * @param \App\Models\User $user
+     */
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * Summary of show
+     * @param mixed $id
+     * @return object|null
+     */
+    public function show($id)
+    {
+      return  DB::table('users as u')
+            ->leftJoin('gpf_messages as gm', 'u.id', '=', 'gm.user_id')
+            ->leftJoin('gpf_biometrics as b', 'u.id', '=', 'b.user_id')
+            ->leftJoin('gpf_goals as g', 'u.id', '=', 'g.user_id')
+            ->leftJoin('gpf_subscriptions as gs', 'u.id', '=', 'gs.user_id')
+            ->where('u.id', $id)
+            ->first();
+    }
     /**
      * Summary of create
      * @param mixed $request
@@ -17,7 +43,7 @@ class UserRepository
      */
     public function store($request): User
     {
-        return  User::create([
+        return $this->user->create([
             'first_name' => $request->firstName,
             'last_name'  => $request->lastName,
             'email'      => $request->email,
@@ -96,7 +122,7 @@ class UserRepository
      */
     public function getPaginatedTrainers(Int $pageNumber, Int $perPage): LengthAwarePaginator
     {
-        $trainers = User::where('role', 2)
+        $trainers = $this->user->where('role', 2)
             ->with(['trainees' => function ($query) {
                 $query->select('id', 'first_name', 'last_name', 'trainer_id');
             }])
@@ -133,7 +159,7 @@ class UserRepository
      */
     public function countGoPeakFitTrainees(): int
     {
-        return User::where('role', 3)
+        return $this->user->where('role', 3)
             ->where('trainer_id', null)
             ->count();
     }
@@ -144,7 +170,7 @@ class UserRepository
      */
     public function countTraineesAddedByTrainer(): int
     {
-        return User::where('role', 3)
+        return$this->user->where('role', 3)
             ->whereNot('trainer_id', null)
             ->count();
     }
@@ -155,7 +181,7 @@ class UserRepository
      */
     public function countTrainer(): int
     {
-        return  User::where('role', 2)->count();
+        return  $this->user->where('role', 2)->count();
     }
 
     /**
@@ -170,7 +196,8 @@ class UserRepository
             ->leftJoin('gpf_messages as gm', 'u.id', '=', 'gm.user_id')
             ->leftJoin('gpf_biometrics as b', 'u.id', '=', 'b.user_id')
             ->leftJoin('gpf_goals as g', 'u.id', '=', 'g.user_id')
-            ->where('gm.phone_number', $userPhone)
+            ->leftJoin('gpf_subscriptions as gs', 'u.id', '=', 'gs.user_id')
+            ->where('b.phone_number', $userPhone)
             ->first();
     }
 
