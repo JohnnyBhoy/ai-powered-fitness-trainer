@@ -246,7 +246,7 @@ class MessageService
      */
     public function sendExpirationMessageToTrial($phoneNumber, $firstName, $isPromo, $currentWeight, $userId)
     {
-        $newWeight = $this->traineeProgressService->getNewWeight($userId, $currentWeight);
+        $newWeight = $this->traineeProgressService->calculateWeightChange($userId, $currentWeight);
 
         // Evaluation greetings if the user lose weight lbs
         $newWeight > 0
@@ -275,46 +275,50 @@ class MessageService
     }
 
     /**
+     * Send daily SMS update to trainee via twilio app
      * 3x per day daily sms update  to trainee
-     * @return void
+     * @return int
      */
-    public function sendWorkoutEncouragement()
+    public function sendWorkoutEncouragement(): int
     {
+        $messagesSent = 0;
+
+        // Get the time of the day (morning, afternoon, evening)
         $timeOfDay = $this->helpers->getTimeOfTheDay();
+
+        // Get all users with their biometrics and other data
         $users = $this->userService->getAllUsersGoalsAndBiometric();
 
+        if (empty($users)) {
+            return $messagesSent; // No users to process
+        }
+
         foreach ($users as $user) {
-            $daysSinceAccountCreated = $this->helpers->getDaysSinceAccountCreated($user->created_at);
-            $trialDay = $this->helpers->getTrialDay($user->is_promo);
-            $askLatestWeight = $this->helpers->getLatestWeightQuestion($trialDay);
+            try {
+                $daysSinceAccountCreated = $this->helpers->getDaysSinceAccountCreated($user->created_at);
+                $trialDay = $this->helpers->getTrialDay($user->is_promo);
+                $askLatestWeight = $this->helpers->getLatestWeightQuestion($trialDay);
 
-            if ($this->helpers->timeToUpdateCurrentWeight($daysSinceAccountCreated, $timeOfDay, $user)) {
-                $this->sendSms(
-                    $user->phone_number,
-                    $askLatestWeight
-                );
-            } elseif ($daysSinceAccountCreated < 5) { // Executes if trainee is still in 5-Day Trial
-                $message = $this->dailyMessageUpdates(
-                    $user->user_id,
-                    $user->subscription,
-                    $daysSinceAccountCreated,
-                    $user->first_name,
-                    $user->phone_number,
-                    $user->current_weight
-                );
+                // Ask about latest weight
+                if ($this->helpers->timeToUpdateCurrentWeight($daysSinceAccountCreated, $timeOfDay, $user)) {
+                    $this->sendSms($user->phone_number, $askLatestWeight);
+                    $messagesSent++;
+                }
 
-                $this->appendBotMessageToConversation($user, $message);
-                $this->sendSms($user->phone_number, $message);
-            } elseif ($this->helpers->isTrialExpire($daysSinceAccountCreated, $user)) {
-                $this->sendExpirationMessageToTrial(
-                    $user->phone_number,
-                    $user->first_name,
-                    0,
-                    $user->current_weight,
-                    $user->user_id,
-                );
-            } else { // Executes if the trainee is paid to premium and subscribed to our program
-                if ($this->helpers->isPremiumOrPromo($user, $daysSinceAccountCreated)) {
+                // Send expiration message if trial expired
+                if ($this->helpers->isTrialExpire($daysSinceAccountCreated, $user)) {
+                    $this->sendExpirationMessageToTrial(
+                        $user->phone_number,
+                        $user->first_name,
+                        0,
+                        $user->current_weight,
+                        $user->user_id
+                    );
+                    $messagesSent++;
+                }
+
+                // Generate daily message for trial, premium, or promo users
+                if (in_array($user->subscription, ['trial', 'premium', 'promo'])) {
                     $message = $this->dailyMessageUpdates(
                         $user->user_id,
                         $user->subscription,
@@ -324,15 +328,21 @@ class MessageService
                         $user->current_weight
                     );
 
-                    // Guard if no message generated
-                    if ($message === 'Happy Workout') {
-                        continue;
+                    // Skip sending default placeholder message
+                    if ($message !== 'Happy Workout') {
+                        $this->appendBotMessageToConversation($user, $message);
+                        $this->sendSms($user->phone_number, $message);
+                        $messagesSent++;
                     }
-
-                    $this->appendBotMessageToConversation($user, $message);
-                    $this->sendSms($user->phone_number, $message);
                 }
+            } catch (\Exception $e) {
+                \Log::error("Failed to send SMS to {$user->phone_number}: {$e->getMessage()}", [
+                    'user_id' => $user->user_id,
+                    'trace' => $e->getTraceAsString(),
+                ]);
             }
         }
+
+        return $messagesSent;
     }
 }

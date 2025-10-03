@@ -57,13 +57,14 @@ class  BiometricController extends Controller
             'phone_number' => $phone
         ]);
 
+        // Create verification for phone number (send 6-digit OTP)
         $this->phoneVerificationService->create([
             'user_id' => $request->user_id,
             'otp' => $otp,
             'is_verified' => 0
         ]);
 
-        $this->twilioService->sendOtp($phone, $otp);
+        //$this->twilioService->sendOtp($phone, $otp);
 
         return response()->json([
             'message' => 'Location and Biometrics saved successfully!',

@@ -145,4 +145,13 @@ class UserService
     {
         return $this->userRepository->getAllUsersGoalsAndBiometric();
     }
+
+    /**
+     * Get all user Id to array
+     * @return array
+     */
+    public function getActiveTraineesId()
+    {
+        return $this->userRepository->getActiveTraineesId();
+    }
 }

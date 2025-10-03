@@ -20,7 +20,7 @@
         @inertiaHead
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
-    <body class="font-sans antialiased">
+    <body class="font-sans antialiased dark:bg-gray-900">
         @inertia
     </body>
 </html>

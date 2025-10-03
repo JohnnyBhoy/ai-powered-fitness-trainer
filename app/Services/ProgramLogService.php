@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\GpfFitnessProgram;
+use App\Models\GpfWeeklyProgramLog;
 use App\Repositories\ProgramLogRepository;
 
 class ProgramLogService
@@ -23,9 +23,9 @@ class ProgramLogService
     /**
      * Log the program as it will replace weekly for archive purposes
      * @param array $data
-     * @return \App\Models\GpfFitnessProgram | null
+     * @return \App\Models\GpfWeeklyProgramLog | null
      */
-    public function create(array $data): GpfFitnessProgram | null
+    public function create(array $data): GpfWeeklyProgramLog | null
     {
         return $this->programLogRepository->create($data);
     }
@@ -44,10 +44,20 @@ class ProgramLogService
     /**
      * Summary of getTrialProgramByDay
      * @param mixed $day
-     * @return \App\Models\GpfFitnessProgram|null
+     * @return \App\Models\GpfWeeklyProgramLog|null
      */
-    public function getTrialProgramByDay($day): GpfFitnessProgram|null
+    public function getTrialProgramByDay($day): GpfWeeklyProgramLog|null
     {
         return $this->programLogRepository->getTrialProgramByDay($day);
+    }
+
+    /**
+     * Get the date program was created
+     * @param int $userId
+     * @return string
+     */
+    public function getDateProgramCreated(int $userId): string
+    {
+        return $this->programLogRepository->getDateProgramCreated($userId);
     }
 }

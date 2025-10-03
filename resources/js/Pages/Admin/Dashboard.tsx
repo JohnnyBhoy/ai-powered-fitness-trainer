@@ -1,12 +1,12 @@
-import MonthlyUsersWithTrainerChart from '@/Components/Admin/Charts/MonthlyUsersWithTrainerChart';
-import MonthlyUserWithoutTrainerChart from '@/Components/Admin/Charts/MonthlyUserWithoutTrainerChart';
-import QuickActions from '@/Components/Admin/Dashboard/QuickActions';
-import Stats from '@/Components/Admin/Dashboard/Stats';
-import Welcome from '@/Components/Admin/Dashboard/Welcome';
-import LatestUsers from '@/Components/Admin/Tables/LatestUsers';
 import Authenticated from '@/Pages/Layouts/AuthenticatedLayout';
 import { Cards } from '@/types/admin';
 import { Head } from '@inertiajs/react';
+import EcommerceMetrics from "@/Components/Ecommerce/EcommerceMetrics";
+import MonthlySalesChart from "@/Components/Ecommerce/MonthlySalesChart";
+import StatisticsChart from "@/Components/Ecommerce/StatisticsChart";
+import MonthlyTarget from "@/Components/Ecommerce/MonthlyTarget";
+import RecentOrders from "@/Components/Ecommerce/RecentOrders";
+import DemographicCard from "@/Components/Ecommerce/DemographicCard";
 
 type DashboardProps = {
   monthlyGpfTrainerCount: any;
@@ -61,18 +61,30 @@ const Dashboard = ({
   return (
     <Authenticated>
       <Head title="Admin Dashboard" />
-      <main className="space-y-6 p-4 lg:p-6">
-        <Welcome />
-        <Stats cards={cards} />
-        <QuickActions />
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <MonthlyUsersWithTrainerChart trainees={monthlyGoPeakFitTrainer} />
-          <MonthlyUserWithoutTrainerChart
-            trainees={monthlyTraineeAddedByTrainer}
-            trainer={monthlyTrainer}
-          />
+      <main className='mx-auto max-w-(--breakpoint-2xl)'>
+        <div className="grid grid-cols-12 gap-4 md:gap-6">
+          <div className="col-span-12 space-y-6 xl:col-span-7">
+            <EcommerceMetrics />
+
+            <MonthlySalesChart />
+          </div>
+
+          <div className="col-span-12 xl:col-span-5">
+            <MonthlyTarget />
+          </div>
+
+          <div className="col-span-12">
+            <StatisticsChart />
+          </div>
+
+          <div className="col-span-12 xl:col-span-5">
+            <DemographicCard />
+          </div>
+
+          <div className="col-span-12 xl:col-span-7">
+            <RecentOrders />
+          </div>
         </div>
-        <LatestUsers users={latestUsers} />
       </main>
     </Authenticated>
   );

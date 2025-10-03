@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TrainerRequest;
-use App\Models\Trainer;
+use App\Models\GpfTrainer;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
@@ -87,7 +86,7 @@ class TrainerController extends Controller
         ]);
 
         // Step 2: Create the trainer profile linked to the user
-        Trainer::create(array_merge(
+        GpfTrainer::create(array_merge(
             $request->validated(),
             ['user_id' => $user->id]
         ));

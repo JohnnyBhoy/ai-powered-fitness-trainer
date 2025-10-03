@@ -2,12 +2,10 @@
 
 namespace App\Support;
 
-use App\Models\Consent;
-use App\Models\GpfBiometric;
+use App\Models\GpfConsent;
 use App\Models\GpfMessage;
-use App\Models\GpfPhoneVerification;
 use App\Models\GpfSubscription;
-use App\Models\TraineeProgress;
+use App\Models\GpfTraineeProgress;
 use App\Repositories\MessageRepository;
 use App\Services\TrialProgramService;
 use Carbon\Carbon;
@@ -112,7 +110,7 @@ class HelperFunctions
      */
     public function createConsent($request): mixed
     {
-        return Consent::insert([
+        return GpfConsent::insert([
             'phone_number' => $request->phone,
             'consent_status' => 'granted',
             'ip_address' => $request->ip(),
@@ -192,7 +190,8 @@ class HelperFunctions
         6. Cool down: $trialPogramData->cool_down
         7. Alignment: $trialPogramData->alignment
 
-        Please based your sms reply on this program.
+        NOTE: Please based your sms reply on this program and REPLY SHORT IF INCOMING SMS IS SHORT AND LONG IF
+        TRAINEE WANT A LONG OR BASED ON ITS CONVERSATION.
         ";
 
         $instruction = $daysSinceAccountCreated <= 5 ? $inTrialInstruction : $ubscribedInstruction;
@@ -216,7 +215,9 @@ class HelperFunctions
 
         Instructions: $instruction.
         
-        Always prioritize safety, avoid motivational reply at the end and never suggest dangerous practices.
+        Always prioritize safety, avoid motivational reply at the end and never suggest dangerous practices
+
+        NOTE: MAKE YOUR RESPONSE LIKE HAVING A CASUAL CONVERSATION TO TRAINEE, MAKE IT SHORT AND PRECISE AS POSSIBLE.
     ");
     }
 
@@ -261,13 +262,13 @@ class HelperFunctions
         }
 
         try {
-            TraineeProgress::create([
+            GpfTraineeProgress::create([
                 'user_id' => $id,
                 'weight_lbs' => $weight,
                 'body_fat_percent' => 0,
                 'muscle_mass_lbs' => 0,
                 'recorded_at' => $now,
-                'notes' => 0,
+                'notes' => $message,
             ]);
         } catch (\Throwable $th) {
             throw $th;
@@ -331,7 +332,7 @@ class HelperFunctions
      */
     public function getNewWeight($id, $currentWeight): float|int
     {
-        $newWeight = TraineeProgress::where('user_id', $id)->value('weight_lbs');
+        $newWeight = GpfTraineeProgress::where('user_id', $id)->value('weight_lbs');
 
         return $currentWeight - $newWeight;
     }

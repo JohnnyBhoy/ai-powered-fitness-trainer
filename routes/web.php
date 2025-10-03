@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Api\PromoController;
+use App\Http\Controllers\NutritionController;
 use App\Http\Controllers\NutritionPlanController;
 use App\Http\Controllers\ProgramController;
+use App\Http\Controllers\ProgressController;
 use App\Http\Controllers\TraineeController;
 use App\Http\Controllers\TrainerController;
 use Illuminate\Foundation\Application;
@@ -112,7 +114,7 @@ Route::post('/admin/login', [AdminController::class, 'login'])
 |
 | This route is for web portal trainee
 | Dashboard, Weekly Program, Weekly Nutrition Plan
-| Daily Program and daily nutrition plan
+| Daily Program and daily nutrition plan, Settings
 |
 */
 Route::middleware(['auth', 'role:3'])->prefix('/trainee')->group(function () {
@@ -121,6 +123,15 @@ Route::middleware(['auth', 'role:3'])->prefix('/trainee')->group(function () {
 
     Route::get('/workout', [WorkoutController::class, 'index'])
         ->name('trainee.workout');
+
+    Route::get('/nutrition', [NutritionController::class, 'index'])
+        ->name('trainee.nutrition');
+
+    Route::get('/progress', [ProgressController::class, 'index'])
+        ->name('trainee.progress');
+
+    Route::get('/settings', [TraineeController::class, 'settings'])
+        ->name('trainee.settings');
 });
 
 

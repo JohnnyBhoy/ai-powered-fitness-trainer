@@ -32,15 +32,10 @@ class WorkoutController extends Controller
     {
         $userId = auth()->user()->id;
         $user = $this->userService->show($userId);
-        $isTrial = $user->subscription == 'trial';
         $daySinceCreated = $this->helper->getDaysSinceAccountCreated($user->created_at);
 
         try {
-            if ($isTrial) {
-               $todaysWorkoutProgram =  $this->trialProgramService->find($userId);
-            } else {
-                $todaysWorkoutProgram = $this->programService->getProgramByDay($userId, $daySinceCreated);
-            }
+            $todaysWorkoutProgram = $this->programService->getProgramByDay($userId, $daySinceCreated);
         } catch (\Throwable $th) {
             throw $th;
         }

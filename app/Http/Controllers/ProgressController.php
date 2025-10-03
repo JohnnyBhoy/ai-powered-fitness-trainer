@@ -2,33 +2,53 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Services\TraineeProgressService;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class ProgressController extends Controller
 {
-    public function index(Request $request)
+    protected TraineeProgressService $progressService;
+
+    public function __construct(TraineeProgressService $progressService)
     {
-        $userId = $request->user()->id;
+        $this->progressService = $progressService;
+    }
 
-        // Simulated progress data — replace with DB queries
-        $progress = [
-            'workoutsCompleted' => 18,
-            'mealsLogged' => 34,
-            'startingWeight' => 82,
-            'currentWeight' => 78.5,
-            'goalWeight' => 75,
-        ];
-
-        $messages = [
-            ['sender' => 'Coach', 'text' => 'Great job! Down 3.5kg already! 🎉'],
-            ['sender' => 'You', 'text' => 'Thanks! Feeling stronger every week.'],
-        ];
-
-        return Inertia::render('Progress/ProgressPage', [
+    /**
+     * Summary of index
+     * @return \Inertia\Response
+     */
+    public function index(): Response
+    {
+        $userId = auth()->user()->id;
+        $progress = $this->progressService->getAllProgress($userId);
+        return Inertia::render('Trainee/GpfTrainee/WeeklyProgress', [
             'progress' => $progress,
-            'messages' => $messages,
         ]);
     }
-}
 
+    /**
+     * Summary of latest
+     * @param int $userId
+     * @return Illuminate\Http\JsonResponse
+     */
+    public function latest()
+    {
+        $userId = auth()->user()->id;
+        $latest = $this->progressService->getLatestProgress($userId);
+        return response()->json($latest);
+    }
+
+    /**
+     * Summary of weightChange
+     * @param int $userId
+     * @param float $currentWeight
+     * @return Illuminate\Http\JsonResponse
+     */
+    public function weightChange(int $userId, float $currentWeight)
+    {
+        $change = $this->progressService->calculateWeightChange($userId, $currentWeight);
+        return response()->json(['weight_change' => $change]);
+    }
+}

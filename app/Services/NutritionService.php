@@ -22,34 +22,65 @@ class NutritionService
     }
 
     /**
-     * Create weekly nutrition plan
+     * Summary of create
      * @param mixed $user
-     * @return array|null
+     * @return null
      */
-    public function create($user): null
+    public function create($user)
     {
         $systemPrompt = $this->nutritionSystemPrompt();
-        $userPrompt = $this->nutritionUserPrompt($user);
-
-        $response = $this->aiService->get($systemPrompt, $userPrompt);
+        $userPrompt   = $this->nutritionUserPrompt($user);
 
         $weekNumber = $this->nutritionLogService->getWeekNumber($user->user_id);
-        $this->nutritionLogService->create($user->user_id, $weekNumber, $response);
 
-        // Extract json response to array (iterable create program by day)
-        $plans = $this->aiService->extractArrayOfDataInAiResponse($response);
+        $maxRetries = 3;
+        $attempt    = 0;
+        $plans      = [];
 
-        if ($weekNumber > 1) {
-            $this->delete($user->user_id);
+        // Keep fetching unless it will give 28 objects (needed to create a nutrition plan)
+        while ($attempt < $maxRetries) {
+            $response = $this->aiService->get($systemPrompt, $userPrompt);
+
+            // Extract json response to array
+            $plans = $this->aiService->extractArrayOfDataInAiResponse($response);
+
+            // Break loop if we got exactly 28 objects
+            if (is_array($plans) && count($plans) === 28) {
+                break;
+            }
+
+            $attempt++;
         }
 
-        if (is_array($plans)) {
-            foreach ($plans as $plan) {
-                $this->nutritionRepository->create($plan);
+        // Save logs (keep AI response)
+        $this->nutritionLogService->create($user->user_id, $weekNumber, $response);
+
+        // Save only if valid
+        if (is_array($plans) && count($plans) === 28) {
+            // Remove the old weekly nutrition plan from DB
+            $hasExistingNutritionPlan = $this->find($user->user_id);
+
+            if ($hasExistingNutritionPlan) {
+                $this->delete($user->user_id);
             }
+
+            return $this->nutritionRepository->create($plans);
+        } else {
+            // Optional: log failure if retries exhausted
+            \Log::warning("Nutrition plan generation failed for user {$user->user_id}. Attempts: $attempt");
         }
 
         return null;
+    }
+
+    /**
+     * Get weekly nutrition plan using
+     * @param int $userId
+     * @return \App\Models\GpfNutritionPlan|null
+     */
+    public function find(int $userId)
+    {
+        return $this->nutritionRepository->find($userId);
     }
 
     /**

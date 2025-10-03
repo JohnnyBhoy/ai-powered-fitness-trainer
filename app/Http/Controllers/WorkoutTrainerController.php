@@ -63,6 +63,8 @@ class WorkoutTrainerController extends Controller
 
         // Here we prepare the data for prompts
         $systemPropmt = $this->helpers->generatePrompt($userData);
+
+        // Get open ai response
         $botResponse = $this->aiService->get($userMessage, $systemPropmt);
 
         // Add ai response to conversations

@@ -6,6 +6,7 @@ use App\Models\GpfBiometric;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class TraineeController extends Controller
 {
@@ -42,5 +43,15 @@ class TraineeController extends Controller
             'data' => $update,
             'status' => 200,
         ]);
+    }
+
+    /**
+     * *
+     * @return \Inertia\Response
+     */
+    public function settings(): Response
+    {
+        $userid = auth()->user()->id;
+        return  Inertia::render('Trainee/Settings', []);
     }
 }

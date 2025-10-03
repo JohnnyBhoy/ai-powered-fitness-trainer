@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\CreateWeeklyNutrition;
+use App\Jobs\CreateWeeklyProgram;
 use App\Services\BiometricService;
 use App\Services\MessageService;
 use App\Services\NutritionService;
@@ -10,6 +12,7 @@ use App\Services\SubscriptionService;
 use App\Services\UserService;
 use App\Support\HelperFunctions;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 
@@ -126,7 +129,7 @@ class StripePaymentController extends Controller
         try {
             // Get user session
             $session = Session::retrieve($sessionId);
-            $user = $this->userService->show($userId);
+
             $welcomeMessage = $this->messageService->getWelcomeMessageOnSubscription($amount);
 
             // Update subscription trial = $1  / premium = $49
@@ -136,15 +139,14 @@ class StripePaymentController extends Controller
             $this->helperFunctions->createInitialConversation($userId, $welcomeMessage);
 
             // Send welcome sms via twilio
-            //$this->messageService->sendSms($user->phone_number, $welcomeMessage);
+            // $this->messageService->sendSms($user->phone_number, $welcomeMessage);
 
-            // Create weekly nutrition plan for trainee
-            $this->nutritionService->create($user);
+            // Create new nutrition and weekly program jobs
+            CreateWeeklyProgram::dispatch($userId);
+            CreateWeeklyNutrition::dispatch($userId);
 
-            // Create weekly program on premium subscription
-            if ((string)$amount === '49') {
-                $this->programService->create($user);
-            }
+            // Log Dispatched Action
+            Log::info("Dispatched weekly program job for user {$userId}");
 
             return view('stripe.success');
         } catch (\Exception $e) {

@@ -2,9 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Models\GpfFitnessProgram;
 use App\Models\GpfWeeklyProgram;
-use Carbon\Carbon;
 
 class ProgramRepository
 {
@@ -16,22 +14,15 @@ class ProgramRepository
     }
 
     /**
-     * Summary of createWeeklyProgram
-     * @param mixed $userId
-     * @param mixed $programs
-     * @param mixed $weekNumber
+     * Create new set of weekly program for trainee with the
+     * @param array $programs Array or set of weekly programs in 7 json objects
      * @return void
      */
-    public function create($userId, $programs, $weekNumber): void
+    public function create($programs): void
     {
-        // Replace new set of weekly program
-        if ($weekNumber > 1) {
-            $this->program->where('user_id', $userId)->delete();
-        }
-
         if (is_array($programs)) {
-            foreach ($programs as $data) {
-                $this->program->create($data);
+            foreach ($programs as $program) {
+                $this->program->create($program);
             }
         }
     }
@@ -43,8 +34,31 @@ class ProgramRepository
      */
     public function getProgramByDay(Int $userId, Int $day): GpfWeeklyProgram|null
     {
-        return $this->program->where('user_id', $userId)
+        return $this->program
+            ->where('user_id', $userId)
             ->where('day', $day)
             ->first();
+    }
+
+    /**
+     * Delete the existing program by the given user id
+     * @param mixed $userId
+     * @return bool|null
+     */
+    public function delete($userId)
+    {
+        return $this->program
+            ->where('user_id', $userId)
+            ->delete();
+    }
+
+    /**
+     * Get program by ID
+     * @param mixed $userId
+     * @return GpfWeeklyProgram|null
+     */
+    public function find(Int $userId): GpfWeeklyProgram|null
+    {
+        return $this->program->where('user_id', $userId)->first();
     }
 }

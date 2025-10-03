@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {
   onClose: () => void;
@@ -6,20 +6,44 @@ type Props = {
 };
 
 const UpgradeModal = ({ onClose, onUpgrade }: Props) => {
+  const [visible, setVisible] = useState(false);
+  const [closing, setClosing] = useState(false);
+
   useEffect(() => {
+    // Trigger fade-in after mount
+    const timer = setTimeout(() => setVisible(true), 20);
+
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") handleClose();
     };
     document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [onClose]);
+
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  const handleClose = () => {
+    setClosing(true);
+    setVisible(false);
+    setTimeout(() => onClose(), 500); // match duration
+  };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 px-4">
-      <div className="relative bg-white rounded-xl shadow-xl max-w-md w-full p-6 sm:p-8">
+    <div
+      className={`fixed inset-0 z-50 flex items-center justify-center px-4
+      bg-black transition-opacity duration-500 ease-in-out
+      ${visible && !closing ? "bg-opacity-50 opacity-100" : "bg-opacity-0 opacity-0"}`}
+    >
+      <div
+        className={`relative bg-white rounded-xl shadow-xl max-w-md w-full p-6 sm:p-8
+        transform transition-all duration-500 ease-in-out
+        ${visible && !closing ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
+      >
         {/* Close Button */}
         <button
-          onClick={onClose}
+          onClick={handleClose}
           className="absolute top-3 right-3 text-gray-400 hover:text-gray-600"
         >
           ✕
@@ -48,7 +72,8 @@ const UpgradeModal = ({ onClose, onUpgrade }: Props) => {
         {/* CTA Button */}
         <button
           onClick={onUpgrade}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition duration-150"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg 
+          transition duration-300 transform hover:scale-105"
         >
           Subscribe Now – $49/month
         </button>

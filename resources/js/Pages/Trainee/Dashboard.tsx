@@ -12,7 +12,7 @@ const Dashboard = () => {
     <Authenticated>
       <main className="p-6 space-y-6">
         {/* Welcome Banner */}
-        <div className="bg-gradient-to-r from-blue-600 to-blue-500 rounded-2xl p-6 shadow-md text-white flex justify-between items-center">
+        <div className="bg-torq rounded-2xl p-6 shadow-md text-white flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold">Welcome back, Trainee!</h1>
             <p className="mt-1 text-sm text-blue-100">

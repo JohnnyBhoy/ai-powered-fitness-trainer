@@ -57,29 +57,29 @@ class AdminController extends Controller
      */
     public function index(): Response
     {
-        $latestUsers  = $this->userService->getLatestUsers();
+        try {
+            $latestUsers  = $this->userService->getLatestUsers();
+            $gpfUser =  $this->userService->countGoPeakFitTrainees();
 
-        $gpfUser =  $this->userService->countGoPeakFitTrainees();
+            $trainerCount = $this->userService->countTrainer();
+            $traineeCount = $this->userService->countTraineesAddedByTrainer();
 
-        $trainerCount = $this->userService->countTrainer();
+            $monthlyGpfTrainerCount = $this->getUserCountByMonthBaseOnRole(3, null);
+            $monthlyTrainerCount = $this->getUserCountByMonthBaseOnRole(2, 1);
+            $monthlyTraineeCount = $this->getUserCountByMonthBaseOnRole(3, 1);
 
-        $traineeCount = $this->userService->countTraineesAddedByTrainer();
-
-        $monthlyGpfTrainerCount = $this->getUserCountByMonthBaseOnRole(3, null);
-
-        $monthlyTrainerCount = $this->getUserCountByMonthBaseOnRole(2, 1);
-
-        $monthlyTraineeCount = $this->getUserCountByMonthBaseOnRole(3, 1);
-
-        return Inertia::render('Admin/Dashboard', [
-            'latestUsers' => $latestUsers,
-            'gpfUsersCount' => $gpfUser,
-            'trainerCount' => $trainerCount,
-            'traineeCount' => $traineeCount,
-            'monthlyGpfTrainerCount' => $monthlyGpfTrainerCount,
-            'monthlyTrainerCount' => $monthlyTrainerCount,
-            'monthlyTraineeCount' => $monthlyTraineeCount,
-        ]);
+            return Inertia::render('Admin/Dashboard', [
+                'latestUsers' => $latestUsers,
+                'gpfUsersCount' => $gpfUser,
+                'trainerCount' => $trainerCount,
+                'traineeCount' => $traineeCount,
+                'monthlyGpfTrainerCount' => $monthlyGpfTrainerCount,
+                'monthlyTrainerCount' => $monthlyTrainerCount,
+                'monthlyTraineeCount' => $monthlyTraineeCount,
+            ]);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
     /**
@@ -162,10 +162,14 @@ class AdminController extends Controller
     //Counter based on role
     public function getUserCountByMonthBaseOnRole(Int $role, Int|null $trainerId)
     {
-        // Query users created in the current year, grouped by month
-        $allMonths = $this->helperFunctions->getMonthlyUserCountByRole($role, $trainerId);
+        try {
+            // Query users created in the current year, grouped by month
+            $allMonths = $this->helperFunctions->getMonthlyUserCountByRole($role, $trainerId);
 
-        return response()->json($allMonths)->original;
+            return response()->json($allMonths)->original;
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
     /**

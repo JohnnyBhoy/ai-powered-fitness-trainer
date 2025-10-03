@@ -14,14 +14,29 @@ class NutritionRepository
         $this->nutrition = $nutrition;
     }
 
+
     /**
-     * Create weekly nutrition plan for trainee
-     * @param array $data
-     * @return GpfNutritionPlan
+     * Create weekly nutrition plan
+     * @param mixed $plans
+     * @return void
      */
-    public function create($data)
+    public function create($plans): void
     {
-        return $this->nutrition->create($data);
+        if (is_array($plans)) {
+            foreach ($plans as $plan) {
+                $this->nutrition->create($plan);
+            }
+        }
+    }
+
+    /**
+     * Find the weekly nutrition using the
+     * @param int $userId
+     * @return GpfNutritionPlan|null
+     */
+    public function find(int $userId)
+    {
+        return $this->nutrition->where('user_id', $userId)->first();
     }
 
     /**

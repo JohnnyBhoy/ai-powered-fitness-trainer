@@ -1,4 +1,4 @@
-import { Card } from '@/Components/UI/Card';
+import { Card } from '@/Components/UI_2/Card';
 import { GpfTraineeProps } from '@/types/gpf';
 import { useState } from 'react';
 

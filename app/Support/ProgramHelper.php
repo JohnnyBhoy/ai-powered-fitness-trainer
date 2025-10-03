@@ -10,28 +10,51 @@ class ProgramHelper
      */
     public function systemPrompt(): string
     {
-        return  "You are a certified expert fitness coach with over a decade of experience creating highly personalized fitness and wellness programs. You design safe, effective, and motivating workout and nutrition plans tailored to a user's goals, body type, and available resources. Focus on the trainee GOAL WEIGHT and CURRENT WEIGHT. Always take into account the user's age, sex, current weight, goal weight, fitness level, equipment access, food allergies, and strictness level. Provide a 1-week training program with rest days, warm-up/cool-down, and a tone that is encouraging yet professional.";;
+        return  "You are an expert fitness coach.
+Create safe, effective, and motivational 7-day workout programs.
+Always tailor to the trainee’s profile (age, sex, current/goal weight, fitness level, equipment, allergies, goal).
+Include warm_up, workout, cool_down, and alignment.
+Output: exactly 7 JSON objects (days 1–7).
+Return only valid JSON, nothing else.";
     }
 
 
     public function userPrompt($user): string
     {
-        return   "Create a 1-week personalized fitness plan for $user->first_name profile:
-        - Age: {$user->age} years
-        - Sex: {$user->sex}
-        - Current Weight: {$user->current_weight} lbs
-        - Goal Weight: {$user->goal_weight} lbs
-        - Fitness Level: {$user->fitness_level}
-        - Equipment Access: {$user->equipment_access}
-        - Food Allergies: {$user->food_allergies}
-        - Primary Goal: {$user->goal}
-        - Motivation (Why): {$user->why}
-        - Past Obstacles: {$user->past_obstacles}
-        - Current Struggles: {$user->current_struggles}
+        return   <<<PROMPT
+Profile:
+- Name: {$user->first_name}
+- Age: {$user->age}
+- Sex: {$user->sex}
+- Current: {$user->current_weight} lbs
+- Goal: {$user->goal_weight} lbs
+- Level: {$user->fitness_level}
+- Equipment: {$user->equipment_access}
+- Allergies: {$user->food_allergies}
+- Goal: {$user->goal}
+- Why: {$user->why}
+- Obstacles: {$user->past_obstacles}
+- Struggles: {$user->current_struggles}
 
-         Consider this information to generate a daily workout schedule including warm-ups, workouts, rest days, and cool-downs. Tailor all recommendations to the $user->first_name profile. Tone should be motivational but clear and professional.
-         
-         NOTE: RETURN DATA FORMAT SHOULD BE [{user_id, program_name,day,focus,warm_up,workout,cool_down,alignment},{}, to 7] user_id = $user->user_id, day key has a value of 1 to 7 IN ASSOCIATIVE ARRAY OF OBJECT FORMAT SO THAT I CAN LOOP IT AND SAVE IT TO MY DB";
+Task:
+Generate a 7-day plan for {$user->first_name}.
+Each day = object with keys:
+`user_id`, `program_name`, `day`, `focus`, `warm_up`, `workout`, `cool_down`, `alignment`.
+
+Example format (repeat for day 1–7):
+[
+  {
+    "user_id": {$user->id},
+    "program_name": "...",
+    "day": 1,
+    "focus": "...",
+    "warm_up": "...",
+    "workout": "...",
+    "cool_down": "...",
+    "alignment": "..."
+  }
+]
+PROMPT;
     }
 
     /**

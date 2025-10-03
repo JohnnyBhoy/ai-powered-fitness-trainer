@@ -12,9 +12,22 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // Send training update and reminder 3x daily 4am in the morning, 1pm in the afternoon and 9pm in the evening
-        $schedule->command('workout:send-encouragement')->twiceDaily(4, 13);
-        $schedule->command('workout:send-encouragement')->dailyAt('21:00');
+        $denverTimezone = 'America/Denver';
+
+        // Workout encouragement messages 3x daily (4am, 1pm, 9pm Denver time)
+        $workoutTimes = ['04:00', '13:00', '21:00'];
+        foreach ($workoutTimes as $time) {
+            $schedule->command('workout:send-encouragement')
+                ->dailyAt($time)
+                ->timezone($denverTimezone)
+                ->description("Send workout encouragement at $time Denver time");
+        }
+
+        // Generate weekly program daily at 11pm Denver time
+        $schedule->command('generate:weekly-plan')
+            ->dailyAt('23:00')
+            ->timezone($denverTimezone)
+            ->description('Generate weekly program for trainees ending their current plan');
     }
 
     /**

@@ -1,4 +1,4 @@
-import { Card, CardContent } from '@/Components/UI/Card';
+import { Card, CardContent } from '@/Components/UI_2/Card';
 import { motion } from 'framer-motion';
 import { Activity, HeartPulse, Ruler, Scale } from 'lucide-react';
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
