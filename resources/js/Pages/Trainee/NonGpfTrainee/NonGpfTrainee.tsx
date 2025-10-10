@@ -80,7 +80,7 @@ const NonGpfTrainee = ({ data }: { data: any }) => {
       <Head title="GoPeakFit Trainees under Trainer" />
 
       <TableContainer>
-        <Card className={`h-full w-full ${open ? 'hidden' : ''}`}>
+        <Card className={`h-full w-full dark:bg-gray-900 ${open ? 'hidden' : ''}`}>
           <TableHeader
             perPage={perPage}
             setPerPage={setPage}
@@ -91,7 +91,7 @@ const NonGpfTrainee = ({ data }: { data: any }) => {
             filter={filter}
             setFilter={setFilter}
             setStrictnessLevel={setStrictnessLevel}
-            traineeType='GoPeakFit'
+            traineeType='Added by trainer'
           />
           <CardBody className="overflow-scroll px-2">
             <TableContent

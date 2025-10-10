@@ -5,10 +5,9 @@ import {
 } from "@material-tailwind/react";
 
 const Goals = ({ data }: { data: GpfTraineeProps }) => {
-  console.log(data);
 
   return (
-    <Card color="white"  className="p-6 mt-3" shadow={false}>
+    <Card className="p-6 mt-3 bg-white dark:bg-white/[0.03] border dark:border-none" shadow={false}>
       <form className="mb-2 space-y-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <MtTextArea name="What's your primary health and fitness goal?" data={data.goal} row={5} />

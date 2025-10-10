@@ -33,6 +33,7 @@
         "@heroicons/react": "^2.2.0",
         "@material-tailwind/react": "^2.1.10",
         "@react-jvectormap/core": "^1.0.4",
+        "@react-jvectormap/unitedstates": "^1.0.1",
         "@react-jvectormap/world": "^1.1.2",
         "@stripe/stripe-js": "^7.2.0",
         "@tanstack/react-query": "^5.74.4",
@@ -48,6 +49,6 @@
         "react-router": "^7.9.3",
         "recharts": "^3.1.2",
         "sonner": "^2.0.3",
-        "zustand": "^5.0.3"
+        "zustand": "^5.0.8"
     }
 }

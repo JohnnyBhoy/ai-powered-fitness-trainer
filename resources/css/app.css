@@ -122,6 +122,49 @@ html {
   }
 }
 
+/* Hide or restyle scrollbars for dark mode */
+@layer base {
+ .dark { /* Default scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.6); /* gray-400 */
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(107, 114, 128, 0.8); /* gray-500 */
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  /* Dark mode adjustments */
+  .dark ::-webkit-scrollbar-thumb {
+    background-color: rgba(75, 85, 99, 0.7); /* gray-600 */
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(107, 114, 128, 0.9); /* gray-500 */
+  }
+
+  .dark ::-webkit-scrollbar-track {
+    background-color: rgb(17, 24, 39); /* gray-900 */
+  }
+
+  /* Optional: Firefox scrollbar colors */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(75, 85, 99, 0.7) rgb(17, 24, 39);
+  }
+}
+}
+
+
 /* Separate dark mode overrides */
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
   background-color: #344054;

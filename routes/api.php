@@ -3,10 +3,12 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ConsentController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\TrialProgramController;
 use App\Http\Controllers\WorkoutTrainerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PromoController;
 use App\Http\Controllers\TraineeController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,4 +56,10 @@ Route::prefix('admin')->group(function () {
 
     Route::get('/trainee-update', [TraineeController::class, 'update'])
         ->name('admin.trainee.update');
+
+    Route::get('/get-data', [AdminController::class, 'getAdminDashboardData'])
+        ->name('admin.get.data');
+
+    Route::put('/update-trial-programs', [TrialProgramController::class, 'update'])
+        ->name('admin.trial.update');
 });

@@ -154,4 +154,66 @@ class UserService
     {
         return $this->userRepository->getActiveTraineesId();
     }
+
+    /**
+     *Get user growth compare to last month
+     * @return float
+     */
+    public function getUsersGrowthPercentage(): float
+    {
+        return $this->userRepository->getUserSignupGrowthPercentage();
+    }
+
+    /**
+     * Get percentage of GoPeakFit trainee signup growth vs last month
+     * (role = 3, trainer_id = null)
+     */
+    public function getGpfTraineeGrowthPercentage(): float
+    {
+        return $this->userRepository->getGoPeakFitTraineeGrowthPercentage();
+    }
+
+    /**
+     * Get percentage of Non-GoPeakFit trainee signup growth vs last month
+     * (role = 3, trainer_id != null)
+     */
+    public function getNonGpfTraineeGrowthPercentage(): float
+    {
+        return $this->userRepository->getNonGpfTraineeGrowthPercentage();
+    }
+
+    /**
+     * Get percentage of Trainer signup growth vs last month
+     * (role = 2)
+     */
+    public function getTrainerGrowthPercentage(): float
+    {
+        return $this->userRepository->getTrainerGrowthPercentage();
+    }
+
+    public function getTraineesPerState()
+    {
+        return $this->userRepository->getTraineesPerState();
+    }
+
+    /**
+     * Get the most recent trainees with biometric info
+     * Joins users and gpf_biometrics
+     * Returns role = 3 (trainees) only
+     */
+    public function getRecentTrainees($limit = 10)
+    {
+        return $this->userRepository->getRecentTrainees($limit);
+    }
+
+    /**
+     * Update user's data
+     * @param mixed $data
+     * @param mixed $id
+     * @return bool
+     */
+    public function updateUser($data, $id): bool
+    {
+        return $this->userRepository->updateUser($data, $id);
+    }
 }

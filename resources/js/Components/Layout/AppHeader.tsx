@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 
 import { Link } from "react-router";
 import { useSidebar } from "../../context/SidebarContext";
-import { ThemeToggleButton } from "@/Components/common/ThemeToggleButton";
-import NotificationDropdown from "@/Components/header/NotificationDropdown";
-import UserDropdown from "@/Components/header/UserDropdown";
+import { ThemeToggleButton } from "@/Components/Common/ThemeToggleButton";
+import NotificationDropdown from "@/Components/Header/NotificationDropdown";
+import UserDropdown from "@/Components/Header/UserDropdown";
 
 const AppHeader: React.FC = () => {
   const [isApplicationMenuOpen, setIsApplicationMenuOpen] = useState(false);
@@ -86,13 +86,17 @@ const AppHeader: React.FC = () => {
           <Link to="/" className="lg:hidden">
             <img
               className="dark:hidden"
-              src="./images/logo/logo.svg"
+              src="/logos/header-logo.png"
+              height={140}
+              width={90}
               alt="Logo"
             />
             <img
               className="hidden dark:block"
-              src="./images/logo/logo-dark.svg"
+              src="/logos/header-logo.png"
               alt="Logo"
+              height={140}
+              width={90}
             />
           </Link>
 

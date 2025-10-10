@@ -81,7 +81,7 @@ const GpfTrainee = ({ data }: { data: any }) => {
       <Head title="GoPeakFit Trainees" />
 
       <TableContainer>
-        <Card className={`h-full w-full ${open ? 'hidden' : ''}`}>
+        <Card className={`dark:bg-gray-900 h-full w-full ${open ? 'hidden' : ''}`}>
           <TableHeader
             perPage={perPage}
             setPerPage={setPage}
@@ -94,7 +94,7 @@ const GpfTrainee = ({ data }: { data: any }) => {
             setStrictnessLevel={setStrictnessLevel}
             traineeType='GoPeakFit'
           />
-          <CardBody className="overflow-scroll px-2">
+          <CardBody className="overflow-scroll px-2  dark:bg-gray-900 dark:text-gray-100 ">
             <TableContent
               TABLE_HEAD={TABLE_HEAD}
               TABLE_ROWS={TABLE_ROWS}
@@ -105,13 +105,7 @@ const GpfTrainee = ({ data }: { data: any }) => {
         </Card>
       </TableContainer>
 
-      {open && <Update
-        open={open}
-        handleOpen={handleOpen}
-        traineeData={traineeData}
-        setReload={setReload}
-        reload={reload}
-      />}
+      {open && <Update traineeData={traineeData} />}
     </Authenticated >
   )
 }

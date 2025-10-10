@@ -1,37 +1,29 @@
-import Header from '@/Components/Admin/NutritionPlan/Header';
-import TraineesCountPerDay from '@/Components/Admin/TrialProgram/TraineesCountPerDay';
-import TrialPrograms from '@/Components/Admin/TrialProgram/TrialPrograms';
+import TrialPrograms from '@/Components/Admin/Programs/TrialProgram/TrialPrograms';
 import Authenticated from '@/Pages/Layouts/AuthenticatedLayout';
+import { useTrialProgramStore } from '@/stores/useProgramStore';
+import { WeeklyProgram } from '@/types/weekly-program';
 import { Head } from '@inertiajs/react';
-
-type ProgramDay = {
-    id: number;
-    day: number;
-    focus: string;
-    warm_up: string;
-    workout: string[];
-    cool_down: string;
-    alignment: string;
-};
-
-type PageProps = {
-    freeTrialTraineesCountByDays: Record<string, number>;
-    programs: ProgramDay[];
-};
+import { useEffect } from 'react';
 
 
+const Index = ({ programs }: { programs: WeeklyProgram[] }) => {
+    console.log(programs);
 
-const Index = ({ programs, freeTrialTraineesCountByDays }: PageProps) => {
-    
+    const { setTrialPrograms } = useTrialProgramStore();
+
+    // Set trial program data on component mount
+    useEffect(() => {
+        setTimeout(() => {
+        setTrialPrograms(programs);
+        }, 1000);
+    }, []);
+
     return (
         <Authenticated>
             <Head title="5-Day Trial Program" />
 
-            <div className="max-w-7xl mx-auto py-8 px-8">
-                {/* Title */}
-                <Header title="5-Day Trial Program Dashboard" />
-                <TraineesCountPerDay freeTrialTraineesCountByDays={freeTrialTraineesCountByDays} />
-                <TrialPrograms programs={programs} />
+            <div className="max-w-7xl mx-auto">
+                <TrialPrograms />
             </div>
         </Authenticated>
     )

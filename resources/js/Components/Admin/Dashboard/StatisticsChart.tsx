@@ -1,8 +1,11 @@
 import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
-import ChartTab from "../common/ChartTab";
+import ChartTab from "../../Common/ChartTab";
+import { useDashboardStore } from "@/stores/dashboardStore";
 
 export default function StatisticsChart() {
+  const {data} = useDashboardStore();
+
   const options: ApexOptions = {
     legend: {
       show: false, // Hide legend
@@ -103,12 +106,12 @@ export default function StatisticsChart() {
 
   const series = [
     {
-      name: "Sales",
-      data: [180, 190, 170, 160, 175, 165, 170, 205, 230, 210, 240, 235],
+      name: "GoPeakFit",
+      data: Object.values(data?.monthlyGpfTrainees ?? {}) ?? [0,0,0,0,0,0,0,0,0,0],
     },
     {
-      name: "Revenue",
-      data: [40, 30, 50, 40, 55, 40, 70, 100, 110, 120, 150, 140],
+      name: "Non-GoPeakFit",
+      data: Object.values(data?.monthlyNonGpfTrainees ?? {}) ?? [0,0,0,0,0,0,0,0,0,0],
     },
   ];
   return (
@@ -119,7 +122,7 @@ export default function StatisticsChart() {
             Statistics
           </h3>
           <p className="mt-1 text-gray-500 text-theme-sm dark:text-gray-400">
-            Target you’ve set for each month
+            Users registered for each month
           </p>
         </div>
         <div className="flex items-start w-full gap-3 sm:justify-end">

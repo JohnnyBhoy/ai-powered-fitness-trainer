@@ -2,21 +2,21 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router";
 
 // Assume these icons are imported from an icon library
+import { useSidebar } from "@/context/SidebarContext";
 import {
-  BoxCubeIcon,
   ChevronDownIcon,
   GridIcon,
   HorizontaLDots,
+
   ListIcon,
-  PieChartIcon,
-  PlugInIcon,
+
   TableIcon,
   UserCircleIcon,
-  UserIcon,
+  UserIcon
 } from "@/icons";
-import { useSidebar } from "@/context/SidebarContext";
-import SidebarWidget from "./SidebarWidget";
 import { Link } from "@inertiajs/react";
+import { Gear, PersonGear } from "react-bootstrap-icons";
+import SidebarWidget from "./SidebarWidget";
 
 type NavItem = {
   name: string;
@@ -35,20 +35,20 @@ const navItems: NavItem[] = [
     name: "Trainees",
     icon: <UserCircleIcon />,
     subItems: [
-      { name: "GoPeakFit", path: "/form-elements", pro: false },
-      { name: "Non GoPeakFit", path: "/form-elements", pro: false },
+      { name: "GoPeakFit", path: "/admin/gpf-trainees", pro: false },
+      { name: "Non GoPeakFit", path: "/admin/non-gpf-trainees", pro: false },
     ],
   },
   {
     icon: <UserIcon />,
     name: "Trainers",
-    path: "/calendar",
+    path: "/admin/trainers",
   },
   {
     name: "Programs",
     icon: <ListIcon />,
     subItems: [
-      { name: "5-Day Trial", path: "/form-elements", pro: false },
+      { name: "5-Day Trial", path: "/admin/five-days-trail", pro: false },
       { name: "Weekly Program", path: "/form-elements", pro: false },
     ],
   },
@@ -56,39 +56,28 @@ const navItems: NavItem[] = [
     name: "Nutrition",
     icon: <TableIcon />,
     subItems: [
-      { name: "5-Day Trial", path: "/form-elements", pro: false },
-      { name: "Weekly Nutrition", path: "/form-elements", pro: false },
+      { name: "5-Day Trial", path: "/admin/nutrition-plans", pro: false },
+      { name: "Weekly Nutrition", path: "/admin/weekly-nutrition", pro: false },
     ],
   },
 ];
 
 const othersItems: NavItem[] = [
   {
-    icon: <PieChartIcon />,
-    name: "Charts",
+    icon: <Gear />,
+    name: "Settings",
     subItems: [
-      { name: "Line Chart", path: "/line-chart", pro: false },
-      { name: "Bar Chart", path: "/bar-chart", pro: false },
+      { name: "Trial Program", path: "/admin/trial-program-setting", pro: false },
+      { name: "Trial Nutrition", path: "/admin/trial-nutrition-setting", pro: false },
     ],
   },
   {
-    icon: <BoxCubeIcon />,
-    name: "UI Elements",
+    icon: <PersonGear />,
+    name: "Account Settings",
     subItems: [
-      { name: "Alerts", path: "/alerts", pro: false },
-      { name: "Avatar", path: "/avatars", pro: false },
-      { name: "Badge", path: "/badge", pro: false },
-      { name: "Buttons", path: "/buttons", pro: false },
-      { name: "Images", path: "/images", pro: false },
-      { name: "Videos", path: "/videos", pro: false },
-    ],
-  },
-  {
-    icon: <PlugInIcon />,
-    name: "Authentication",
-    subItems: [
-      { name: "Sign In", path: "/signin", pro: false },
-      { name: "Sign Up", path: "/signup", pro: false },
+      { name: "Profile", path: "/admin/profile", pro: false },
+      { name: "Account", path: "/admin/account", pro: false },
+      { name: "Analytics", path: "/admin/analytics", pro: false },
     ],
   },
 ];
@@ -289,6 +278,7 @@ const AppSidebar: React.FC = () => {
       onMouseEnter={() => !isExpanded && setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      {/* Logo Section */}
       <div
         className={`py-8 flex ${!isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
           }`}
@@ -321,7 +311,10 @@ const AppSidebar: React.FC = () => {
           )}
         </Link>
       </div>
-      <div className="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
+
+      {/* Sidebar content with widget pinned to bottom */}
+      <div className="flex flex-col flex-1 overflow-y-auto duration-300 ease-linear no-scrollbar justify-between">
+        {/* Navigation */}
         <nav className="mb-6">
           <div className="flex flex-col gap-4">
             <div>
@@ -339,7 +332,7 @@ const AppSidebar: React.FC = () => {
               </h2>
               {renderMenuItems(navItems, "main")}
             </div>
-            <div className="">
+            <div>
               <h2
                 className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${!isExpanded && !isHovered
                   ? "lg:justify-center"
@@ -356,10 +349,15 @@ const AppSidebar: React.FC = () => {
             </div>
           </div>
         </nav>
-        {isExpanded || isHovered || isMobileOpen ? <SidebarWidget /> : null}
+
+        {/* SidebarWidget pinned to bottom */}
+        <div className="mt-auto pt-4 border-t border-gray-200 dark:border-gray-800">
+          {isExpanded || isHovered || isMobileOpen ? <SidebarWidget /> : null}
+        </div>
       </div>
     </aside>
   );
+
 };
 
 export default AppSidebar;

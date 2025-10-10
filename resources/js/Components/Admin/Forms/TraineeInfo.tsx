@@ -7,7 +7,6 @@ import { MouseEventHandler } from "react";
 import { X } from "react-bootstrap-icons";
 
 const TraineeInfo = ({ user, onClose }: { user: User, onClose: MouseEventHandler }) => {
-    console.log(user);
 
     return (
         <div className="p-6">

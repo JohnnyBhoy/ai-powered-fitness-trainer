@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -65,11 +66,15 @@ class UserRepository
             ->leftJoin('gpf_biometrics as gb', 'u1.id', '=', 'gb.user_id')
             ->leftJoin('gpf_goals as g', 'u1.id', '=', 'g.user_id')
             ->leftJoin('gpf_messages as gm', 'u1.id', '=', 'gm.user_id')
+            ->leftJoin('gpf_weekly_program_logs as gwp', 'u1.id', '=', 'gwp.user_id')
+            ->leftJoin('gpf_nutrition_plan_logs as gwn', 'u1.id', '=', 'gwn.user_id')
             ->select(
                 'u1.*',
                 'gb.*',
                 'g.*',
                 'gm.conversations',
+                'gwp.*',
+                'gwn.*'
             )
             ->where('role', 3)
             ->whereNull('trainer_id');
@@ -227,5 +232,180 @@ class UserRepository
             ->where('role', 3)
             ->pluck('id')
             ->toArray();
+    }
+
+    /**
+     * Get percentage of user signup growth (all users) vs last month
+     * @return float
+     */
+    public function getUserSignupGrowthPercentage(): float
+    {
+        // Get the start and end of this month
+        $startOfCurrentMonth = Carbon::now()->startOfMonth();
+        $endOfCurrentMonth = Carbon::now()->endOfMonth();
+
+        // Get the start and end of last month
+        $startOfLastMonth = Carbon::now()->subMonth()->startOfMonth();
+        $endOfLastMonth = Carbon::now()->subMonth()->endOfMonth();
+
+        // Count new users for each month
+        $currentMonthCount = User::whereBetween('created_at', [$startOfCurrentMonth, $endOfCurrentMonth])->count();
+        $lastMonthCount = User::whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->count();
+
+        // If there were no users last month, return 100% if there are any this month
+        if ($lastMonthCount === 0) {
+            return $currentMonthCount > 0 ? 100.0 : 0.0;
+        }
+
+        // Calculate percentage growth ((current - last) / last) * 100
+        $growth = (($currentMonthCount - $lastMonthCount) / $lastMonthCount) * 100;
+
+        return round($growth, 2);
+    }
+
+    /**
+     * Get percentage of GoPeakFit trainee signup growth vs last month
+     * (role = 3, trainer_id = null)
+     * @return float
+     */
+    public function getGoPeakFitTraineeGrowthPercentage(): float
+    {
+        $startOfCurrentMonth = Carbon::now()->startOfMonth();
+        $endOfCurrentMonth = Carbon::now()->endOfMonth();
+
+        $startOfLastMonth = Carbon::now()->subMonth()->startOfMonth();
+        $endOfLastMonth = Carbon::now()->subMonth()->endOfMonth();
+
+        // Count GPF trainees created this month
+        $currentMonthCount = User::where('role', 3)
+            ->whereNull('trainer_id')
+            ->whereBetween('created_at', [$startOfCurrentMonth, $endOfCurrentMonth])
+            ->count();
+
+        // Count GPF trainees created last month
+        $lastMonthCount = User::where('role', 3)
+            ->whereNull('trainer_id')
+            ->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])
+            ->count();
+
+        if ($lastMonthCount === 0) {
+            return $currentMonthCount > 0 ? 100.0 : 0.0;
+        }
+
+        $growth = (($currentMonthCount - $lastMonthCount) / $lastMonthCount) * 100;
+
+        return round($growth, 2);
+    }
+
+    /**
+     * Get percentage of Non-GoPeakFit trainee signup growth vs last month
+     * (role = 3, trainer_id != null)
+     */
+    public function getNonGpfTraineeGrowthPercentage(): float
+    {
+        $startOfCurrentMonth = now()->startOfMonth();
+        $endOfCurrentMonth = now()->endOfMonth();
+
+        $startOfLastMonth = now()->subMonth()->startOfMonth();
+        $endOfLastMonth = now()->subMonth()->endOfMonth();
+
+        // Count Non-GPF trainees created this month
+        $currentMonthCount = User::where('role', 3)
+            ->whereNotNull('trainer_id')
+            ->whereBetween('created_at', [$startOfCurrentMonth, $endOfCurrentMonth])
+            ->count();
+
+        // Count Non-GPF trainees created last month
+        $lastMonthCount = User::where('role', 3)
+            ->whereNotNull('trainer_id')
+            ->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])
+            ->count();
+
+        if ($lastMonthCount === 0) {
+            return $currentMonthCount > 0 ? 100.0 : 0.0;
+        }
+
+        return round((($currentMonthCount - $lastMonthCount) / $lastMonthCount) * 100, 2);
+    }
+
+    /**
+     * Get percentage of Trainer signup growth vs last month
+     * (role = 2)
+     */
+    public function getTrainerGrowthPercentage(): float
+    {
+        $startOfCurrentMonth = now()->startOfMonth();
+        $endOfCurrentMonth = now()->endOfMonth();
+
+        $startOfLastMonth = now()->subMonth()->startOfMonth();
+        $endOfLastMonth = now()->subMonth()->endOfMonth();
+
+        // Count trainers created this month
+        $currentMonthCount = User::where('role', 2)
+            ->whereBetween('created_at', [$startOfCurrentMonth, $endOfCurrentMonth])
+            ->count();
+
+        // Count trainers created last month
+        $lastMonthCount = User::where('role', 2)
+            ->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])
+            ->count();
+
+        if ($lastMonthCount === 0) {
+            return $currentMonthCount > 0 ? 100.0 : 0.0;
+        }
+
+        return round((($currentMonthCount - $lastMonthCount) / $lastMonthCount) * 100, 2);
+    }
+
+    /**
+     * Get count of trainees per state
+     * Joins users and gpf_biometrics tables
+     * Filters only role = 3 (trainees)
+     */
+    public function getTraineesPerState()
+    {
+        return \DB::table('users')
+            ->join('gpf_biometrics', 'users.id', '=', 'gpf_biometrics.user_id')
+            ->select('gpf_biometrics.state', \DB::raw('COUNT(users.id) as total'))
+            ->where('users.role', 3)
+            ->groupBy('gpf_biometrics.state')
+            ->orderBy('total', 'desc')
+            ->get();
+    }
+
+    /**
+     * Get the most recent trainees with biometric info
+     * Joins users and gpf_biometrics
+     * Returns role = 3 (trainees) only
+     */
+    public function getRecentTrainees(int $limit = 10)
+    {
+        return \DB::table('users')
+            ->join('gpf_biometrics', 'users.id', '=', 'gpf_biometrics.user_id')
+            ->select(
+                'users.id',
+                'users.first_name',
+                'users.last_name',
+                'users.trainer_id',
+                'users.email',
+                'gpf_biometrics.city',
+                'gpf_biometrics.state',
+                'users.created_at'
+            )
+            ->where('users.role', 3)
+            ->orderBy('users.created_at', 'desc')
+            ->limit($limit)
+            ->get();
+    }
+
+    /**
+     * Update user data
+     * @param mixed $data
+     * @param mixed $id
+     * @return bool
+     */
+    public function updateUser($data, $id): bool
+    {
+        return $this->user->where('id', $id)->update($data);
     }
 }

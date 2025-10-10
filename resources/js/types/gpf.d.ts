@@ -1,3 +1,5 @@
+import { WeeklyProgram } from "./weekly-program";
+
 export type GpfTraineeProps = {
   id: number;
   user_id: number;
@@ -37,6 +39,10 @@ export type GpfTraineeProps = {
 
   //Messages b/w ai and trainee
   conversations: string;
+
+  //program data
+  program_data:string;
+  nutrition_plan: string;
 };
 
 export type TrainersProps = {

@@ -36,4 +36,6 @@ export const TraineeData = {
     updated_at: "",
 
     conversations: "",
+    program_data: "",
+    nutrition_plan: "",
   }

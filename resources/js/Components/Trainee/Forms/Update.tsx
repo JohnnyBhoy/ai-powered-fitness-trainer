@@ -27,18 +27,20 @@ type UpdateProps = {
 }
 
 export default function Update({ open, handleOpen, traineeData, setReload, reload }: UpdateProps) {
+    console.log('data: ',traineeData);
+
     const data = [
         {
             label: "Account",
             value: "account",
-            desc: <AccountInfo data={traineeData} />,
+            desc: <AccountInfo userData={traineeData} />,
             icon: UserCircleIcon,
         },
 
         {
             label: "Biometrics",
             value: "biometrics",
-            desc: <Biometrics data={traineeData} />,
+            desc: <Biometrics userData={traineeData} />,
             icon: FingerPrintIcon,
         },
 
@@ -58,13 +60,13 @@ export default function Update({ open, handleOpen, traineeData, setReload, reloa
         {
             label: "Program",
             value: "program",
-            desc: <Program data={traineeData} />,
+            desc: <Program data={traineeData?.program_data} />,
             icon: ListBulletIcon,
         },
         {
             label: "Nutrition",
             value: "nutrition",
-            desc: <Nutrition data={traineeData} />,
+            desc: <Nutrition data={traineeData?.nutrition_plan} />,
             icon: FolderArrowDownIcon,
         },
         {
@@ -94,7 +96,7 @@ export default function Update({ open, handleOpen, traineeData, setReload, reloa
                     initial: { y: 250 },
                     mount: { y: 0 },
                     unmount: { y: 250 },
-                }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} placeholder={undefined}  >
+                }} onPointerEnterCapture={undefined} placeholder={undefined} onPointerLeaveCapture={undefined}  >
                 {data.map(({ value, desc }) => (
                     <TabPanel key={value} value={value}>
                         {desc}

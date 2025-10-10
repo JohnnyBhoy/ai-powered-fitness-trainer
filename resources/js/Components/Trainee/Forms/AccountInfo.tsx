@@ -1,50 +1,142 @@
 import MtTextInput from '@/Components/MtTextInput';
+import UpdateButton from '@/Components/UpdateButton';
 import { GpfTraineeProps } from '@/types/gpf';
+import { useForm } from '@inertiajs/react';
 import {
   Card,
   Switch,
   Typography
 } from "@material-tailwind/react";
 import moment from 'moment';
+import { toast } from 'sonner';
 
-const AccountInfo = ({ data }: { data: GpfTraineeProps }) => {
-  console.log(data);
+const AccountInfo = ({ userData }: { userData: GpfTraineeProps }) => {
+  const UPDATE_USER_URL = import.meta.env.VITE_UPDATE_USER as string;
+
+  const { data, setData, put, processing } = useForm({
+    first_name: userData?.first_name || "",
+    last_name: userData?.last_name || "",
+    email: userData?.email || "",
+    user_name: userData?.user_name || "",
+  });
+
+  // Handle updating user data
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    put(`${UPDATE_USER_URL}/${userData.id}`, {
+      onSuccess: () => {
+        toast.success("✅ User updated successfully!");
+      },
+      onError: (errors) => {
+        // Option 1: Loop all validation messages
+        Object.values(errors).forEach((message) => toast.error(message as string));
+      },
+    });
+  };
 
   return (
-    <Card color="white" className="p-6 mt-3" shadow={false}>
-
+    <Card
+      className="p-6 mt-3 bg-white dark:bg-white/[0.03] border dark:border-gray-700"
+      shadow={false}
+    >
+      <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <MtTextInput name="Name" data={`${data.first_name} ${data.last_name}`} type="text" />
-          <MtTextInput name="Email" data={data.email} type="text" />
-          <MtTextInput name="Username" data={data.user_name} type="text" />
-          <MtTextInput name="User Type" data={data.role == 3 ? 'Trainee' : 'Trainer'} type="text" />
+          <MtTextInput
+            name="first_name"
+            data={data.first_name}
+            type="text"
+            onChange={(e: any) => setData("first_name", e.target.value)}
+          />
 
-          <div className="w-full grid">
-            <Typography
-              variant="small"
-              color="blue-gray"
-              className="mb-3 text-left font-medium"
-            >
-              Is Active
-            </Typography>
-            <Switch color="blue" defaultChecked={data?.is_active == 1} />
+          <MtTextInput
+            name="last_name"
+            data={data.last_name}
+            type="text"
+            onChange={(e: any) => setData("last_name", e.target.value)}
+          />
+
+
+          <MtTextInput
+            name="email"
+            data={data.email}
+            type="text"
+            onChange={(e: any) => setData("email", e.target.value)}
+          />
+
+          <MtTextInput
+            name="user_name"
+            data={data.user_name}
+            type="text"
+            onChange={(e: any) => setData("user_name", e.target.value)}
+          />
+
+          <MtTextInput
+            name="role"
+            data={userData?.role == 3 ? 'Trainee' : 'Trainer'}
+            type="text"
+            onChange={() => { }}
+          />
+
+          <div className="grid grid-cols-2">
+            <div className="w-full grid">
+              <Typography
+                variant="small"
+                color="blue-gray"
+                className="mb-3 text-left font-medium dark:text-gray-400"
+              >
+                Is Active
+              </Typography>
+              <Switch
+                color="blue"
+                defaultChecked={userData?.is_active == 1}
+              />
+            </div>
+
+            <div className="grid">
+              <Typography
+                variant="small"
+                color="blue-gray"
+                className="mb-3 text-left font-medium dark:text-gray-400"
+              >
+                Is Promo
+              </Typography>
+              <Switch
+                color="blue"
+                defaultChecked={userData?.is_promo == 1}
+              />
+            </div>
           </div>
 
-          <div className="grid">
-            <Typography
-              variant="small"
-              color="blue-gray"
-              className="mb-3 text-left font-medium"
-            >
-              Is Promo
-            </Typography>
-            <Switch color="blue" defaultChecked={data?.is_promo == 1} />
-          </div>
 
-          <MtTextInput name="Trainer" data={data.trainer_id == null ? 'GoPeakFit AI' : 'Trainer'} type="text" />
-          <MtTextInput name="Email Verified At" data={data?.email_verified_at != null ? moment(data.email_verified_at).format('MMMM D, YYYY hA') : 'Not veified'} type="text" />
-          <MtTextInput name="Date Created" data={moment(data.created_at).format('MMMM D, YYYY hA')} type="text" />
+          <MtTextInput
+            name="Trainer"
+            data={userData?.trainer_id == null ? 'GoPeakFit AI' : 'Trainer'}
+            type="text"
+            onChange={(e) => { }}
+          />
+
+          <MtTextInput
+            name="Email Verified At"
+            data={userData?.email_verified_at != null
+              ? moment(userData?.email_verified_at).format('MMMM D, YYYY hA')
+              : 'Not veified'}
+            type="text"
+            onChange={() => { }}
+          />
+
+          <MtTextInput
+            name="Date Created"
+            data={moment(userData?.created_at).format('MMMM D, YYYY hA')}
+            type="text"
+            onChange={() => { }}
+          />
         </div>
+
+        <div className="flex justify-end pt-8">
+          <UpdateButton processing={processing} />
+        </div>
+      </form>
 
     </Card>
   )

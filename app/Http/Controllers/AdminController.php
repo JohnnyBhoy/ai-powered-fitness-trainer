@@ -58,24 +58,31 @@ class AdminController extends Controller
     public function index(): Response
     {
         try {
-            $latestUsers  = $this->userService->getLatestUsers();
-            $gpfUser =  $this->userService->countGoPeakFitTrainees();
+            return Inertia::render('Admin/Dashboard');
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 
-            $trainerCount = $this->userService->countTrainer();
-            $traineeCount = $this->userService->countTraineesAddedByTrainer();
-
-            $monthlyGpfTrainerCount = $this->getUserCountByMonthBaseOnRole(3, null);
-            $monthlyTrainerCount = $this->getUserCountByMonthBaseOnRole(2, 1);
-            $monthlyTraineeCount = $this->getUserCountByMonthBaseOnRole(3, 1);
-
-            return Inertia::render('Admin/Dashboard', [
-                'latestUsers' => $latestUsers,
-                'gpfUsersCount' => $gpfUser,
-                'trainerCount' => $trainerCount,
-                'traineeCount' => $traineeCount,
-                'monthlyGpfTrainerCount' => $monthlyGpfTrainerCount,
-                'monthlyTrainerCount' => $monthlyTrainerCount,
-                'monthlyTraineeCount' => $monthlyTraineeCount,
+    /**
+     * Get the admin dashboard data
+     */
+    public function getAdminDashboardData()
+    {
+        try {
+            return response()->json([
+                'totalTrainees' => $this->userService->countGoPeakFitTrainees() + $this->userService->countTraineesAddedByTrainer(),
+                'totalTrainers' => $this->userService->countTrainer(),
+                'monthlyTrainees' => $this->getUserCountByMonthBaseOnRole(3, 1),
+                'monthlyUsers' => $this->getUserCountByMonthBaseOnRole(3, null),
+                'usersPercentageComparedLastMonth' => $this->userService->getUsersGrowthPercentage(),
+                'gopeakfitTraineesPercentageComparedLastMonth' => $this->userService->getGpfTraineeGrowthPercentage(),
+                'nonGopeakfitTraineesPercentageComparedLastMonth' => $this->userService->getNonGpfTraineeGrowthPercentage(),
+                'trainersPercentageComparedLastMonth' => $this->userService->getTrainerGrowthPercentage(),
+                'traineesPerStates' => $this->userService->getTraineesPerState(),
+                'recentTrainees' => $this->userService->getRecentTrainees(),
+                'monthlyGpfTrainees' => $this->helperFunctions->getMonthlyUserCountByRole(3, null),
+                'monthlyNonGpfTrainees' => $this->helperFunctions->getMonthlyUserCountByRole(3, 1),
             ]);
         } catch (\Throwable $th) {
             throw $th;

@@ -45,10 +45,10 @@ export default function Messenger({ name, conversations }: MessengerProps) {
     }, [messages]);
 
     return (
-        <div className="flex flex-col h-auto bg-gray-100 ">
+        <div className="flex flex-col h-[30rem] bg-gray-100 dark:bg-white/[0.03] dark:text-gray-100">
             {/* Header */}
-            <div className="flex items-center sticky px-4 py-3 bg-white border-b shadow">
-                <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold text-lg">
+            <div className="flex items-center sticky px-4 py-3 bg-white dark:bg-white/[0.03] border-b shadow">
+                <div className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center font-bold text-lg">
                     {name?.charAt(0)}
                 </div>
                 <div className="ml-3">
@@ -58,7 +58,7 @@ export default function Messenger({ name, conversations }: MessengerProps) {
             </div>
 
             {/* Messages area */}
-            <div className="flex-1 p-4 space-y-2 h-[2rem] overflow-y-scroll">
+            <div className="flex-1 p-4 space-y-2 h-[40rem] overflow-y-scroll">
                 {messages.map((msg: any) => (
                     <div
                         key={msg.id}
@@ -77,7 +77,7 @@ export default function Messenger({ name, conversations }: MessengerProps) {
 
                             <div
                                 className={`px-4 py-2 rounded-2xl max-w-xs break-words ${msg.sender === "trainee"
-                                    ? "bg-blue-500 text-white rounded-br-none"
+                                    ? "bg-torq text-white rounded-br-none"
                                     : "bg-gray-200 text-gray-800 rounded-bl-none"
                                     }`}
                             >

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\NutritionPlan;
+use App\Models\GpfNutritionPlan;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,8 +13,7 @@ class NutritionPlanController extends Controller
      */
     public function index()
     {
-        $plans = NutritionPlan::with(['trainee','meals', 'supplements'])
-            ->orderBy('created_at', 'desc')
+        $plans = GpfNutritionPlan::orderBy('created_at', 'desc')
             ->get();
 
         return Inertia::render('Admin/NutritionPlans/Index', [
@@ -38,7 +37,7 @@ class NutritionPlanController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        return NutritionPlan::create($data);
+        return GpfNutritionPlan::create($data);
     }
 
     /**
@@ -52,7 +51,7 @@ class NutritionPlanController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(NutritionPlan $nutritionPlan)
+    public function show(GpfNutritionPlan $nutritionPlan)
     {
         return $nutritionPlan->load(['trainee', 'meals', 'supplements']);
     }
@@ -60,7 +59,7 @@ class NutritionPlanController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(NutritionPlan $nutritionPlan)
+    public function edit(GpfNutritionPlan $nutritionPlan)
     {
         //
     }
@@ -68,7 +67,7 @@ class NutritionPlanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, NutritionPlan $nutritionPlan)
+    public function update(Request $request, GpfNutritionPlan $nutritionPlan)
     {
         $nutritionPlan->update($request->all());
         return $nutritionPlan->fresh(['trainee', 'meals', 'supplements']);
@@ -76,7 +75,7 @@ class NutritionPlanController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(NutritionPlan $nutritionPlan)
+    public function destroy(GpfNutritionPlan $nutritionPlan)
     {
         $nutritionPlan->delete();
         return response()->noContent();

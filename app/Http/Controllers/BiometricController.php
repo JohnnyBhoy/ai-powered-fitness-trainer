@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BiometricRequest;
+use App\Http\Requests\BiometricUpdateRequest;
+use App\Models\GpfBiometric;
 use App\Services\BiometricService;
 use App\Services\MessageService;
 use App\Services\PhoneVerificationService;
@@ -112,6 +114,26 @@ class  BiometricController extends Controller
             return response()->json([
                 'message' => 'Something went wrong during verification.',
             ], 500);
+        }
+    }
+
+
+    /**
+     * Update the specified resource in storage.
+     * @param \App\Http\Requests\UserRequest $request
+     */
+    public function update(BiometricRequest $request, int $id)
+    {
+        $validated = $request->validated();
+
+        try {
+            $user = GpfBiometric::where('user_id', $id);
+
+            $user->update($validated);
+
+            return redirect()->back()->with('success', 'Biometrics updated successfully');
+        } catch (\Throwable $th) {
+            throw $th;
         }
     }
 }

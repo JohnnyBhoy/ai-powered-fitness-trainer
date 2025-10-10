@@ -1,5 +1,5 @@
 import { GpfTraineeProps } from "@/types/gpf";
-import { AcademicCapIcon, ChatBubbleBottomCenterIcon, ComputerDesktopIcon, FingerPrintIcon, FolderArrowDownIcon, ListBulletIcon, PencilSquareIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import { AcademicCapIcon, ChatBubbleBottomCenterIcon, FingerPrintIcon, ListBulletIcon, PencilSquareIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import {
     Tab,
     TabPanel,
@@ -7,40 +7,35 @@ import {
     TabsBody,
     TabsHeader,
 } from "@material-tailwind/react";
-import { handler } from "@material-tailwind/react/types/components/dialog";
+import { Brain } from "lucide-react";
 import React from "react";
 import AccountInfo from "../../Forms/AccountInfo";
 import Biometrics from "../../Forms/Biometrics";
 import Goals from "../../Forms/Goals";
 import Messages from "../../Forms/Messages";
-import Program from "../../Forms/Program";
 import Nutrition from "../../Forms/Nutrition";
+import Program from "../../Forms/Program";
 import Prompt from "../../Forms/Prompt";
-import { Apple, MinecartLoaded } from "react-bootstrap-icons";
-import { Brain } from "lucide-react";
 
 
 type UpdateProps = {
-    open: boolean,
-    handleOpen: handler,
-    traineeData: GpfTraineeProps,
-    setReload: CallableFunction,
-    reload: boolean,
+    traineeData: GpfTraineeProps
 }
 
-export default function Update({ open, handleOpen, traineeData, setReload, reload }: UpdateProps) {
+export default function Update({ traineeData }: UpdateProps) {
+
     const data = [
         {
             label: "Account",
             value: "account",
-            desc: <AccountInfo data={traineeData} />,
+            desc: <AccountInfo userData={traineeData} />,
             icon: UserCircleIcon,
         },
 
         {
             label: "Biometrics",
             value: "biometrics",
-            desc: <Biometrics data={traineeData} />,
+            desc: <Biometrics userData={traineeData} />,
             icon: FingerPrintIcon,
         },
 
@@ -60,13 +55,13 @@ export default function Update({ open, handleOpen, traineeData, setReload, reloa
         {
             label: "Program",
             value: "program",
-            desc: <Program data={traineeData} />,
+            desc: <Program data={traineeData?.program_data} />,
             icon: ListBulletIcon,
         },
         {
             label: "Nutrition",
             value: "nutrition",
-            desc: <Nutrition data={traineeData} />,
+            desc: <Nutrition data={traineeData?.nutrition_plan} />,
             icon: PencilSquareIcon,
         },
         {
@@ -78,31 +73,37 @@ export default function Update({ open, handleOpen, traineeData, setReload, reloa
     ];
 
     return (
-        <Tabs id="custom-animation" value="account">
-            <div>
-                <TabsHeader>
-                    {data.map(({ label, value, icon }) => (
-                        <Tab key={value} value={value}>
-                            <div className="flex items-center gap-2">
-                                {React.createElement(icon, { className: "w-5 h-5" })}
-                                {label}
-                            </div>
-                        </Tab>
+        <div className="dark:bg-gray-900">
+            <Tabs id="custom-animation" value="account">
+                <div className="dark:bg-gray-900">
+                    <TabsHeader className="dark:bg-white/[0.03] dark:text-gray-100">
+                        {data.map(({ label, value, icon }) => (
+                            <Tab key={value} value={value} className="dark:text-blue-500">
+                                <div className="flex items-center gap-2 dart:text-blue-500">
+                                    {React.createElement(icon, { className: "w-5 h-5" })}
+                                    {label}
+                                </div>
+                            </Tab>
+                        ))}
+                    </TabsHeader>
+                </div>
+                <TabsBody
+                    animate={{
+                        initial: { y: 250 },
+                        mount: { y: 0 },
+                        unmount: { y: 250 },
+                    }}
+                    onPointerEnterCapture={undefined}
+                    placeholder={undefined}
+                    onPointerLeaveCapture={undefined}
+                >
+                    {data.map(({ value, desc }) => (
+                        <TabPanel key={value} value={value}>
+                            {desc}
+                        </TabPanel>
                     ))}
-                </TabsHeader>
-            </div>
-            <TabsBody
-                animate={{
-                    initial: { y: 250 },
-                    mount: { y: 0 },
-                    unmount: { y: 250 },
-                }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} placeholder={undefined}  >
-                {data.map(({ value, desc }) => (
-                    <TabPanel key={value} value={value}>
-                        {desc}
-                    </TabPanel>
-                ))}
-            </TabsBody>
-        </Tabs>
+                </TabsBody>
+            </Tabs>
+        </div>
     );
 }

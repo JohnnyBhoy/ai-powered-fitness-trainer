@@ -1,3 +1,5 @@
+import { ChangeEventHandler } from "react";
+
 export type Program = {
     id: number;
     program_name: string;
@@ -10,3 +12,10 @@ export type Program = {
     created_at: string | null;
     updated_at: string | null;
 };
+
+export type ProgramDataProps = {
+    value: string,
+    rows: number,
+    name: string,
+    onChange: ChangeEventHandler
+}

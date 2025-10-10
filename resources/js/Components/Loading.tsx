@@ -8,7 +8,7 @@ const Loading = ({text} : {text:string}) => {
                 alt='loading_gif'
                 className='h-auto'
             />
-            <h4>{text}</h4>
+            <h4 className='dark:text-gray-100'>{text}</h4>
         </div>
     )
 }

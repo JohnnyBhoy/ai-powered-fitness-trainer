@@ -1,14 +1,22 @@
 import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { useState } from "react";
-import { Dropdown } from "../ui/dropdown/Dropdown";
-import { DropdownItem } from "../ui/dropdown/DropdownItem";
-import { MoreDotIcon } from "../../icons";
+import { Dropdown } from "../../ui/dropdown/Dropdown";
+import { DropdownItem } from "../../ui/dropdown/DropdownItem";
+import { MoreDotIcon } from "../../../icons";
+import { useDashboardStore } from "@/stores/dashboardStore";
 
-export default function MonthlyTarget() {
-  const series = [75.55];
+export default function MonthlyUsers() {
+  const { data } = useDashboardStore();
+
+  const today = new Date();
+  const monthName: any = today.toLocaleString('default', { month: 'long' });
+
+  const currentMonthTrainees = data?.monthlyUsers[monthName];
+
+  const series = [data?.usersPercentageComparedLastMonth ?? 0];
   const options: ApexOptions = {
-    colors: ["#465FFF"],
+    colors: ["#1CB4C7"],
     chart: {
       fontFamily: "Outfit, sans-serif",
       type: "radialBar",
@@ -47,7 +55,7 @@ export default function MonthlyTarget() {
     },
     fill: {
       type: "solid",
-      colors: ["#465FFF"],
+      colors: ["#1CB4C7"],
     },
     stroke: {
       lineCap: "round",
@@ -63,16 +71,19 @@ export default function MonthlyTarget() {
   function closeDropdown() {
     setIsOpen(false);
   }
+
+  console.log(data);
+
   return (
     <div className="rounded-2xl border border-gray-200 bg-gray-100 dark:border-gray-800 dark:bg-white/[0.03]">
       <div className="px-5 pt-5 bg-white shadow-default rounded-2xl pb-11 dark:bg-gray-900 sm:px-6 sm:pt-6">
         <div className="flex justify-between">
           <div>
             <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-              Monthly Target
+              Monthly Users
             </h3>
             <p className="mt-1 text-gray-500 text-theme-sm dark:text-gray-400">
-              Target you’ve set for each month
+              Registered users compared last month
             </p>
           </div>
           <div className="relative inline-block">
@@ -114,18 +125,17 @@ export default function MonthlyTarget() {
           </span>
         </div>
         <p className="mx-auto mt-10 w-full max-w-[380px] text-center text-sm text-gray-500 sm:text-base">
-          You earn $3287 today, it's higher than last month. Keep up your good
-          work!
+          You have {currentMonthTrainees} users today, it's {data?.usersPercentageComparedLastMonth}% higher than last month. We have many users showing interest with our program.
         </p>
       </div>
 
       <div className="flex items-center justify-center gap-5 px-6 py-3.5 sm:gap-8 sm:py-5">
         <div>
           <p className="mb-1 text-center text-gray-500 text-theme-xs dark:text-gray-400 sm:text-sm">
-            Target
+            GoPeakFit
           </p>
           <p className="flex items-center justify-center gap-1 text-base font-semibold text-gray-800 dark:text-white/90 sm:text-lg">
-            $20K
+            {data?.gopeakfitTraineesPercentageComparedLastMonth ?? 0}%
             <svg
               width="16"
               height="16"
@@ -147,10 +157,10 @@ export default function MonthlyTarget() {
 
         <div>
           <p className="mb-1 text-center text-gray-500 text-theme-xs dark:text-gray-400 sm:text-sm">
-            Revenue
+            Non-GoPeakFit
           </p>
           <p className="flex items-center justify-center gap-1 text-base font-semibold text-gray-800 dark:text-white/90 sm:text-lg">
-            $20K
+            {data?.nonGopeakfitTraineesPercentageComparedLastMonth ?? 0}%
             <svg
               width="16"
               height="16"
@@ -172,10 +182,10 @@ export default function MonthlyTarget() {
 
         <div>
           <p className="mb-1 text-center text-gray-500 text-theme-xs dark:text-gray-400 sm:text-sm">
-            Today
+            Trainers
           </p>
           <p className="flex items-center justify-center gap-1 text-base font-semibold text-gray-800 dark:text-white/90 sm:text-lg">
-            $20K
+            {data?.trainersPercentageComparedLastMonth ?? 0}%
             <svg
               width="16"
               height="16"

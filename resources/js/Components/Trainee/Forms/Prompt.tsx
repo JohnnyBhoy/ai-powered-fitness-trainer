@@ -82,27 +82,35 @@ Always prioritize safety, and never suggest dangerous practices.
     setTimeout(() => setCopied(false), 2000);
   };
 
-return (
-  <Card color="white" className="p-6 mt-3" shadow={false}>
-      <div className="max-w-4xl\ mx-auto p-6">
-        <h1 className="text-2xl font-bold mb-4 text-center">GoPeakFit 3x Daily Update Prompt Preview</h1>
+  return (
+    <Card
+      color="white"
+      className="p-6 mt-3 bg-white dark:bg-gray-900 border dark:border-gray-800 transition-colors duration-300"
+      shadow={false}
+    >
+      <div className="max-w-4xl mx-auto p-6">
+        <h1 className="text-2xl font-bold mb-4 text-center text-gray-800 dark:text-white transition-colors duration-300">
+          GoPeakFit 3x Daily Update Prompt Preview
+        </h1>
 
-        <div className="bg-gray-100 rounded-xl shadow-md p-4 relative">
-          <pre className="whitespace-pre-wrap text-sm font-mono text-gray-800">
+        <div className="bg-gray-100 dark:bg-white/[0.05] rounded-xl shadow-md p-4 relative transition-colors duration-300">
+          <pre className="whitespace-pre-wrap text-sm font-mono text-gray-800 dark:text-gray-200 transition-colors duration-300">
             {prompt}
           </pre>
 
           <button
             onClick={copyToClipboard}
-            className="absolute top-4 right-4 flex items-center gap-2 bg-blue-500 text-white px-3 py-1 rounded-lg shadow hover:bg-blue-600 transition"
+            className="absolute top-4 right-4 flex items-center gap-2 bg-gradient-to-r from-teal-400 to-cyan-500 dark:from-cyan-600 dark:to-blue-700 text-white px-3 py-1 rounded-lg shadow hover:opacity-90 transition-all duration-300"
           >
             <Copy className="w-4 h-4" />
             {copied ? "Copied!" : "Copy"}
           </button>
         </div>
       </div>
-  </Card>
-)
+    </Card>
+
+
+  )
 }
 
 export default Prompt

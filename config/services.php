@@ -49,4 +49,8 @@ return [
         'token' => env('TWILIO_AUTH_TOKEN'),
         'phone' => env('TWILIO_PHONE_NUMBER'),
     ],
+    
+    'opencage' => [
+        'key' => env('OPENCAGE_API_KEY'),
+    ],
 ];

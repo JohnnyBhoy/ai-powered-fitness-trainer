@@ -13,20 +13,20 @@ type TableContentProps = {
     filter: string,
 }
 
-const TableContent = ({TABLE_HEAD, TABLE_ROWS, handleOpen, filter } : TableContentProps) => {
+const TableContent = ({ TABLE_HEAD, TABLE_ROWS, handleOpen, filter }: TableContentProps) => {
     return (
-        <table className=" w-full min-w-max table-auto text-left">
+        <table className=" w-full min-w-max table-auto text-left  dark:bg-gray-900 dark:text-gray-100 ">
             <thead>
                 <tr>
                     {TABLE_HEAD.map((head, index) => (
                         <th
                             key={index}
-                            className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50"
+                            className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50 dark:bg-gray-900 dark:text-gray-100 "
                         >
                             <Typography
                                 variant="small"
                                 color="blue-gray"
-                                className="flex items-center justify-between gap-2 font-normal leading-none opacity-70"
+                                className="flex items-center justify-between gap-2 font-normal leading-none opacity-70  dark:bg-gray-900 dark:text-gray-100 "
                             >
                                 {head}{" "}
                                 {index !== TABLE_HEAD.length - 1 && (
@@ -52,24 +52,24 @@ const TableContent = ({TABLE_HEAD, TABLE_ROWS, handleOpen, filter } : TableConte
                             (trainee: GpfTraineeProps, index: number) => {
                                 const isLast = index === TABLE_ROWS.length - 1;
                                 const classes = isLast
-                                    ? "py-2 px-4"
-                                    : "py-2 px-4 border-b border-blue-gray-50";
+                                    ? "py-2 px-4 "
+                                    : "py-2 px-4 border-b border-blue-gray-50  dark:bg-gray-900 dark:text-gray-100 ";
 
                                 return (
-                                    <tr key={index}>
+                                    <tr key={index} className=' dark:bg-gray-900 dark:text-gray-100 '>
                                         <td className={classes}>
                                             <div className="flex flex-col">
                                                 <Typography
                                                     variant="small"
                                                     color="blue-gray"
-                                                    className="font-semibold"
+                                                    className="font-semibold dark:bg-gray-900 dark:text-gray-100 "
                                                 >
                                                     {trainee.first_name} {trainee.last_name}
                                                 </Typography>
                                                 <Typography
                                                     variant="small"
                                                     color="blue-gray"
-                                                    className="font-normal opacity-70"
+                                                    className="font-normal opacity-70 dark:bg-gray-900 dark:text-gray-100 "
                                                 >
                                                     {trainee.email}
                                                 </Typography>
@@ -80,7 +80,7 @@ const TableContent = ({TABLE_HEAD, TABLE_ROWS, handleOpen, filter } : TableConte
                                                 <Typography
                                                     variant="small"
                                                     color="blue-gray"
-                                                    className="font-normal"
+                                                    className="font-normal dark:bg-gray-900 dark:text-gray-100 "
                                                 >
                                                     {trainee.city}, {trainee.state?.slice(0, 20)}
                                                 </Typography>
@@ -92,7 +92,7 @@ const TableContent = ({TABLE_HEAD, TABLE_ROWS, handleOpen, filter } : TableConte
                                                 <Typography
                                                     variant="small"
                                                     color="blue-gray"
-                                                    className="font-normal"
+                                                    className="font-normal dark:bg-gray-900 dark:text-gray-100 "
                                                 >
                                                     {trainee.phone_number ?? "Not specify"}
                                                 </Typography>
@@ -104,7 +104,7 @@ const TableContent = ({TABLE_HEAD, TABLE_ROWS, handleOpen, filter } : TableConte
                                                 <Typography
                                                     variant="small"
                                                     color="blue-gray"
-                                                    className="font-normal"
+                                                    className="font-normal dark:bg-gray-900 dark:text-gray-100 "
                                                 >
                                                     {trainee.age ?? 0}
                                                 </Typography>
@@ -118,6 +118,7 @@ const TableContent = ({TABLE_HEAD, TABLE_ROWS, handleOpen, filter } : TableConte
                                                     size="sm"
                                                     value={trainee.fitness_level ?? 'Not specify'}
                                                     color={"green"}
+                                                    className=' dark:bg-gray-900 dark:text-gray-100 '
                                                 />
                                             </div>
                                         </td>
@@ -129,13 +130,14 @@ const TableContent = ({TABLE_HEAD, TABLE_ROWS, handleOpen, filter } : TableConte
                                                     size="sm"
                                                     value={getStrictnessLevel(trainee.strictness_level) ?? 'Chill'}
                                                     color={"blue-gray"}
+                                                    className=' dark:bg-gray-900 dark:text-gray-100 '
                                                 />
                                             </div>
                                         </td>
                                         <td className={classes}>
                                             <Tooltip content="Edit Trainee">
                                                 <IconButton variant="text" onClick={() => handleOpen(trainee)} >
-                                                    <PencilIcon className="h-4 w-4" />
+                                                    <PencilIcon className="h-4 w-4 dark:bg-gray-900 dark:text-gray-100 " />
                                                 </IconButton>
                                             </Tooltip>
                                         </td>

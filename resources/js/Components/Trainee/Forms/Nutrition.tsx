@@ -1,183 +1,132 @@
-import { Card } from '@/Components/UI_2/Card';
-import { GpfTraineeProps } from '@/types/gpf';
-import { useState } from 'react';
+import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/Components/ui/table";
+import { WeeklyNutrition } from "@/types/weekly-nutrition";
+import { Tab, Tabs, TabsHeader } from "@material-tailwind/react";
+import { motion } from "framer-motion";
+import { useState } from "react";
+import { Check2Square } from "react-bootstrap-icons";
 
-type Meal = {
-  name: string;
-  description: string;
-  calories: number;
-  protein: number;
-  carbs: number;
-  fats: number;
-};
+export default function Nutrition({ data }: { data: string }) {
 
-type DayPlan = {
-  day: number;
-  meals: Meal[];
-  totalCalories: number;
-};
+  const [show, setShow] = useState<string>('Weekly');
 
-type NutritionPlan = {
-  [day: number]: DayPlan;
-};
-
-const sampleNutrition: NutritionPlan = {
-  1: {
-    day: 1,
-    totalCalories: 2200,
-    meals: [
-      {
-        name: "Breakfast",
-        description: "Oatmeal with banana and peanut butter",
-        calories: 500,
-        protein: 20,
-        carbs: 60,
-        fats: 15,
-      },
-      {
-        name: "Lunch",
-        description: "Grilled chicken breast with brown rice and broccoli",
-        calories: 700,
-        protein: 45,
-        carbs: 70,
-        fats: 10,
-      },
-      {
-        name: "Dinner",
-        description: "Salmon with quinoa and mixed veggies",
-        calories: 700,
-        protein: 40,
-        carbs: 50,
-        fats: 20,
-      },
-      {
-        name: "Snack",
-        description: "Greek yogurt with honey and almonds",
-        calories: 300,
-        protein: 15,
-        carbs: 25,
-        fats: 10,
-      },
-    ],
-  },
-  2: {
-    day: 2,
-    totalCalories: 2100,
-    meals: [
-      {
-        name: "Breakfast",
-        description: "Scrambled eggs with toast and avocado",
-        calories: 550,
-        protein: 25,
-        carbs: 40,
-        fats: 20,
-      },
-      {
-        name: "Lunch",
-        description: "Turkey wrap with mixed greens and hummus",
-        calories: 650,
-        protein: 35,
-        carbs: 60,
-        fats: 15,
-      },
-      {
-        name: "Dinner",
-        description: "Beef stir-fry with vegetables and jasmine rice",
-        calories: 700,
-        protein: 40,
-        carbs: 70,
-        fats: 18,
-      },
-      {
-        name: "Snack",
-        description: "Protein smoothie with berries",
-        calories: 200,
-        protein: 20,
-        carbs: 25,
-        fats: 5,
-      },
-    ],
-  },
-  // Add days 3-7 here for a full plan
-};
-
-const Nutrition = ({ data }: { data: GpfTraineeProps }) => {
-  const [selectedDay, setSelectedDay] = useState<number>(1);
-  const dayPlan = sampleNutrition[selectedDay];
-  console.log(data);
+  const TABS = [{
+    label: 'Weekly',
+    value: 'Weekly',
+  }, {
+    label: 'Daily',
+    value: 'Daily',
+  }];
+  const weeklyNutrition = JSON.parse(data);
 
   return (
-    <Card className="p-6 mt-3">
+    <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      <Tabs
+        value={'Weekly'}
+        className="w-full md:w-max transition-colors duration-300"
+      >
+        <TabsHeader
+          className="bg-white dark:bg-gray-900 dark:text-gray-100 -xl dark:border-none border border-gray-200 dark:border-gray-700 transition-colors duration-300 mb-3"
+        >
+          {TABS.map(({ label, value }) => (
+            <Tab
+              key={value}
+              value={value}
+              onClick={() => setShow(value)}
+              className={`
+              px-4 py-2 text-sm font-medium -lg transition-all duration-200
+              hover:bg-blue-50 dark:hover:bg-gray-800 
+              data-[state=active]:bg-blue-500 data-[state=active]:text-white 
+              dark:data-[state=active]:bg-blue-600 dark:data-[state=active]:text-white dark:bg-white/[0.03] dark:text-gray-300
+            `}
+            >
+              {label}
+            </Tab>
+          ))}
+        </TabsHeader>
+      </Tabs>
 
-        <div className="flex flex-col h-screen bg-gray-50">
-          {/* Header */}
-          <div className="p-4 bg-green-600 text-white text-center font-bold text-lg shadow">
-            7-Day Nutrition Plan
-          </div>
+      <WeeklyNutritions weeklyNutrition={weeklyNutrition} />
+    </div>
 
-          {/* Day Selector */}
-          <div className="flex justify-around p-2 bg-white shadow">
-            {[1, 2, 3, 4, 5, 6, 7].map((day) => (
-              <button
-                key={day}
-                onClick={() => setSelectedDay(day)}
-                className={`px-3 py-2 rounded-full text-sm font-medium transition ${selectedDay === day
-                    ? "bg-green-600 text-white"
-                    : "bg-gray-100 hover:bg-gray-200"
-                  }`}
-              >
-                Day {day}
-              </button>
-            ))}
-          </div>
-
-          {/* Nutrition Content */}
-          <div className="flex-1 overflow-y-auto p-4">
-            {dayPlan ? (
-              <div className="bg-white rounded-2xl shadow p-4">
-                <h2 className="text-xl font-semibold text-green-600 mb-2">
-                  Day {dayPlan.day} Nutrition
-                </h2>
-                <p className="text-gray-600 mb-4">
-                  Total Calories:{" "}
-                  <span className="font-bold">{dayPlan.totalCalories} kcal</span>
-                </p>
-
-                <ul className="space-y-3">
-                  {dayPlan.meals.map((meal, idx) => (
-                    <li
-                      key={idx}
-                      className="p-3 border rounded-lg bg-gray-50 shadow-sm"
-                    >
-                      <div className="flex justify-between items-center mb-2">
-                        <h3 className="text-lg font-semibold text-gray-700">
-                          {meal.name}
-                        </h3>
-                        <span className="text-sm font-medium text-green-600">
-                          {meal.calories} kcal
-                        </span>
-                      </div>
-                      <p className="text-gray-600 text-sm mb-2">
-                        {meal.description}
-                      </p>
-                      <div className="flex justify-between text-xs text-gray-500">
-                        <span>Protein: {meal.protein}g</span>
-                        <span>Carbs: {meal.carbs}g</span>
-                        <span>Fats: {meal.fats}g</span>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : (
-              <div className="text-center text-gray-500 mt-10">
-                No plan available for Day {selectedDay}.
-              </div>
-            )}
-          </div>
-        </div>
-    </Card>
-  )
+  );
 }
 
-export default Nutrition
+const WeeklyNutritions = ({ weeklyNutrition }: { weeklyNutrition: WeeklyNutrition[] }) => {
+  const HEADERS = ["Day Number", "Meal Name", "Food Items ", "Macros", "Notes"];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="overflow-hidden dark:border-gray-800 bg-white dark:border-white/[0.05] dark:bg-white/[0.03] shadow-md"
+    >
+      <div className="max-w-full overflow-x-auto">
+        {/* Scrollable vertical container */}
+        <div className="max-h-[700px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800">
+          <Table>
+            {/* Table Header */}
+            <TableHeader className="border dark:border-gray-800 dark:border-white/[0.05] sticky top-0 z-10 bg-torq dark:bg-gray-900">
+              <TableRow>
+                {HEADERS.map((header, index) => (
+                  <TableCell
+                    key={index}
+                    className="text-center  font-semibold text-gray-200 text-theme-sm uppercase tracking-wide bg-torq dark:bg-gray-800 border border-gray-200 dark:border-gray-700 w-[20%] py-2.5"
+                  >
+                    {header}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHeader>
+
+            {/* Table Body */}
+            <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+              {weeklyNutrition.map((nutrition, i) => (
+                <TableRow key={i}>
+                  {/* Day Number */}
+                  <TableCell className="px-1  text-gray-500 text-start dark:text-gray-300 border border-gray-200 dark:border-gray-700">
+                    <div className="flex flex-col text-center place-items-center">
+                      <h3 className="font-bold text-2xl">Day {nutrition.day_number}</h3>
+                      <h4 className="font-semibold">{nutrition.meal_type}</h4>
+                    </div>
+                  </TableCell>
+
+                  {/* Meal Name */}
+                  <TableCell className="px-1  text-gray-500 text-start dark:text-gray-300 border border-gray-200 dark:border-gray-700">
+                    {nutrition.meal_name}
+                  </TableCell>
+
+                  {/* Food Items */}
+                  <TableCell className="px-1  text-gray-500 text-start dark:text-gray-300 border border-gray-200 dark:border-gray-700 w-[30%]">
+                    <ul className="space-y-1">
+                      {nutrition.food_items.map((item, idx) => (
+                        <li key={idx} className="flex items-center gap-2">
+                          <Check2Square className="text-green-500" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </TableCell>
+
+                  {/* Macros */}
+                  <TableCell className="px-1 text-gray-500 text-start dark:text-gray-300 border border-gray-200 dark:border-gray-700 w-[20%]">
+                    <div>🍎 {nutrition.calories} kcal</div>
+                    <div>🥩 {nutrition.protein}g Protein</div>
+                    <div>🍞 {nutrition.carbs}g Carbs</div>
+                    <div>🥑 {nutrition.fats}g Fats</div>
+                  </TableCell>
+
+                  {/* Notes */}
+                  <TableCell className="px-1  text-gray-500 text-start italic dark:text-gray-300 border border-gray-200 dark:border-gray-700">
+                    {nutrition.notes}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+    </motion.div>
+
+  )
+}

@@ -7,8 +7,6 @@ export default function UserDropdown() {
   const user = usePage().props.auth.user;
   const [isOpen, setIsOpen] = useState(false);
 
-  console.log(user);
-
   function toggleDropdown() {
     setIsOpen(!isOpen);
   }

@@ -2,12 +2,15 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Api\PromoController;
+use App\Http\Controllers\BiometricController;
 use App\Http\Controllers\NutritionController;
 use App\Http\Controllers\NutritionPlanController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\ProgressController;
 use App\Http\Controllers\TraineeController;
 use App\Http\Controllers\TrainerController;
+use App\Http\Controllers\TrialProgramController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -28,6 +31,28 @@ use App\Http\Controllers\WorkoutController;
 */
 
 Route::get('/', function () {
+    $user = auth()->user();
+
+    // Check if there are user's signed in
+    if ($user) {
+        $role = $user->role;
+        $route = 'dashboard';
+
+        if ($role == 3) {
+            $route = 'dashboard';
+        }
+
+        if ($role == 2) {
+            $route = 'trainer.dashboard';
+        }
+
+        if ($role == 1) {
+            $route = 'admin.dashboard';
+        }
+
+        return redirect()->route($route);
+    }
+
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
@@ -184,7 +209,7 @@ Route::middleware(['auth', 'role:1'])->prefix('/admin')->group(function () {
         ->name('admin.trainers.store');
 
     // Program and workouts
-    Route::get('/five-days-trail', [ProgramController::class, 'index'])
+    Route::get('/five-days-trail', [TrialProgramController::class, 'index'])
         ->name('admin.five-days-trials');
 
     Route::get('/trainees-in-trial-by-day/{id}', [ProgramController::class, 'show'])
@@ -199,6 +224,12 @@ Route::middleware(['auth', 'role:1'])->prefix('/admin')->group(function () {
     // Progress tracking
     Route::get('/progress-tracking', [TraineeProgressController::class, 'index'])
         ->name('trainee-progress.index');
+
+    Route::put('/update-user/{id}', [UserController::class, 'update'])
+        ->name('admin.update.user');
+
+    Route::put('/update-biometrics/{id}', [BiometricController::class, 'update'])
+        ->name('admin.update.biometrics');
 });
 
 

@@ -99,49 +99,104 @@ const Trainer = ({ data }: { data: any }) => {
             <Head title="GoPeakFit trainers" />
 
             <TableContainer>
-                <Card className="h-full w-full">
-                    <CardHeader floated={false} shadow={false} className="rounded-none">
+                <Card className="h-full w-full bg-white dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+                    <CardHeader
+                        floated={false}
+                        shadow={false}
+                        className="rounded-none bg-white dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300"
+                    >
+                        {/* Header */}
                         <div className="mb-3 flex items-center justify-between gap-6">
                             <div>
-                                <Typography variant="h5" color="blue-gray">
-                                    Trainers list
+                                <Typography
+                                    variant="h5"
+                                    color="blue-gray"
+                                    className="text-gray-900 dark:text-gray-100 font-semibold"
+                                >
+                                    Trainers List
                                 </Typography>
-                                <Typography color="gray" className="mt-1 font-normal">
+                                <Typography
+                                    color="gray"
+                                    className="mt-1 font-normal text-gray-600 dark:text-gray-400"
+                                >
                                     See information about all Trainers
                                 </Typography>
                             </div>
-                            <div className="flex flex-col gap-2 sm:flex-row">
 
+                            {/* Pagination + Select */}
+                            <div className="flex flex-col gap-2 sm:flex-row items-center">
                                 <select
                                     name="strictness-level"
                                     id="strictness-level"
-                                    className='rounded-lg border border-1 border-slate-900 w-auto'
+                                    className="
+            rounded-lg border border-gray-300 dark:border-gray-700
+            bg-white dark:bg-gray-800
+            text-gray-900 dark:text-gray-100
+            px-3 py-2 text-sm focus:outline-none focus:ring-2
+            focus:ring-blue-500 dark:focus:ring-torq transition-all
+          "
                                     onChange={(e: any) => setPerPage(e.target.value)}
                                 >
                                     <option value={perPage}>{perPage}</option>
                                     <option value={10}>10</option>
                                     <option value={50}>50</option>
                                     <option value={100}>100</option>
-                                    {page?.total > 100
-                                        && <option value={page.total}></option>
-                                    }
+                                    {page?.total > 100 && <option value={page.total}>All</option>}
                                 </select>
 
-                                <Button variant="outlined" size="sm" onClick={() => setPageNumber(page.currentPage == 1 ? 1 : page.currentPage - 1)}>
-                                    <ChevronLeft />
-                                </Button>
-                                <Button variant="outlined" size="sm" onClick={() => setPageNumber(page.currentPage == page.lastPage ? page.currentPage : page.currentPage + 1)}>
-                                    <ChevronRight />
-                                </Button>
+                                <div className="flex gap-2">
+                                    <Button
+                                        variant="outlined"
+                                        size="sm"
+                                        onClick={() =>
+                                            setPageNumber(page.currentPage == 1 ? 1 : page.currentPage - 1)
+                                        }
+                                        className="
+              border-gray-300 dark:border-gray-700 
+              text-gray-700 dark:text-gray-200
+              hover:bg-gray-100 dark:hover:bg-gray-800 transition
+            "
+                                    >
+                                        <ChevronLeft />
+                                    </Button>
+
+                                    <Button
+                                        variant="outlined"
+                                        size="sm"
+                                        onClick={() =>
+                                            setPageNumber(
+                                                page.currentPage == page.lastPage
+                                                    ? page.currentPage
+                                                    : page.currentPage + 1
+                                            )
+                                        }
+                                        className="
+              border-gray-300 dark:border-gray-700 
+              text-gray-700 dark:text-gray-200
+              hover:bg-gray-100 dark:hover:bg-gray-800 transition
+            "
+                                    >
+                                        <ChevronRight />
+                                    </Button>
+                                </div>
                             </div>
                         </div>
-                        <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
 
-                            <Typography variant="small" color="blue-gray" className="font-normal">
+                        {/* Search & Info */}
+                        <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+                            <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-normal text-gray-700 dark:text-gray-300"
+                            >
                                 Showing {page.from}-{page.to} of {page.total} Trainers
                             </Typography>
 
-                            <Typography variant="small" color="blue-gray" className="font-normal">
+                            <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-normal text-gray-700 dark:text-gray-300"
+                            >
                                 Page {page.currentPage} of {page.lastPage}
                             </Typography>
 
@@ -151,11 +206,19 @@ const Trainer = ({ data }: { data: any }) => {
                                     onChange={(e: any) => setFilter(e.target.value)}
                                     label="Search"
                                     icon={<MagnifyingGlassIcon className="h-5 w-5" />}
+                                    className="
+            dark:[&>input]:bg-gray-800 
+            dark:[&>input]:text-gray-100 
+            dark:[&>label]:text-gray-400 
+            dark:[&>div>svg]:text-gray-400
+          "
                                 />
                             </div>
                         </div>
                     </CardHeader>
-                    <CardBody className="overflow-scroll px-2">
+
+                    {/* Table */}
+                    <CardBody className="overflow-auto px-2 bg-white dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
                         <TableContent
                             TABLE_HEAD={TABLE_HEAD}
                             TABLE_ROWS={TABLE_ROWS}
@@ -164,6 +227,7 @@ const Trainer = ({ data }: { data: any }) => {
                         />
                     </CardBody>
                 </Card>
+
             </TableContainer>
         </Authenticated >
     )

@@ -42,9 +42,7 @@ const LatestUsers = ({ users }: { users: Users[] }) => {
         setActiveUser(user);
         setShowTrainerInfo(true);
     }
-    console.log(users);
-    console.log(activeUser);
-
+    
     return (
 
         <div className="rounded-lg">
