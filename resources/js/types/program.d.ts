@@ -19,3 +19,14 @@ export type ProgramDataProps = {
     name: string,
     onChange: ChangeEventHandler
 }
+
+export type WeeklyProgramLists = {
+    first_name: string;
+    last_name: string;
+    program_name: string;
+    week_number: number;
+    goal: string;
+    program_data: string;
+    email: string;
+    created_at: string;
+}

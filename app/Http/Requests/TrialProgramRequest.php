@@ -11,7 +11,7 @@ class TrialProgramRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true; // Admin only
+        return auth()->user()->role == 1;
     }
 
     /**

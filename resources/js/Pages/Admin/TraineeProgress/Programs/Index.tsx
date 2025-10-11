@@ -1,21 +1,17 @@
 import TrialPrograms from '@/Components/Admin/Programs/TrialProgram/TrialPrograms';
 import Authenticated from '@/Pages/Layouts/AuthenticatedLayout';
-import { useTrialProgramStore } from '@/stores/useProgramStore';
+import { useProgramStore } from '@/stores/useProgramStore';
 import { WeeklyProgram } from '@/types/weekly-program';
 import { Head } from '@inertiajs/react';
 import { useEffect } from 'react';
 
 
 const Index = ({ programs }: { programs: WeeklyProgram[] }) => {
-    console.log(programs);
-
-    const { setTrialPrograms } = useTrialProgramStore();
+    const { setWeeklyPrograms } = useProgramStore();
 
     // Set trial program data on component mount
     useEffect(() => {
-        setTimeout(() => {
-        setTrialPrograms(programs);
-        }, 1000);
+        setWeeklyPrograms(programs);
     }, []);
 
     return (

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Api\PromoController;
 use App\Http\Controllers\BiometricController;
+use App\Http\Controllers\GoalsController;
 use App\Http\Controllers\NutritionController;
 use App\Http\Controllers\NutritionPlanController;
 use App\Http\Controllers\ProgramController;
@@ -230,6 +231,12 @@ Route::middleware(['auth', 'role:1'])->prefix('/admin')->group(function () {
 
     Route::put('/update-biometrics/{id}', [BiometricController::class, 'update'])
         ->name('admin.update.biometrics');
+
+    Route::put('/update-goals/{id}', [GoalsController::class, 'update'])
+        ->name('admin.update.goals');
+
+    Route::get('/weekly-program', [ProgramController::class, 'all'])
+        ->name('admin.program');
 });
 
 

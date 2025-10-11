@@ -43,6 +43,8 @@ const Biometrics = ({ userData }: { userData: GpfTraineeProps }) => {
         ),
     });
   };
+  
+  console.log(userData);
 
   return (
     <Card className="p-6 mt-3 bg-white dark:bg-white/[0.03] border dark:border-gray-700" shadow={false}>

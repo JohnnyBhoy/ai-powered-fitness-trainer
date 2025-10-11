@@ -11,7 +11,7 @@ class ProgramUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->user()->role == 1;
     }
 
     /**

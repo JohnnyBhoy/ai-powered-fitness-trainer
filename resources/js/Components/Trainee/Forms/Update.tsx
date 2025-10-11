@@ -47,7 +47,7 @@ export default function Update({ open, handleOpen, traineeData, setReload, reloa
         {
             label: "Goals",
             value: "goals",
-            desc: <Goals data={traineeData} />,
+            desc: <Goals userData={traineeData} />,
             icon: AcademicCapIcon,
         },
 

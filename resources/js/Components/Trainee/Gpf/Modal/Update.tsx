@@ -42,7 +42,7 @@ export default function Update({ traineeData }: UpdateProps) {
         {
             label: "Goals",
             value: "goals",
-            desc: <Goals data={traineeData} />,
+            desc: <Goals userData={traineeData} />,
             icon: AcademicCapIcon,
         },
 

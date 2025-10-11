@@ -15,7 +15,8 @@ import {
   UserIcon
 } from "@/icons";
 import { Link } from "@inertiajs/react";
-import { Gear, PersonGear } from "react-bootstrap-icons";
+import { ChartAreaIcon } from "lucide-react";
+import { PersonGear } from "react-bootstrap-icons";
 import SidebarWidget from "./SidebarWidget";
 
 type NavItem = {
@@ -49,7 +50,7 @@ const navItems: NavItem[] = [
     icon: <ListIcon />,
     subItems: [
       { name: "5-Day Trial", path: "/admin/five-days-trail", pro: false },
-      { name: "Weekly Program", path: "/form-elements", pro: false },
+      { name: "Weekly Program", path: "/admin/weekly-program", pro: false },
     ],
   },
   {
@@ -64,12 +65,9 @@ const navItems: NavItem[] = [
 
 const othersItems: NavItem[] = [
   {
-    icon: <Gear />,
-    name: "Settings",
-    subItems: [
-      { name: "Trial Program", path: "/admin/trial-program-setting", pro: false },
-      { name: "Trial Nutrition", path: "/admin/trial-nutrition-setting", pro: false },
-    ],
+    icon: <ChartAreaIcon />,
+    name: "Analytics",
+    path: "/admin/analytics",
   },
   {
     icon: <PersonGear />,
@@ -149,6 +147,8 @@ const AppSidebar: React.FC = () => {
       return { type: menuType, index };
     });
   };
+
+  console.log(isExpanded)
 
   const renderMenuItems = (items: NavItem[], menuType: "main" | "others") => (
     <ul className="flex flex-col gap-4">

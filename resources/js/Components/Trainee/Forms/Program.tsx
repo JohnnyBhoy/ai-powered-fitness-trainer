@@ -1,7 +1,8 @@
 import { Tab, Tabs, TabsHeader } from "@material-tailwind/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DailyWorkoutProgram from "./Program/DailyProgram";
 import WeeklyPrograms from "./Program/WeeklyProgram";
+import { useProgramStore } from "@/stores/useProgramStore";
 
 type ProgramDay = {
   title: string;
@@ -14,6 +15,9 @@ type Program = {
 };
 
 export default function Program({ data }: { data: string }) {
+  const { setWeeklyPrograms } = useProgramStore();
+
+  console.log('program datas:', data);
 
   const [show, setShow] = useState<string>('Weekly');
 
@@ -24,8 +28,14 @@ export default function Program({ data }: { data: string }) {
     label: 'Daily',
     value: 'Daily',
   }];
-  
+
   const weeklyProgram = JSON.parse(data);
+  
+  console.log(weeklyProgram);
+
+  useEffect(() => {
+    setWeeklyPrograms(weeklyProgram);
+  }, []);
 
   return (
     <div className="flex flex-col h-auto bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
@@ -56,7 +66,7 @@ export default function Program({ data }: { data: string }) {
 
       {show == 'Daily'
         ? <DailyWorkoutProgram weeklyProgram={weeklyProgram} />
-        : <WeeklyPrograms/>
+        : <WeeklyPrograms />
       }
     </div>
 

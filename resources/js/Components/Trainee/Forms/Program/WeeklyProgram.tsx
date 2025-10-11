@@ -11,6 +11,7 @@ const WeeklyPrograms = () => {
     const { update } = useProgramStore();
     const { setTrialPrograms, trialPrograms } = useTrialProgramStore();
     const [trialProgram, setTrialProgram] = useState<WeeklyProgram[]>(trialPrograms);
+    const { weeklyPrograms } = useProgramStore();
 
     const HEADERS = ["Day", "Warm-up", "Workout", "Cool-down", "Alignment"];
 
@@ -46,15 +47,15 @@ const WeeklyPrograms = () => {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="overflow-hidden  dark:border-gray-800 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]"
+            className="overflow-hidden rounded-xl dark:border-gray-800 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]"
         >
-            <div className="overflow-hidden bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+            <div className="overflow-hidden rounded-xl bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
                 <div className="max-w-full overflow-x-auto">
-                    <Table>
+                    <Table className="rounded-xl">
                         {/* Table Header */}
-                        <TableHeader className="border dark:border-gray-800 dark:border-white/[0.05]">
+                        <TableHeader className="rounded-xl border dark:border-gray-800 dark:border-white/[0.05]">
                             <TableRow>
-                                {HEADERS.map((header,i) => (
+                                {HEADERS.map((header, i) => (
                                     <TableCell key={i} className="text-center px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400 dark:bg-gray-800 border border-black-200 bg-torq text-white  dark:border-gray-700">
                                         {header}
                                     </TableCell>
@@ -64,7 +65,7 @@ const WeeklyPrograms = () => {
 
                         {/* Table Body */}
                         <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]  dark:border-gray-800  dark:border-gray-700" >
-                            {trialProgram.map((program: WeeklyProgram, i: number) => (
+                            {weeklyPrograms.map((program: WeeklyProgram, i: number) => (
                                 <TableRow key={i}>
                                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400 border border-black-200  dark:border-gray-700">
                                         <div className="flex flex-col text-cenyter place-items-center">
@@ -107,12 +108,16 @@ const WeeklyPrograms = () => {
                                         ) : Array.isArray(program.workout) ?
                                             program.workout?.map((item, i) => (
                                                 <ul key={i}>
-                                                    <li className="flex gap-1"><Check2Square />{item}</li>
+                                                    <li className="flex gap-1 place-items-center">
+                                                        <Check2Square className="text-green-500" />{item}
+                                                    </li>
                                                 </ul>
                                             )) :
                                             program.workout?.split(",")?.map((item, i) => (
                                                 <ul key={i}>
-                                                    <li className="flex gap-1 plca"><Check2Square />{item}</li>
+                                                    <li className="flex gap-1 place-items-center">
+                                                        <Check2Square className="text-green-500" />{item}
+                                                    </li>
                                                 </ul>
                                             ))}
                                     </TableCell>

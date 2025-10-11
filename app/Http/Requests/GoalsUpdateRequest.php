@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BiometricUpdateRequest extends FormRequest
+class GoalsUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,10 @@ class BiometricUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'goal'             => 'required|string',
+            'why'              => 'required|string',
+            'past_obstacles'   => 'required|string',
+            'current_struggles' => 'required|string',
         ];
     }
 }

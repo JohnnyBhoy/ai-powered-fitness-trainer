@@ -27,9 +27,9 @@ const Dashboard = ({
   traineeCount,
   trainerCount,
 }: DashboardProps) => {
-  const monthlyGoPeakFitTrainer: number[] = Object.values(monthlyGpfTrainerCount);
-  const monthlyTrainer: number[] = Object.values(monthlyTrainerCount);
-  const monthlyTraineeAddedByTrainer: number[] = Object.values(monthlyTraineeCount);
+  const monthlyGoPeakFitTrainer: number[] = Object?.values(monthlyGpfTrainerCount);
+  const monthlyTrainer: number[] = Object?.values(monthlyTrainerCount);
+  const monthlyTraineeAddedByTrainer: number[] = Object?.values(monthlyTraineeCount);
 
   const cards: Cards[] = [
     {

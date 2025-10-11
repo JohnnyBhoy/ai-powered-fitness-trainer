@@ -1,12 +1,14 @@
 import { Textarea, Typography } from '@material-tailwind/react'
+import { ChangeEventHandler } from 'react'
 
 type InputProps = {
     name: string,
     data: string | number | readonly string[] | undefined,
     row: number,
+    onChange: ChangeEventHandler,
 }
 
-const MtTextArea = ({ name, data, row }: InputProps) => {
+const MtTextArea = ({ name, data, row , onChange}: InputProps) => {
     return (
         <div className="w-full">
             <Typography
@@ -19,8 +21,8 @@ const MtTextArea = ({ name, data, row }: InputProps) => {
             <Textarea
                 value={data}
                 rows={row}
-                onChange={() => {}}
-                className="!w-full !border-[1.5px]  bg-white text-gray-600 ring-4 ring-transparent focus:!border-primary focus:!border-t-blue-gray-900 group-hover:!border-primary dark:bg-white/[0.03] dark:text-gray-300 dark:border-gray-700 border-t-gray-400"
+                onChange={onChange}
+                className="!w-full !border-[1.5px]  bg-white text-gray-600 ring-4 ring-transparent focus:!border-primary focus:!border-t-blue-gray-900 group-hover:!border-primary dark:bg-white/[0.03] dark:text-gray-300 dark:border-gray-700 border-t-gray-400 !border-t-gray-400"
                 labelProps={{
                     className: "hidden",
                 }}

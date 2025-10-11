@@ -3,13 +3,36 @@
 namespace App\Http\Controllers;
 
 use App\Models\GpfFiveDaysProgram;
+use App\Models\GpfWeeklyProgram;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class ProgramController extends Controller
 {
+    /**
+     * Show all program in DB
+     * @return \Inertia\Response
+     */
+    public function all()
+    {
+        $programs = GpfWeeklyProgram::join('users', 'users.id', '=', 'gpf_weekly_programs.user_id')
+            ->leftJoin('gpf_weekly_program_logs as gpl', 'users.id', '=', 'gpl.user_id')
+            ->leftJoin('gpf_goals as g', 'users.id', '=', 'g.user_id')
+            ->select('users.id', 'users.email', 'gpl.week_number', 'users.first_name', 'users.last_name', 'g.goal', 'gpf_weekly_programs.program_name', 'gpl.program_data', 'gpl.created_at')
+            ->groupBy('users.id', 'users.email', 'gpl.week_number', 'users.first_name', 'users.last_name', 'g.goal', 'gpf_weekly_programs.program_name', 'gpl.program_data', 'gpl.created_at')
+            ->get();
+
+        try {
+            return Inertia::render('Admin/Programs/WeeklyProgram', [
+                'programs' => $programs,
+            ]);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
     /**
      * Summary of index
      * @return \Inertia\Response

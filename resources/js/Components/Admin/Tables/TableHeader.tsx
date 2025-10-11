@@ -50,7 +50,7 @@ const TableHeader = ({ perPage, setPerPage, pageNumber, setPageNumber, page, TAB
                     <select
                         name="strictness-level"
                         id="strictness-level"
-                        className="rounded-lg border border-slate-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-2 py-1 focus:ring-2 focus:ring-blue-500 outline-none transition"
+                        className="rounded-lg border border-slate-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm px-2 py-1 focus:ring-2 focus:ring-blue-500 outline-none transition w-[3.5rem]"
                         onChange={(e: any) => setPerPage(e.target.value)}
                     >
                         <option value={perPage}>{perPage}</option>

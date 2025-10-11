@@ -1,10 +1,11 @@
 import NoRecordFound from '@/Components/NoRecordFound';
+import Badge from '@/Components/ui/badge/Badge';
+import { Table, TableBody, TableCell, TableHeader, TableRow } from '@/Components/ui/table';
 import { GpfTraineeProps } from '@/types/gpf';
 import { getStrictnessLevel } from '@/utils/functions/helperFunctions';
-import { ChevronUpDownIcon } from '@heroicons/react/24/outline';
-import { Chip, IconButton, Tooltip, Typography } from '@material-tailwind/react';
+import { IconButton, Tooltip } from '@material-tailwind/react';
 import { PencilIcon } from 'lucide-react';
-import React from 'react'
+import moment from 'moment';
 
 type TableContentProps = {
     TABLE_HEAD: Object[],
@@ -15,138 +16,81 @@ type TableContentProps = {
 
 const TableContent = ({ TABLE_HEAD, TABLE_ROWS, handleOpen, filter }: TableContentProps) => {
     return (
-        <table className=" w-full min-w-max table-auto text-left  dark:bg-gray-900 dark:text-gray-100 ">
-            <thead>
-                <tr>
-                    {TABLE_HEAD.map((head, index) => (
-                        <th
-                            key={index}
-                            className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50 dark:bg-gray-900 dark:text-gray-100 "
-                        >
-                            <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="flex items-center justify-between gap-2 font-normal leading-none opacity-70  dark:bg-gray-900 dark:text-gray-100 "
-                            >
-                                {head}{" "}
-                                {index !== TABLE_HEAD.length - 1 && (
-                                    <ChevronUpDownIcon strokeWidth={2} className="h-4 w-4" />
-                                )}
-                            </Typography>
-                        </th>
-                    ))}
-                </tr>
-            </thead>
-            <tbody>
-                {TABLE_ROWS?.length == 0
-                    ? <NoRecordFound />
-                    : TABLE_ROWS
-                        ?.filter((trainee: GpfTraineeProps) => trainee?.first_name?.includes(filter)
-                            || trainee?.email?.includes(filter)
-                            || trainee?.last_name?.includes(filter)
-                            || trainee?.user_name?.includes(filter)
-                            || trainee?.city?.includes(filter)
-                            || trainee?.state?.includes(filter)
-                        )
-                        ?.map(
-                            (trainee: GpfTraineeProps, index: number) => {
-                                const isLast = index === TABLE_ROWS.length - 1;
-                                const classes = isLast
-                                    ? "py-2 px-4 "
-                                    : "py-2 px-4 border-b border-blue-gray-50  dark:bg-gray-900 dark:text-gray-100 ";
+        <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6">
+            <div className="max-w-full overflow-x-auto">
+                <Table>
+                    {/* Table Header */}
+                    <TableHeader className="border-gray-100 dark:border-gray-800 border-y">
+                        <TableRow>
+                            {TABLE_HEAD.map((head: any, i: number) => (
+                                <TableCell
+                                    isHeader
+                                    className="py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                                    key={i}
+                                >
+                                    {head}
+                                </TableCell>
+                            ))}
+                        </TableRow>
+                    </TableHeader>
 
-                                return (
-                                    <tr key={index} className=' dark:bg-gray-900 dark:text-gray-100 '>
-                                        <td className={classes}>
-                                            <div className="flex flex-col">
-                                                <Typography
-                                                    variant="small"
-                                                    color="blue-gray"
-                                                    className="font-semibold dark:bg-gray-900 dark:text-gray-100 "
-                                                >
-                                                    {trainee.first_name} {trainee.last_name}
-                                                </Typography>
-                                                <Typography
-                                                    variant="small"
-                                                    color="blue-gray"
-                                                    className="font-normal opacity-70 dark:bg-gray-900 dark:text-gray-100 "
-                                                >
-                                                    {trainee.email}
-                                                </Typography>
-                                            </div>
-                                        </td>
-                                        <td className={classes}>
-                                            <div className="flex flex-col">
-                                                <Typography
-                                                    variant="small"
-                                                    color="blue-gray"
-                                                    className="font-normal dark:bg-gray-900 dark:text-gray-100 "
-                                                >
-                                                    {trainee.city}, {trainee.state?.slice(0, 20)}
-                                                </Typography>
-                                            </div>
-                                        </td>
+                    {/* Table Body */}
 
-                                        <td className={classes}>
-                                            <div className="flex flex-col">
-                                                <Typography
-                                                    variant="small"
-                                                    color="blue-gray"
-                                                    className="font-normal dark:bg-gray-900 dark:text-gray-100 "
-                                                >
-                                                    {trainee.phone_number ?? "Not specify"}
-                                                </Typography>
-                                            </div>
-                                        </td>
-
-                                        <td className={classes}>
-                                            <div className="flex flex-col">
-                                                <Typography
-                                                    variant="small"
-                                                    color="blue-gray"
-                                                    className="font-normal dark:bg-gray-900 dark:text-gray-100 "
-                                                >
-                                                    {trainee.age ?? 0}
-                                                </Typography>
-                                            </div>
-                                        </td>
-
-                                        <td className={classes}>
-                                            <div className="w-max">
-                                                <Chip
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    value={trainee.fitness_level ?? 'Not specify'}
-                                                    color={"green"}
-                                                    className=' dark:bg-gray-900 dark:text-gray-100 '
-                                                />
-                                            </div>
-                                        </td>
-
-                                        <td className={classes}>
-                                            <div className="w-max">
-                                                <Chip
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    value={getStrictnessLevel(trainee.strictness_level) ?? 'Chill'}
-                                                    color={"blue-gray"}
-                                                    className=' dark:bg-gray-900 dark:text-gray-100 '
-                                                />
-                                            </div>
-                                        </td>
-                                        <td className={classes}>
+                    <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
+                        {TABLE_ROWS?.length == 0
+                            ? <NoRecordFound />
+                            : TABLE_ROWS
+                                ?.filter((trainee: GpfTraineeProps) => trainee?.first_name?.includes(filter)
+                                    || trainee?.email?.includes(filter)
+                                    || trainee?.last_name?.includes(filter)
+                                    || trainee?.user_name?.includes(filter)
+                                    || trainee?.city?.includes(filter)
+                                    || trainee?.state?.includes(filter)
+                                )
+                                ?.map((trainee: GpfTraineeProps, i: number) => (
+                                    <TableRow key={i} className="">
+                                        <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                                            {trainee.first_name} {trainee?.last_name}
+                                        </TableCell>
+                                        <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                                            {trainee.email}
+                                        </TableCell>
+                                        <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                                            {trainee.city}, {trainee.state}
+                                        </TableCell>
+                                        <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                                            <Badge
+                                                size="sm"
+                                                color={
+                                                    trainee.trainer_id === null
+                                                        ? "success"
+                                                        : trainee.trainer_id != null
+                                                            ? "warning"
+                                                            : "error"
+                                                }
+                                            >
+                                                {trainee.trainer_id == null ? "GoPeakFit" : "Non GoPeakFit"}
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                                            {moment(trainee.created_at).format('MMMM D, YYYY hA')}
+                                        </TableCell>
+                                        <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                                            {getStrictnessLevel(trainee.strictness_level) ?? 'Chill'}
+                                        </TableCell>
+                                        <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                                             <Tooltip content="Edit Trainee">
                                                 <IconButton variant="text" onClick={() => handleOpen(trainee)} >
                                                     <PencilIcon className="h-4 w-4 dark:bg-gray-900 dark:text-gray-100 " />
                                                 </IconButton>
                                             </Tooltip>
-                                        </td>
-                                    </tr>
-                                );
-                            },
-                        )}
-            </tbody>
-        </table>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                    </TableBody>
+                </Table>
+            </div>
+        </div>
     )
 }
 

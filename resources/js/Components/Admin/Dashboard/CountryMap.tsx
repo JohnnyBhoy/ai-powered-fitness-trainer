@@ -16,6 +16,7 @@ interface Marker {
 }
 
 const openCageKey = import.meta.env.VITE_OPENCAGE_API_KEY as string;
+const OPENCAGE_URL = import.meta.env.OPEN_CAGE_URL as string;
 
 const CountryMap: React.FC<CountryMapProps> = ({ mapColor }) => {
   const { data } = useDashboardStore();
@@ -29,7 +30,7 @@ const CountryMap: React.FC<CountryMapProps> = ({ mapColor }) => {
         const results = await Promise.all(
           data.traineesPerStates.map(async (item: { state: string; total: number }) => {
             const res = await fetch(
-              `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(item.state)},USA&key=${openCageKey}`
+              `${OPENCAGE_URL}?q=${encodeURIComponent(item.state)},USA&key=${openCageKey}`
             );
             const json = await res.json();
 
