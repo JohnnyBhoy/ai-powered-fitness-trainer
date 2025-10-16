@@ -1,5 +1,7 @@
+import CloseUpdateFormButton from '@/Components/Admin/Trainees/GoPeakFit/CloseUpdateFormButton';
 import MtTextInput from '@/Components/MtTextInput';
 import UpdateButton from '@/Components/UpdateButton';
+import { useGpfStore } from '@/stores/useGpfStore';
 import { GpfTraineeProps } from '@/types/gpf';
 import { getStrictnessLevel } from '@/utils/functions/helperFunctions';
 import { useForm } from '@inertiajs/react';
@@ -13,8 +15,13 @@ import {
 } from "@material-tailwind/react";
 import { toast } from 'sonner';
 
-const Biometrics = ({ userData }: { userData: GpfTraineeProps }) => {
-  console.log(userData);
+const Biometrics = ({ userData }: { userData: GpfTraineeProps | null}) => {
+  if(userData == null) {
+    return 'No Data';
+  }
+  
+  // Global states
+  const { refetchData, setRefetchData } = useGpfStore();
 
   const UPDATE_BIOMETRIC_URL = import.meta.env.VITE_UPDATE_BIOMETRICS;
 
@@ -35,15 +42,18 @@ const Biometrics = ({ userData }: { userData: GpfTraineeProps }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    put(`${UPDATE_BIOMETRIC_URL}/${userData.id}`, {
-      onSuccess: () => toast.success("✅ User biometrics updated successfully!"),
+    put(`${UPDATE_BIOMETRIC_URL}/${userData.user_id}`, {
+      onSuccess: () => {
+        toast.success("User biometrics updated successfully!");
+        setRefetchData(!refetchData);
+      },
       onError: (errors) =>
         Object.values(errors).forEach((message) =>
           toast.error(message as string)
         ),
     });
   };
-  
+
   console.log(userData);
 
   return (
@@ -174,7 +184,10 @@ const Biometrics = ({ userData }: { userData: GpfTraineeProps }) => {
 
         {/* Submit */}
         <div className="flex justify-end">
-          <UpdateButton processing={processing} />
+          <div className="flex gap-3">
+            <CloseUpdateFormButton />
+            <UpdateButton processing={processing} />
+          </div>
         </div>
       </form>
     </Card>

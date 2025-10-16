@@ -21,7 +21,7 @@ export default function UserDropdown() {
         className="flex items-center text-gray-700 dropdown-toggle dark:text-gray-400"
       >
         <span className="mr-3 overflow-hidden rounded-full h-11 w-11">
-          <img src="/images/user/owner.jpg" alt="User" />
+          <img src="https://lh3.googleusercontent.com/a-/ALV-UjWT9_ul-BFTX-kdugK8cK3nS3rrpuCvVgc3dye3AIyl7lhwpzTe=s64-w64-h64-c-k-no" alt="User" />
         </span>
 
         <span className="block mr-1 font-medium text-theme-sm">{user?.first_name}</span>

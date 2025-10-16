@@ -10,6 +10,7 @@ use App\Repositories\MessageRepository;
 use App\Services\TrialProgramService;
 use Carbon\Carbon;
 use DateTime;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 class HelperFunctions
@@ -337,7 +338,7 @@ class HelperFunctions
         return $currentWeight - $newWeight;
     }
 
-    
+
     /**
      * Summary of timeToUpdateCurrentWeight
      * @param mixed $daysSinceAccountCreated
@@ -373,5 +374,25 @@ class HelperFunctions
     public function isPremiumOrPromo($user, $daysSinceAccountCreated)
     {
         return ($user->subscription != 'trial' && $user->payment_status == 'paid') || ($user->is_promo == 1 && $daysSinceAccountCreated < 30);
+    }
+
+    /**
+     * Summary of jsonReturn
+     * @param mixed $pageNumber
+     * @param mixed $result
+     * @param mixed $perPage
+     * @return JsonResponse
+     */
+    public function jsonReturn($pageNumber, $result, $perPage)
+    {
+        return response()->json([
+            'success' => true,
+            'data' => $result,
+            'pagination' => [
+                'page' => $pageNumber,
+                'per_page' => $perPage,
+                'total' => $result->total() ?? null, // if using LengthAwarePaginator
+            ],
+        ]);
     }
 }

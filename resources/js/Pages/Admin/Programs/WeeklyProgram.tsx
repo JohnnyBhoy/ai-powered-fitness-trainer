@@ -2,7 +2,7 @@ import ProgramData from '@/Components/Admin/Programs/WeeklyProgram/ProgramData';
 import Authenticated from '@/Pages/Layouts/AuthenticatedLayout';
 import { WeeklyProgramLists } from '@/types/program';
 import { Head } from '@inertiajs/react';
-import { ChevronDown, Pencil, Search, Trash, Trash2 } from 'lucide-react';
+import { ChevronDown, Download, Pencil, Search, Trash2 } from 'lucide-react';
 import moment from 'moment';
 import { useState } from 'react';
 
@@ -43,24 +43,17 @@ const WeeklyProgram = ({ programs }: { programs: WeeklyProgramLists[] }) => {
                                     </span>
                                     <div className="relative z-20 bg-transparent">
                                         <select className="w-full py-2 pl-3 pr-8 text-sm text-gray-800 bg-transparent border border-gray-300 rounded-lg appearance-none dark:bg-dark-900 h-9 bg-none shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800">
-                                            <option
-                                                value="10"
-                                                className="text-gray-500 dark:bg-gray-900 dark:text-gray-400"
-                                            >
-                                                10
-                                            </option>
-                                            <option
-                                                value="8"
-                                                className="text-gray-500 dark:bg-gray-900 dark:text-gray-400"
-                                            >
-                                                8
-                                            </option>
-                                            <option
-                                                value="5"
-                                                className="text-gray-500 dark:bg-gray-900 dark:text-gray-400"
-                                            >
-                                                5
-                                            </option>
+
+                                            {[programs?.length, 10, 50, 100]?.map(item => (
+                                                <option
+                                                    key={item}
+                                                    value={item}
+                                                    className="text-gray-500 dark:bg-gray-900 dark:text-gray-400"
+                                                >
+                                                    {item}
+                                                </option>
+                                            ))}
+
                                         </select>
                                         <span className="absolute z-30 text-gray-500 -translate-y-1/2 right-2 top-1/2 dark:text-gray-400">
                                             <ChevronDown size={16} />
@@ -74,7 +67,7 @@ const WeeklyProgram = ({ programs }: { programs: WeeklyProgramLists[] }) => {
                                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                                     <div className="relative">
                                         <button className="absolute text-gray-500 -translate-y-1/2 left-4 top-1/2 dark:text-gray-400">
-                                            <Search size={18} />
+                                            <Search size={16} />
                                         </button>
                                         <input
                                             x-model="search"
@@ -85,21 +78,7 @@ const WeeklyProgram = ({ programs }: { programs: WeeklyProgramLists[] }) => {
                                     </div>
                                     <button className="inline-flex items-center justify-center gap-2 rounded-lg transition  px-4 py-3 text-sm bg-white text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700 dark:hover:bg-white/[0.03] dark:hover:text-gray-300 ">
                                         Download
-                                        <svg
-                                            className="fill-current"
-                                            width="20"
-                                            height="20"
-                                            viewBox="0 0 20 20"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                fillRule="evenodd"
-                                                clip-rule="evenodd"
-                                                d="M10.0018 14.083C9.7866 14.083 9.59255 13.9924 9.45578 13.8472L5.61586 10.0097C5.32288 9.71688 5.32272 9.242 5.61552 8.94902C5.90832 8.65603 6.3832 8.65588 6.67618 8.94868L9.25182 11.5227L9.25182 3.33301C9.25182 2.91879 9.5876 2.58301 10.0018 2.58301C10.416 2.58301 10.7518 2.91879 10.7518 3.33301L10.7518 11.5193L13.3242 8.94866C13.6172 8.65587 14.0921 8.65604 14.3849 8.94903C14.6777 9.24203 14.6775 9.7169 14.3845 10.0097L10.5761 13.8154C10.4385 13.979 10.2323 14.083 10.0018 14.083ZM4.0835 13.333C4.0835 12.9188 3.74771 12.583 3.3335 12.583C2.91928 12.583 2.5835 12.9188 2.5835 13.333V15.1663C2.5835 16.409 3.59086 17.4163 4.8335 17.4163H15.1676C16.4102 17.4163 17.4176 16.409 17.4176 15.1663V13.333C17.4176 12.9188 17.0818 12.583 16.6676 12.583C16.2533 12.583 15.9176 12.9188 15.9176 13.333V15.1663C15.9176 15.5806 15.5818 15.9163 15.1676 15.9163H4.8335C4.41928 15.9163 4.0835 15.5806 4.0835 15.1663V13.333Z"
-                                                fill="currentColor"
-                                            ></path>
-                                        </svg>
+                                        <Download size={16} />
                                     </button>
                                 </div>
                             </div>
@@ -213,7 +192,7 @@ const WeeklyProgram = ({ programs }: { programs: WeeklyProgramLists[] }) => {
                                 <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between">
                                     <div className="pb-3 xl:pb-0">
                                         <p className="pb-3 text-sm font-medium text-center text-gray-500 border-b border-gray-100 dark:border-gray-800 dark:text-gray-400 xl:border-b-0 xl:pb-0 xl:text-left">
-                                            Showing 1 to 5 of 10 entries
+                                            Showing 1 to 5 of {programs?.length ?? 0} entries
                                         </p>
                                     </div>
                                     <div className="flex items-center justify-center">

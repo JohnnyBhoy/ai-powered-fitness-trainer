@@ -1,4 +1,4 @@
-import { GpfTraineeProps } from "@/types/gpf";
+import { useTraineeStore } from "@/stores/useTraineeStore";
 import { AcademicCapIcon, ChatBubbleBottomCenterIcon, FingerPrintIcon, FolderArrowDownIcon, ListBulletIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import {
     Tab,
@@ -7,27 +7,17 @@ import {
     TabsBody,
     TabsHeader,
 } from "@material-tailwind/react";
-import { handler } from "@material-tailwind/react/types/components/dialog";
 import React from "react";
-import Prompt from "./Prompt";
 import AccountInfo from "./AccountInfo";
 import Biometrics from "./Biometrics";
 import Goals from "./Goals";
 import Messages from "./Messages";
-import Program from "./Program";
 import Nutrition from "./Nutrition";
+import Program from "./Program";
+import Prompt from "./Prompt";
 
-
-type UpdateProps = {
-    open: boolean,
-    handleOpen: handler,
-    traineeData: GpfTraineeProps,
-    setReload: CallableFunction,
-    reload: boolean,
-}
-
-export default function Update({ open, handleOpen, traineeData, setReload, reload }: UpdateProps) {
-    console.log('data: ',traineeData);
+export default function Update() {
+    const { traineeData } = useTraineeStore();
 
     const data = [
         {
@@ -79,11 +69,11 @@ export default function Update({ open, handleOpen, traineeData, setReload, reloa
 
     return (
         <Tabs id="custom-animation" value="account">
-            <div className="">
-                <TabsHeader>
+            <div className="px-4">
+                <TabsHeader className="dark:bg-gray-800">
                     {data.map(({ label, value, icon }) => (
                         <Tab key={value} value={value}>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 dark:text-gray-400">
                                 {React.createElement(icon, { className: "w-5 h-5" })}
                                 {label}
                             </div>
@@ -96,7 +86,11 @@ export default function Update({ open, handleOpen, traineeData, setReload, reloa
                     initial: { y: 250 },
                     mount: { y: 0 },
                     unmount: { y: 250 },
-                }} onPointerEnterCapture={undefined} placeholder={undefined} onPointerLeaveCapture={undefined}  >
+                }}
+                onPointerEnterCapture={undefined}
+                placeholder={undefined}
+                onPointerLeaveCapture={undefined}
+            >
                 {data.map(({ value, desc }) => (
                     <TabPanel key={value} value={value}>
                         {desc}

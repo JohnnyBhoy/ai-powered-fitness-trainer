@@ -14,13 +14,20 @@ type Program = {
   [day: number]: ProgramDay;
 };
 
-export default function Program({ data }: { data: string }) {
+export default function Program({ data }: { data: string | undefined }) {
+  if (data == undefined) {
+    return <div>
+      <h3 className="dark:text-gray-400 text-center p-3 text-lg">No program created for this trainee.</h3>
+    </div>
+  }
+
+  //Global states from store
   const { setWeeklyPrograms } = useProgramStore();
 
-  console.log('program datas:', data);
-
+  //Local states
   const [show, setShow] = useState<string>('Weekly');
 
+  //Options tabs to be display weekly or daily program
   const TABS = [{
     label: 'Weekly',
     value: 'Weekly',
@@ -29,10 +36,14 @@ export default function Program({ data }: { data: string }) {
     value: 'Daily',
   }];
 
-  const weeklyProgram = JSON.parse(data);
-  
-  console.log(weeklyProgram);
+  //Convert json weekly program to object
+  if (data == "") {
+    return <h1 className="text-center dark:text-gray-300 mt-[10rem]">No program was created for this trainee...</h1>
+  }
 
+  const weeklyProgram = JSON?.parse(data);
+
+  //Store weekly program
   useEffect(() => {
     setWeeklyPrograms(weeklyProgram);
   }, []);
@@ -64,7 +75,9 @@ export default function Program({ data }: { data: string }) {
         </TabsHeader>
       </Tabs>
 
-      {show == 'Daily'
+      {weeklyProgram == null ? (
+        <h1 className="text-center dark:text-gray-300 mt-[10rem]">No program was created for this trainee...</h1>
+      ) : show == 'Daily'
         ? <DailyWorkoutProgram weeklyProgram={weeklyProgram} />
         : <WeeklyPrograms />
       }

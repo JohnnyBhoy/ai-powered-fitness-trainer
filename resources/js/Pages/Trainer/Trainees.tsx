@@ -271,13 +271,7 @@ const Trainees = ({ trainees }: { trainees: any }) => {
           </CardBody>
         </Card>
 
-        <Update
-          open={open}
-          handleOpen={handleOpen}
-          traineeData={traineeData}
-          setReload={setReload}
-          reload={reload}
-        />
+        <Update traineeData={traineeData}/>
       </div>
     </Authenticated >
   )

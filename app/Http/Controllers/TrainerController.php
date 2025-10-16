@@ -3,37 +3,58 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TrainerRequest;
-use App\Models\GpfTrainer;
-use App\Models\User;
+use App\Services\TrainerService;
+use App\Services\UserService;
+use App\Support\HelperFunctions;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class TrainerController extends Controller
 {
-    /**
-     * Summary of index
-     * @return \Inertia\Response
-     */
-    public function index(): Response
-    {
-        $userId = auth()->user()->id;
-        $trainees = User::where('trainer_id', $userId)->get()->toArray();
-        $programs = [];
+    protected $userService;
+    protected $helperFunctions;
+    protected $trainerService;
 
-        try {
-            return Inertia::render('Trainer/Dashboard', [
-                'trainees' => $trainees,
-                'programs' => $programs,
-            ]);
-        } catch (\Throwable $th) {
-            throw $th;
-        }
+    public function __construct(
+        UserService $userService,
+        HelperFunctions $helperFunctions,
+        TrainerService $trainerService
+    ) {
+        $this->userService = $userService;
+        $this->helperFunctions = $helperFunctions;
+        $this->trainerService = $trainerService;
     }
 
     /**
-     * Summary of index
+     * Table page for Trainers
+     * @param Request $request
+     * @return  Response || Illuminate\Http\JsonResponse
+     */
+    public function index(Request $request): JsonResponse|Response
+    {
+        $pageNumber = $request->get('page_number') ?? 1;
+        $perPage = $request->get('per_page') ?? 10;
+
+        try {
+            $result =  $this->userService->getPaginateTrainers($pageNumber, $perPage);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+
+        // This will be the return if the request is coming from api
+        if (request()->wantsJson() || $pageNumber != 1) {
+            $this->helperFunctions->jsonReturn($pageNumber, $result, $perPage);
+        }
+
+        return Inertia::render('Trainer/Trainer', [
+            'data' => $result,
+        ]);
+    }
+    /**
+     * Show all trainers
      * @return \Inertia\Response
      */
     public function show(): Response
@@ -62,7 +83,7 @@ class TrainerController extends Controller
     }
 
     /**
-     * Summary of create
+     * Create Trainer Page
      * @return \Inertia\Response
      */
     public function create()
@@ -71,28 +92,18 @@ class TrainerController extends Controller
     }
 
     /**
-     * Summary of store
-     * @param \Illuminate\Http\Request $request
+     * Create Trainer
+     * @param \App\Http\Requests\TrainerRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(TrainerRequest $request)
     {
-        // Step 1: Create the user first
-        $user = User::create([
-            'first_name'     => explode($request->full_name, "")[0],
-            'last_name'     => explode($request->full_name, "")[1],
-            'email'    => $request->email,
-            'password' => Hash::make('gpftrainer2025'),
-        ]);
+        try {
+            $this->trainerService->store([...$request->validated()]);
 
-        // Step 2: Create the trainer profile linked to the user
-        GpfTrainer::create(array_merge(
-            $request->validated(),
-            ['user_id' => $user->id]
-        ));
-
-        return redirect()
-            ->route('trainers.index')
-            ->with('success', 'Trainer registered successfully!');
+            return redirect()->back()->with('success', 'Trainer created successfully');
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 }

@@ -2,11 +2,14 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ConsentController;
+use App\Http\Controllers\GoPeakFitTraineeController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\TrainerController;
 use App\Http\Controllers\TrialProgramController;
 use App\Http\Controllers\WorkoutTrainerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PromoController;
+use App\Http\Controllers\NonGoPeakFitTraineeController;
 use App\Http\Controllers\TraineeController;
 use App\Http\Controllers\UserController;
 
@@ -45,13 +48,13 @@ Route::post('/promocode/apply', [PromoController::class, 'update'])
 |
 */
 Route::prefix('admin')->group(function () {
-    Route::get('/get-gpf-trainees', [AdminController::class, 'indexOfGpfTrainees'])
+    Route::get('/get-gpf-trainees', [GoPeakFitTraineeController::class, 'index'])
         ->name('admin.getGpfUsers');
 
-    Route::get('/get-non-gpf-trainees', [AdminController::class, 'indexOfNonGpfTrainees'])
+    Route::get('/get-non-gpf-trainees', [NonGoPeakFitTraineeController::class, 'index'])
         ->name('admin.getNonGpfUsers');
 
-    Route::get('/get-trainers', [AdminController::class, 'indexOfTrainers'])
+    Route::get('/get-trainers', [TrainerController::class, 'index'])
         ->name('admin.getTrainers');
 
     Route::get('/trainee-update', [TraineeController::class, 'update'])

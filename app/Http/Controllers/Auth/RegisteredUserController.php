@@ -40,7 +40,7 @@ class RegisteredUserController extends Controller
      */
     public function store(RegisterRequest $request): JsonResponse
     {
-        $request->validate([
+        $data = $request->validate([
             'firstName' => 'required|string|max:255',
             'lastName' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
@@ -48,14 +48,16 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = $this->user->store($request);
+        $user = $this->user->store($data);
 
         event(new Registered($user));
 
+        // Disable automatic login
         //Auth::login($user);
 
         return response()->json(['id' => $user->id], 201);
 
+        // Disable dashboard redirection
         // return redirect(route('dashboard', absolute: false));
     }
 }

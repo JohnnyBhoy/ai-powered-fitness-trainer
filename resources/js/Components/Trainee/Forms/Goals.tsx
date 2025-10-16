@@ -1,5 +1,7 @@
+import CloseUpdateFormButton from '@/Components/Admin/Trainees/GoPeakFit/CloseUpdateFormButton';
 import MtTextArea from '@/Components/MtTextArea';
 import UpdateButton from '@/Components/UpdateButton';
+import { useGpfStore } from '@/stores/useGpfStore';
 import { GpfTraineeProps } from '@/types/gpf';
 import { useForm } from '@inertiajs/react';
 import {
@@ -8,11 +10,18 @@ import {
 import { toast } from 'sonner';
 
 const Goals = ({ userData }: {
-  userData:
-  GpfTraineeProps
+  userData: GpfTraineeProps | null
 }) => {
+  if (userData == null) {
+    return 'No Data';
+  }
+  // Constants
   const UPDATE_GOALS_URL = import.meta.env.VITE_UPDATE_GOALS as string;
 
+  // Global states
+  const { refetchData, setRefetchData } = useGpfStore();
+
+  // Form data params
   const { data, setData, put, processing } = useForm({
     goal: userData?.goal || "",
     why: userData?.why || "",
@@ -21,13 +30,14 @@ const Goals = ({ userData }: {
   });
 
 
-  // Handle updating user goals
+  // Update trainee goal handler
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    put(`${UPDATE_GOALS_URL}/${userData.id}`, {
+    put(`${UPDATE_GOALS_URL}/${userData.user_id}`, {
       onSuccess: () => {
-        toast.success("✅ Goals updated successfully!");
+        toast.success("Trainee goals updated successfully!");
+        setRefetchData(!refetchData);
       },
       onError: (errors) => {
         // Option 1: Loop all validation messages
@@ -35,6 +45,8 @@ const Goals = ({ userData }: {
       },
     });
   };
+
+
   return (
     <Card className="p-6 mt-3 bg-white dark:bg-white/[0.03] border dark:border-none" shadow={false}>
       <form className="mb-2 space-y-8" onSubmit={handleSubmit}>
@@ -69,7 +81,10 @@ const Goals = ({ userData }: {
         </div>
 
         <div className="flex justify-end">
-          <UpdateButton processing={processing} />
+          <div className="flex gap-3">
+            <CloseUpdateFormButton />
+            <UpdateButton processing={processing} />
+          </div>
         </div>
       </form>
     </Card>

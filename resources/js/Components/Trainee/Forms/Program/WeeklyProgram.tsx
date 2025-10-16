@@ -8,14 +8,17 @@ import ProgramData from "./ProgramData";
 
 
 const WeeklyPrograms = () => {
-    const { update } = useProgramStore();
+    // Global states
     const { setTrialPrograms, trialPrograms } = useTrialProgramStore();
-    const [trialProgram, setTrialProgram] = useState<WeeklyProgram[]>(trialPrograms);
-    const { weeklyPrograms } = useProgramStore();
+    const { weeklyPrograms, update } = useProgramStore();
 
+    // Local states
+    const [trialProgram, setTrialProgram] = useState<WeeklyProgram[]>(trialPrograms);
+
+    // Constants data table header
     const HEADERS = ["Day", "Warm-up", "Workout", "Cool-down", "Alignment"];
 
-    // ✅ FIXED: use functional update to always get the latest state
+    // FIXED: use functional update to always get the latest state
     const setNewTrialProgram = useCallback(
         (id: number, e: React.ChangeEvent<HTMLInputElement>): void => {
             e.preventDefault();
@@ -32,7 +35,7 @@ const WeeklyPrograms = () => {
         [] // no deps needed since we use functional state update
     );
 
-    // ✅ Debounce the final sync
+    // Set trial program after 1sec user input (Debounce functions)
     useEffect(() => {
         const debounce = setTimeout(() => {
             setTrialPrograms(trialProgram);
@@ -65,7 +68,7 @@ const WeeklyPrograms = () => {
 
                         {/* Table Body */}
                         <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]  dark:border-gray-800  dark:border-gray-700" >
-                            {weeklyPrograms.map((program: WeeklyProgram, i: number) => (
+                            {weeklyPrograms?.map((program: WeeklyProgram, i: number) => (
                                 <TableRow key={i}>
                                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400 border border-black-200  dark:border-gray-700">
                                         <div className="flex flex-col text-cenyter place-items-center">

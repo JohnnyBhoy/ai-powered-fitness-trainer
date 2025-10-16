@@ -4,6 +4,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Api\PromoController;
 use App\Http\Controllers\BiometricController;
 use App\Http\Controllers\GoalsController;
+use App\Http\Controllers\GoPeakFitTraineeController;
+use App\Http\Controllers\NonGoPeakFitTraineeController;
 use App\Http\Controllers\NutritionController;
 use App\Http\Controllers\NutritionPlanController;
 use App\Http\Controllers\ProgramController;
@@ -194,20 +196,19 @@ Route::middleware(['auth', 'role:1'])->prefix('/admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])
         ->name('admin.dashboard');
 
-    Route::get('/gpf-trainees', [AdminController::class, 'indexOfGpfTrainees'])
+    /**
+     * Web Routes for trainees
+     * Create, Read, Update
+     * And Delete trainer records in DB
+     */
+    Route::get('/gpf-trainees', [GoPeakFitTraineeController::class, 'index'])
         ->name('admin.gpf-trainees');
 
-    Route::get('/trainers', [AdminController::class, 'indexOfTrainers'])
-        ->name('admin.trainers');
+    Route::post('/trainee/store', [GoPeakFitTraineeController::class, 'store'])
+        ->name('admin.gpf-store');
 
-    Route::get('/non-gpf-trainees', [AdminController::class, 'indexOfNonGpfTrainees'])
+    Route::get('/non-gpf-trainees', [NonGoPeakFitTraineeController::class, 'index'])
         ->name('admin.trainees');
-
-    Route::get('/trainers/create', [TrainerController::class, 'create'])
-        ->name('admin.trainer.create');
-
-    Route::post('/trainers/store', [TrainerController::class, 'store'])
-        ->name('admin.trainers.store');
 
     // Program and workouts
     Route::get('/five-days-trail', [TrialProgramController::class, 'index'])
@@ -237,6 +238,28 @@ Route::middleware(['auth', 'role:1'])->prefix('/admin')->group(function () {
 
     Route::get('/weekly-program', [ProgramController::class, 'all'])
         ->name('admin.program');
+
+
+    Route::delete('/users/{id}', [UserController::class, 'destroy'])
+        ->name('users.destroy');
+
+
+    /**
+     * Web Routes for trainer
+     * Create, Read, Update
+     * And Delete trainer records in DB
+     */
+    Route::get('/trainers', [TrainerController::class, 'index'])
+        ->name('admin.trainers');
+
+    Route::get('/trainers/create', [TrainerController::class, 'create'])
+        ->name('admin.trainer.create');
+
+    Route::put('/update-user/{id}', [UserController::class, 'update'])
+        ->name('admin.update.user');
+
+    Route::post('/trainer/store', [TrainerController::class, 'store'])
+        ->name('admin.trainers.store');
 });
 
 

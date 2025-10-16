@@ -1,1 +1,1 @@
-export const TABLE_HEAD = ["Name", "Email", "Address", "User Type", "Date Created", "Strictness Level", "Action"];
+export const TABLE_HEAD = ["Name", "Address", "Goal", "Current Weight", "Goal Weight", "Strictness Level", "Date Created", "Action"];

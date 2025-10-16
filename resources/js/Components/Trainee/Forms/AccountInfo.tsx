@@ -1,5 +1,7 @@
+import CloseUpdateFormButton from '@/Components/Admin/Trainees/GoPeakFit/CloseUpdateFormButton';
 import MtTextInput from '@/Components/MtTextInput';
 import UpdateButton from '@/Components/UpdateButton';
+import { useGpfStore } from '@/stores/useGpfStore';
 import { GpfTraineeProps } from '@/types/gpf';
 import { useForm } from '@inertiajs/react';
 import {
@@ -10,23 +12,28 @@ import {
 import moment from 'moment';
 import { toast } from 'sonner';
 
-const AccountInfo = ({ userData }: { userData: GpfTraineeProps }) => {
+const AccountInfo = ({ userData }: { userData: GpfTraineeProps | null }) => {
+  if (userData == null) return;
+
+  // Global states
+  const { setRefetchData, refetchData } = useGpfStore();
+
   const UPDATE_USER_URL = import.meta.env.VITE_UPDATE_USER as string;
 
   const { data, setData, put, processing } = useForm({
     first_name: userData?.first_name || "",
     last_name: userData?.last_name || "",
-    email: userData?.email || "",
     user_name: userData?.user_name || "",
   });
 
-  // Handle updating user data
+  // Update trainee account handler
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    put(`${UPDATE_USER_URL}/${userData.id}`, {
+    put(`${UPDATE_USER_URL}/${userData.user_id}`, {
       onSuccess: () => {
-        toast.success("✅ User updated successfully!");
+        toast.success("Trainee account updated successfully!");
+        setRefetchData(!refetchData);
       },
       onError: (errors) => {
         // Option 1: Loop all validation messages
@@ -59,9 +66,9 @@ const AccountInfo = ({ userData }: { userData: GpfTraineeProps }) => {
 
           <MtTextInput
             name="email"
-            data={data.email}
+            data={userData.email}
             type="text"
-            onChange={(e: any) => setData("email", e.target.value)}
+            onChange={() => { }}
           />
 
           <MtTextInput
@@ -134,7 +141,11 @@ const AccountInfo = ({ userData }: { userData: GpfTraineeProps }) => {
         </div>
 
         <div className="flex justify-end pt-8">
-          <UpdateButton processing={processing} />
+          <div className="flex gap-3">
+            <CloseUpdateFormButton />
+            <UpdateButton processing={processing} />
+          </div>
+
         </div>
       </form>
 

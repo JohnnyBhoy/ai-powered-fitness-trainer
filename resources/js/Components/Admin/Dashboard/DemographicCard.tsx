@@ -67,32 +67,34 @@ export default function DemographicCard() {
 
       <div className="space-y-5">
         {data?.traineesPerStates != undefined &&
-          data?.traineesPerStates?.map((item, i) => (
-            <div className="flex items-center justify-between" key={i}>
-              <div className="flex items-center gap-3">
-                <div className="items-center w-full rounded-full max-w-8">
-                  <img src="/images/country/country-01.svg" alt="usa" />
+          data?.traineesPerStates
+            ?.slice(0, 5)
+            ?.map((item, i) => (
+              <div className="flex items-center justify-between" key={i}>
+                <div className="flex items-center gap-3">
+                  <div className="items-center w-full rounded-full max-w-8">
+                    <img src="/images/country/country-01.svg" alt="usa" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 text-theme-sm dark:text-white/90">
+                      {item?.state}
+                    </p>
+                    <span className="block text-gray-500 text-theme-xs dark:text-gray-400">
+                      {item?.total} {item?.total == 1 ? 'Trainee' : 'Trainees'}
+                    </span>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-semibold text-gray-800 text-theme-sm dark:text-white/90">
-                    {item?.state}
-                  </p>
-                  <span className="block text-gray-500 text-theme-xs dark:text-gray-400">
-                    {item?.total} {item?.total == 1 ? 'Trainee' : 'Trainees'}
-                  </span>
-                </div>
-              </div>
 
-              <div className="flex w-full max-w-[140px] items-center gap-3">
-                <div className="relative block h-2 w-full max-w-[100px] rounded-sm bg-gray-200 dark:bg-gray-800">
-                  <div className={`absolute left-0 top-0 flex h-full w-[${getPercentage(item?.total)}%] items-center justify-center rounded-sm bg-torq text-xs font-medium text-whit`}></div>
+                <div className="flex w-full max-w-[140px] items-center gap-3">
+                  <div className="relative block h-2 w-full max-w-[100px] rounded-sm bg-gray-200 dark:bg-gray-800">
+                    <div className={`absolute left-0 top-0 flex h-full w-[${getPercentage(item?.total)}%] items-center justify-center rounded-sm bg-torq text-xs font-medium text-whit`}></div>
+                  </div>
+                  <p className="font-medium text-gray-800 text-theme-sm dark:text-white/90">
+                    {Math.round(getPercentage(item?.total))}%
+                  </p>
                 </div>
-                <p className="font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                  {getPercentage(item?.total)}%
-                </p>
               </div>
-            </div>
-          ))}
+            ))}
       </div>
     </div>
   );

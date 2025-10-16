@@ -15,23 +15,29 @@ interface Marker {
   name: string;
 }
 
-const openCageKey = import.meta.env.VITE_OPENCAGE_API_KEY as string;
-const OPENCAGE_URL = import.meta.env.OPEN_CAGE_URL as string;
-
 const CountryMap: React.FC<CountryMapProps> = ({ mapColor }) => {
+  const openCageKey = import.meta.env.VITE_OPENCAGE_API_KEY as string;
+  const OPENCAGE_URL = import.meta.env.OPEN_CAGE_URL as string;
   const { data } = useDashboardStore();
   const [markers, setMarkers] = useState<any[]>([]);
 
+  // get coodinate of every trainees states
   useEffect(() => {
     if (!data?.traineesPerStates || data.traineesPerStates.length === 0) return;
 
     const fetchCoordinates = async () => {
       try {
         const results = await Promise.all(
-          data.traineesPerStates.map(async (item: { state: string; total: number }) => {
+          data.traineesPerStates.map(async (item: { state: string; total: number }, i: number) => {
+
             const res = await fetch(
-              `${OPENCAGE_URL}?q=${encodeURIComponent(item.state)},USA&key=${openCageKey}`
+              `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(item.state)},USA&key=${openCageKey}`
             );
+
+            if (res.status == 404) {
+              return null;
+            }
+
             const json = await res.json();
 
             const geometry = json?.results?.[0]?.geometry;

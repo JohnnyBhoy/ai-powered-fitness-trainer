@@ -51,7 +51,6 @@ class TraineeController extends Controller
      */
     public function settings(): Response
     {
-        $userid = auth()->user()->id;
         return  Inertia::render('Trainee/Settings', []);
     }
 }

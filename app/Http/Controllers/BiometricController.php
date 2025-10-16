@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BiometricRequest;
-use App\Http\Requests\BiometricUpdateRequest;
 use App\Models\GpfBiometric;
 use App\Services\BiometricService;
 use App\Services\MessageService;
@@ -66,7 +65,7 @@ class  BiometricController extends Controller
             'is_verified' => 0
         ]);
 
-        //$this->twilioService->sendOtp($phone, $otp);
+        $this->twilioService->sendOtp($phone, $otp);
 
         return response()->json([
             'message' => 'Location and Biometrics saved successfully!',

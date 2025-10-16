@@ -138,8 +138,11 @@ class StripePaymentController extends Controller
             // Polulate conversation with greetings to trainee
             $this->helperFunctions->createInitialConversation($userId, $welcomeMessage);
 
+            // Get phone number
+            $phoneNumber = $this->biometricService->getPhoneNumberById($userId);
+
             // Send welcome sms via twilio
-            // $this->messageService->sendSms($user->phone_number, $welcomeMessage);
+            $this->messageService->sendSms($phoneNumber, $welcomeMessage);
 
             // Create new nutrition and weekly program jobs
             CreateWeeklyProgram::dispatch($userId);

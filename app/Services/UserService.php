@@ -30,6 +30,16 @@ class UserService
     }
 
     /**
+     * Retrieve user data by Id
+     * @param array $data
+     * @return object|null
+     */
+    public function createUser(array $data)
+    {
+        return $this->userRepository->store($data);
+    }
+
+    /**
      * Summary of getPaginatedGoPeakFitUsers
      * @param  int $pageNumber Page number in table
      * @param  int $perPage     Rows to be shown per page in table

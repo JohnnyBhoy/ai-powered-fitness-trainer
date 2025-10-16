@@ -7,8 +7,6 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-
 class UserRepository
 {
     protected $user;
@@ -37,20 +35,16 @@ class UserRepository
             ->where('u.id', $id)
             ->first();
     }
+
+
     /**
-     * Summary of create
-     * @param mixed $request
-     * @return User
-     */
-    public function store($request): User
+    * Summary of create
+    * @param mixed $request
+    * @return User
+    */
+    public function store(array $data) : User
     {
-        return $this->user->create([
-            'first_name' => $request->firstName,
-            'last_name'  => $request->lastName,
-            'email'      => $request->email,
-            'user_name'   => $request->username,
-            'password'   => Hash::make($request->password),
-        ]);
+        return $this->user->create($data);
     }
 
     /**
@@ -71,20 +65,25 @@ class UserRepository
             ->select(
                 'u1.*',
                 'gb.*',
-                'g.*',
+                'g.goal',
+                'g.why',
+                'g.past_obstacles',
+                'g.current_struggles',
                 'gm.conversations',
-                'gwp.*',
-                'gwn.*'
+                'gwp.program_data',
+                'gwp.week_number',
+                'gwn.nutrition_plan',
             )
             ->where('role', 3)
+            ->orderBy('u1.created_at', 'desc')
+            ->where('is_active', 1)
             ->whereNull('trainer_id');
 
         if ($strictnessLevel != 0) {
             $query = $query->where('gb.strictness_level', $strictnessLevel);
         }
 
-        $goPeakFitUsers = $query->orderBy('u1.created_at', 'desc')
-            ->paginate($perPage, ['*'], 'page', page: $pageNumber);
+        $goPeakFitUsers = $query->paginate($perPage, ['*'], 'page', page: $pageNumber);
 
         return  $goPeakFitUsers;
     }
@@ -130,6 +129,7 @@ class UserRepository
         $trainers = $this->user->where('role', 2)
             ->with(['trainees' => function ($query) {
                 $query->select('id', 'first_name', 'last_name', 'trainer_id');
+
             }])
             ->orderBy('created_at', 'desc')
             ->paginate($perPage, ['*'], 'page', $pageNumber);
@@ -249,8 +249,8 @@ class UserRepository
         $endOfLastMonth = Carbon::now()->subMonth()->endOfMonth();
 
         // Count new users for each month
-        $currentMonthCount = User::whereBetween('created_at', [$startOfCurrentMonth, $endOfCurrentMonth])->count();
-        $lastMonthCount = User::whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->count();
+        $currentMonthCount = User::whereBetween('created_at', [$startOfCurrentMonth, $endOfCurrentMonth])->whereNot('role', 1)->count();
+        $lastMonthCount = User::whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->whereNot('role', 1)->count();
 
         // If there were no users last month, return 100% if there are any this month
         if ($lastMonthCount === 0) {

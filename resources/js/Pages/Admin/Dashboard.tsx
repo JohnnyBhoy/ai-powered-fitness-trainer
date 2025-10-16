@@ -20,7 +20,7 @@ const Dashboard = () => {
       if (document.visibilityState === "visible") {
         fetchDashboardData();
       }
-    }, 7000);
+    }, 10000);
 
     return () => clearInterval(interval);
   }, [fetchDashboardData]);

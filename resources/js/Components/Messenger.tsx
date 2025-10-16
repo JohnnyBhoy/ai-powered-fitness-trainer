@@ -7,8 +7,8 @@ type MessengerProps = {
 }
 
 export default function Messenger({ name, conversations }: MessengerProps) {
-
-    const message: any = conversations.split(/(?=\s*GPF:|\s*Johnny:)/)
+    // Convert string message to array of messages
+    const message: any = conversations?.split(/(?=\s*GPF:|\s*Johnny:)/)
         .map((line, index) => {
             const [sender, text] = line.split(":").map(s => s.trim());
 
@@ -16,28 +16,14 @@ export default function Messenger({ name, conversations }: MessengerProps) {
 
             return {
                 id: index + 1,
-               text,
+                text,
                 sender: sender === "GPF" ? "trainer" : "trainee"
             };
         })?.filter(m => m.text != undefined);
 
+    // Local states
     const [messages, setMessages] = useState(message);
-    const [newMessage, setNewMessage] = useState("");
     const messagesEndRef: any = useRef(null);
-
-    // Add new type message to messages lists
-    const handleSend = () => {
-        if (!newMessage.trim()) return;
-        setMessages((prev: any) => [
-            ...prev,
-            { id: Date.now(), text: newMessage, sender: "trainee" },
-        ]);
-        setNewMessage("");
-    };
-
-    const handleKeyPress = (e: any) => {
-        if (e.key === "Enter") handleSend();
-    };
 
     // Auto scroll to latest message
     useEffect(() => {
@@ -59,7 +45,9 @@ export default function Messenger({ name, conversations }: MessengerProps) {
 
             {/* Messages area */}
             <div className="flex-1 p-4 space-y-2 h-[40rem] overflow-y-scroll">
-                {messages.map((msg: any) => (
+                {messages == undefined ? (
+                    <h1 className="text-center mt-[15%]">No conversations found...</h1>
+                ) : messages?.map((msg: any) => (
                     <div
                         key={msg.id}
                         className={`flex ${msg.sender === "trainee" ? "justify-end" : "justify-start"

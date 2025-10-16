@@ -80,6 +80,14 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        $user->update(['is_active' => 0]);
+
+        if (request()->wantsJson()) {
+            return  redirect()->route('admin.gpf-trainees');
+        }
+
+        return redirect()->back()->with('success', 'User deleted successfully!');
     }
 }

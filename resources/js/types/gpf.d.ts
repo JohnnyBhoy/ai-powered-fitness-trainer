@@ -41,7 +41,7 @@ export type GpfTraineeProps = {
   conversations: string;
 
   //program data
-  program_data:string;
+  program_data: string;
   nutrition_plan: string;
 };
 
@@ -58,9 +58,32 @@ export type TrainersProps = {
   is_promo: number;    // 1 = Promo, 0 = No Promo
   created_at: string;
   updated_at: string;
-  trainees : {
+  trainees: {
     id: number;
     first_name: string;
     last_name: string;
   }[]
 };
+
+
+export type TraineeFormData =  {
+  first_name: string;
+  last_name: string;
+  email: string;
+  user_name: string;
+  password: string;
+  is_promo: string | number; // can be 0/1 or "0"/"1"
+  trainer_id: string | number | undefined;
+  city: string;
+  state: string;
+  phone_number: string;
+  age: string | number;
+  sex: string;
+  current_weight: string | number;
+  goal_weight: string | number;
+  fitness_level: string;
+  equipment_access: string;
+  food_allergies: string;
+  strictness_level: string | number;
+  role: number
+}

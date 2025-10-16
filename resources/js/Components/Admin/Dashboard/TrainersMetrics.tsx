@@ -6,10 +6,13 @@ import {
 } from "../../../icons";
 import Badge from "../../ui/badge/Badge";
 import { useDashboardStore } from "@/stores/dashboardStore";
+import { ArrowLeft } from "lucide-react";
 
 export default function TrainersMetrics() {
-  const {data} = useDashboardStore();  
-  
+  const { data } = useDashboardStore();
+  const gpfGrowthPercentage = Math.round(data?.gopeakfitTraineesPercentageComparedLastMonth ?? 0);
+  const trainerGrowthPercentage = Math.round(data?.trainersPercentageComparedLastMonth ?? 0);
+
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6">
       {/* <!-- Metric Item Start --> */}
@@ -28,8 +31,10 @@ export default function TrainersMetrics() {
             </h4>
           </div>
           <Badge color="success">
-            <ArrowUpIcon />
-            {data?.gopeakfitTraineesPercentageComparedLastMonth ?? 0}%
+            {gpfGrowthPercentage == 0 ? <ArrowLeft size={16} />
+              : gpfGrowthPercentage > 0 ? <ArrowUpIcon />
+                : <ArrowDownIcon />}
+                {gpfGrowthPercentage}%
           </Badge>
         </div>
       </div>
@@ -51,8 +56,10 @@ export default function TrainersMetrics() {
           </div>
 
           <Badge color="error">
-            <ArrowDownIcon />
-            {data?.trainersPercentageComparedLastMonth ??  0}%
+            {trainerGrowthPercentage == 0 ? <ArrowLeft size={16} />
+              : trainerGrowthPercentage > 0 ? <ArrowUpIcon />
+                : <ArrowDownIcon />}
+            {trainerGrowthPercentage}%
           </Badge>
         </div>
       </div>

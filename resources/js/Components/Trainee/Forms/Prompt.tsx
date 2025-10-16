@@ -24,7 +24,11 @@ interface UserProfile {
 }
 
 
-const Prompt = ({ data }: { data: GpfTraineeProps }) => {
+const Prompt = ({ data }: { data: GpfTraineeProps | null }) => {
+  if (data == null) {
+    return 'No data';
+  }
+
   const [copied, setCopied] = useState(false);
 
   // Example user profile (this would usually come from API)

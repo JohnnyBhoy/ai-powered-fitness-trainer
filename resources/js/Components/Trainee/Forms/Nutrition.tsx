@@ -5,10 +5,18 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { Check2Square } from "react-bootstrap-icons";
 
-export default function Nutrition({ data }: { data: string }) {
+export default function Nutrition({ data }: { data: string | undefined }) {
+ if (data == undefined) {
+    return <div>
+      <h3 className="dark:text-gray-400 text-center p-3 text-lg">No plan created for this trainee.</h3>
+    </div>
+  }
 
+
+  //Local states
   const [show, setShow] = useState<string>('Weekly');
 
+  //Weekly and daily toggle options to be display
   const TABS = [{
     label: 'Weekly',
     value: 'Weekly',
@@ -16,7 +24,13 @@ export default function Nutrition({ data }: { data: string }) {
     label: 'Daily',
     value: 'Daily',
   }];
-  const weeklyNutrition = JSON.parse(data);
+
+  //Convert json to object
+  if (data == "") {
+    return <h1 className="text-center dark:text-gray-300 mt-[10rem]">No nutrition plan was created for this trainee...</h1>
+  }
+
+  const weeklyNutrition = JSON?.parse(data);
 
   return (
     <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
@@ -59,12 +73,14 @@ const WeeklyNutritions = ({ weeklyNutrition }: { weeklyNutrition: WeeklyNutritio
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="overflow-hidden dark:border-gray-800 bg-white dark:border-white/[0.05] dark:bg-white/[0.03] shadow-md"
+      className="overflow-hidden dark:border-gray-800 bg-white dark:border-white/[0.05] dark:bg-gray-900"
     >
       <div className="max-w-full overflow-x-auto">
         {/* Scrollable vertical container */}
         <div className="max-h-[700px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800">
-          <Table>
+          {weeklyNutrition == undefined ? (
+            <h1 className="text-center dark:text-gray-300 mt-[5rem]">No nutrition plan was created for this trainee...</h1>
+          ) : (<Table>
             {/* Table Header */}
             <TableHeader className="border dark:border-gray-800 dark:border-white/[0.05] sticky top-0 z-10 bg-torq dark:bg-gray-900">
               <TableRow>
@@ -81,7 +97,7 @@ const WeeklyNutritions = ({ weeklyNutrition }: { weeklyNutrition: WeeklyNutritio
 
             {/* Table Body */}
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {weeklyNutrition.map((nutrition, i) => (
+              {weeklyNutrition?.map((nutrition, i) => (
                 <TableRow key={i}>
                   {/* Day Number */}
                   <TableCell className="px-1  text-gray-500 text-start dark:text-gray-300 border border-gray-200 dark:border-gray-700">
@@ -123,7 +139,7 @@ const WeeklyNutritions = ({ weeklyNutrition }: { weeklyNutrition: WeeklyNutritio
                 </TableRow>
               ))}
             </TableBody>
-          </Table>
+          </Table>)}
         </div>
       </div>
     </motion.div>

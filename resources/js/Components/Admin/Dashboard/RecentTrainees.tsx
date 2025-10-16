@@ -96,7 +96,7 @@ export default function RecentTrainees() {
                   {trainee.email}
                 </TableCell>
                 <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                  {trainee.city}, {trainee.state}
+                  {trainee.city?.substring(0,20)}, {trainee.state?.substring(0,20)}
                 </TableCell>
                 <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                   <Badge
