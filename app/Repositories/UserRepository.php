@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+
 class UserRepository
 {
     protected $user;
@@ -32,17 +33,29 @@ class UserRepository
             ->leftJoin('gpf_biometrics as b', 'u.id', '=', 'b.user_id')
             ->leftJoin('gpf_goals as g', 'u.id', '=', 'g.user_id')
             ->leftJoin('gpf_subscriptions as gs', 'u.id', '=', 'gs.user_id')
+            ->select(
+                'u.id as userId',
+                'u.first_name',
+                'u.last_name',
+                'u.role',
+                'u.is_active',
+                'u.trainer_id',
+                'gm.*',
+                'b.*',
+                'g.*',
+                'gs.*'
+            )
             ->where('u.id', $id)
             ->first();
     }
 
 
     /**
-    * Summary of create
-    * @param mixed $request
-    * @return User
-    */
-    public function store(array $data) : User
+     * Summary of create
+     * @param mixed $request
+     * @return User
+     */
+    public function store(array $data): User
     {
         return $this->user->create($data);
     }
@@ -106,6 +119,7 @@ class UserRepository
                 'g.*'
             )
             ->where('role', 3)
+            ->where('is_active', 1)
             ->whereNotNull('trainer_id');
 
         if ($strictnessLevel != 0) {
@@ -129,9 +143,9 @@ class UserRepository
         $trainers = $this->user->where('role', 2)
             ->with(['trainees' => function ($query) {
                 $query->select('id', 'first_name', 'last_name', 'trainer_id');
-
             }])
             ->orderBy('created_at', 'desc')
+            ->where('is_active', 1)
             ->paginate($perPage, ['*'], 'page', $pageNumber);
 
 
@@ -154,6 +168,7 @@ class UserRepository
                 'gb.*'
             )
             ->orderBy('u1.created_at', 'desc')
+            ->where('u1.is_active', 1)
             ->limit(10)
             ->get();
     }
@@ -166,6 +181,7 @@ class UserRepository
     {
         return $this->user->where('role', 3)
             ->where('trainer_id', null)
+            ->where('is_active', 1)
             ->count();
     }
 
@@ -177,6 +193,7 @@ class UserRepository
     {
         return $this->user->where('role', 3)
             ->whereNot('trainer_id', null)
+            ->where('is_active', 1)
             ->count();
     }
 
@@ -186,7 +203,9 @@ class UserRepository
      */
     public function countTrainer(): int
     {
-        return  $this->user->where('role', 2)->count();
+        return  $this->user->where('role', 2)
+            ->where('is_active', 1)
+            ->count();
     }
 
     /**

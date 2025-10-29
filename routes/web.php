@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\Api\PromoController;
 use App\Http\Controllers\BiometricController;
 use App\Http\Controllers\GoalsController;
@@ -192,7 +193,7 @@ Route::middleware(['auth', 'role:2'])->prefix('/trainer')->group(function () {
 | Nutrition plans
 |
 */
-Route::middleware(['auth', 'role:1'])->prefix('/admin')->group(function () {
+Route::middleware(['auth:sanctum', 'role:1'])->prefix('/admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])
         ->name('admin.dashboard');
 
@@ -260,6 +261,18 @@ Route::middleware(['auth', 'role:1'])->prefix('/admin')->group(function () {
 
     Route::post('/trainer/store', [TrainerController::class, 'store'])
         ->name('admin.trainers.store');
+
+    // Analytics
+    Route::get('/analytics', [AnalyticsController::class, 'index'])
+        ->name('admin.analytics');
+
+    // Profile
+    Route::get('/profile', [AdminController::class, 'getAdminProfile'])
+        ->name('admin.profile');
+
+    // Profile
+    Route::get('/account', [AdminController::class, 'getAdminAccount'])
+        ->name('admin.account');
 });
 
 

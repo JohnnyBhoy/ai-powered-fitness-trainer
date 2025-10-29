@@ -5,9 +5,17 @@ namespace App\Http\Controllers;
 use App\Http\Requests\GoalRequest;
 use App\Http\Requests\GoalsUpdateRequest;
 use App\Models\GpfGoals;
+use App\Services\GoalService;
 
 class GoalsController extends Controller
 {
+    private $goalService;
+
+    public function __construct(GoalService $goalService)
+    {
+        $this->goalService = $goalService;
+    }
+
     /**
      * Summary of store
      * @param \App\Http\Requests\GoalRequest $request
@@ -34,9 +42,15 @@ class GoalsController extends Controller
         $validated = $request->validated();
 
         try {
-            $user = GpfGoals::where('user_id', $id);
+            $user = $this->goalService->getGoal($id);
 
-            $user->update($validated);
+            // Update or Create
+            if ($user) {
+                $user->update($validated);
+            } else {
+                $validated['user_id'] = $id;
+                $this->goalService->createGoal($validated);
+            }
 
             return redirect()->back()->with('success', 'Goals updated successfully');
         } catch (\Throwable $th) {

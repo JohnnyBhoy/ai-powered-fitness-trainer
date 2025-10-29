@@ -1,3 +1,4 @@
+import FormTitle from '@/Components/Form/FormTitle';
 import MtTextInput from '@/Components/MtTextInput';
 import { useTrainerStore } from '@/stores/useTrainerStore';
 import { useForm } from '@inertiajs/react'
@@ -58,20 +59,17 @@ export default function EditTrainerForm() {
     return (
         <form
             onSubmit={handleSubmit}
-            className={`${!isEdit && 'hidden'} max-w-md mx-auto p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-md space-y-4 mt-10`}
+            className={`${!isEdit && 'hidden'} mx-auto p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-md space-y-4`}
         >
-            <h2 className="text-2xl font-semibold text-center mb-4 dark:text-gray-300">
-                Edit Trainer
-            </h2>
+            <FormTitle title="Trainer Update Form" action={() => setIsEdit(false)} />
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-24">
                 {/* First Name */}
                 <MtTextInput
                     name="first_name"
                     data={data.first_name}
                     type="text"
-                    onChange={(e: any) => setData("first_name", e.target.value)}
-                />
+                    onChange={(e: any) => setData("first_name", e.target.value)} error={undefined} />
                 {errors.first_name && (
                     <p className="text-red-500 text-xs mt-1">{errors.first_name}</p>
                 )}
@@ -81,8 +79,7 @@ export default function EditTrainerForm() {
                     name="last_name"
                     data={data.last_name}
                     type="text"
-                    onChange={(e: any) => setData("last_name", e.target.value)}
-                />
+                    onChange={(e: any) => setData("last_name", e.target.value)} error={undefined} />
                 {errors.last_name && (
                     <p className="text-red-500 text-xs mt-1">{errors.last_name}</p>
                 )}
@@ -93,8 +90,7 @@ export default function EditTrainerForm() {
                 name="user_name"
                 data={data.user_name}
                 type="text"
-                onChange={(e: any) => setData("user_name", e.target.value)}
-            />
+                onChange={(e: any) => setData("user_name", e.target.value)} error={undefined} />
             {errors.user_name && (
                 <p className="text-red-500 text-xs mt-1">{errors.user_name}</p>
             )}
@@ -104,34 +100,35 @@ export default function EditTrainerForm() {
                 name="email"
                 data={trainerData?.email}
                 type="email"
-                onChange={() => []}
-            />
+                onChange={() => []} error={undefined} />
 
             {/* Password */}
             <MtTextInput
                 name="password"
                 data="***********"
                 type="password"
-                onChange={() => { }}
-            />
+                onChange={() => { }} error={undefined} />
 
-            <div className="lg:grid grid-cols-2 gap-6">
-                <Button
-                    type="button"
-                    onClick={() => setIsEdit(false)}
-                    className="w-full mt-4 bg-torq dark:bg-gray-700 dark:hover:bg-gray-900 hover:bg-blue-700 text-white"
-                >
-                    Close
-                </Button>
+            <div className="flex justify-end">
+                <div className="lg:grid grid-cols-2 gap-6">
+                    <Button
+                        type="button"
+                        onClick={() => setIsEdit(false)}
+                        className="w-full mt-4 bg-gray-100 border dark:bg-gray-700 dark:hover:bg-gray-900 hover:bg-gray-300 dark:text-white text-black"
+                    >
+                        Close
+                    </Button>
 
-                <Button
-                    type="submit"
-                    disabled={processing}
-                    className="w-full mt-4 bg-torq dark:bg-gray-700 dark:hover:bg-gray-900 hover:bg-blue-700 text-white flex place-items-center gap-2 justify-center"
-                >
-                    {processing ? <><Loader className='animate-spin' /> Saving...</> : "Update Trainer"}
-                </Button>
+                    <Button
+                        type="submit"
+                        disabled={processing}
+                        className="w-full mt-4 bg-black dark:bg-gray-700 dark:hover:bg-gray-900 hover:bg-gray-800 text-white flex place-items-center gap-2 justify-center"
+                    >
+                        {processing ? <><Loader className='animate-spin' /> Saving...</> : "Update Trainer"}
+                    </Button>
+                </div>
             </div>
+
         </form>
     )
 }

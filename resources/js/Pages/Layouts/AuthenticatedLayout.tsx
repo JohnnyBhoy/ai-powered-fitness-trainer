@@ -1,9 +1,9 @@
-import { SidebarProvider, useSidebar } from "../../context/SidebarContext";
-import { BrowserRouter } from "react-router";
 import AppHeader from "@/Components/Layout/AppHeader";
-import Backdrop from "@/Components/Layout/Backdrop";
 import AppSidebar from "@/Components/Layout/AppSidebar";
+import Backdrop from "@/Components/Layout/Backdrop";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { BrowserRouter } from "react-router";
+import { SidebarProvider, useSidebar } from "../../context/SidebarContext";
 
 interface AuthenticatedProps {
   children: React.ReactNode;

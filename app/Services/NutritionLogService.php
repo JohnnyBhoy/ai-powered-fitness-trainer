@@ -40,4 +40,13 @@ class NutritionLogService
     {
         return $this->nutritionLogRepository->getWeekNumber($userId);
     }
+
+    /**
+     * Retrieve program data
+     * @param int $userId
+     */
+    public function getNutritionData(Int $userId)
+    {
+        return $this->nutritionLogRepository->getNutritionData($userId);
+    }
 }

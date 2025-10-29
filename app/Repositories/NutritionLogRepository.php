@@ -49,4 +49,15 @@ class NutritionLogRepository
 
         return $latestPlan ? $latestPlan->week_number  + 1 : 1;
     }
+
+    /**
+     * Retrieve program data
+     * @param int $userId
+     */
+    public function getNutritionData(Int $userId)
+    {
+        return $this->nutritionLog->where('user_id', $userId)
+            ->orderByDesc('week_number')
+            ->first();
+    }
 }

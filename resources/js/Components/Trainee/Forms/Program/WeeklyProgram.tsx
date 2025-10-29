@@ -1,22 +1,27 @@
-import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/Components/ui/table";
+import { TableBody, TableCell, TableRow } from "@/Components/ui/table";
 import { useProgramStore, useTrialProgramStore } from "@/stores/useProgramStore";
 import { WeeklyProgram } from "@/types/weekly-program";
+import getCurrentPage from "@/utils/functions/helperFunctions";
 import { motion } from "framer-motion";
+import { ChevronsUpDown, Edit } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { Check2Square } from "react-bootstrap-icons";
 import ProgramData from "./ProgramData";
 
 
 const WeeklyPrograms = () => {
+    // CurrentPage
+    const currentPage = getCurrentPage();
+
     // Global states
-    const { setTrialPrograms, trialPrograms } = useTrialProgramStore();
-    const { weeklyPrograms, update } = useProgramStore();
+    const { setTrialPrograms, trialPrograms, editTrialByDay, setEditTrialByDay } = useTrialProgramStore();
+    const { weeklyPrograms, update, setUpdate, setDailyProgram } = useProgramStore();
 
     // Local states
     const [trialProgram, setTrialProgram] = useState<WeeklyProgram[]>(trialPrograms);
 
     // Constants data table header
-    const HEADERS = ["Day", "Warm-up", "Workout", "Cool-down", "Alignment"];
+    const HEADERS = ["Day", "Warm-up", "Workout", "Cool-down", "Alignment", "Action"];
 
     // FIXED: use functional update to always get the latest state
     const setNewTrialProgram = useCallback(
@@ -44,34 +49,51 @@ const WeeklyPrograms = () => {
         return () => clearTimeout(debounce);
     }, [trialProgram]);
 
+    // Store daily program and show update daily program form
+    const handleEditProgram = (program: WeeklyProgram) => {
+        currentPage == 'five-days-trail' ? setEditTrialByDay(true) : null;
+        setDailyProgram(program);
+    }
 
     return (
         <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="overflow-hidden rounded-xl dark:border-gray-800 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]"
+            className={`${editTrialByDay ? "hidden" : ""} overflow-hidden dark:border-gray-800 bg-white dark:border-white/[0.05] dark:bg-white/[0.03] shadow-lg`}
         >
-            <div className="overflow-hidden rounded-xl bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+            <div className="overflow-hidden bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
                 <div className="max-w-full overflow-x-auto">
-                    <Table className="rounded-xl">
-                        {/* Table Header */}
-                        <TableHeader className="rounded-xl border dark:border-gray-800 dark:border-white/[0.05]">
-                            <TableRow>
-                                {HEADERS.map((header, i) => (
-                                    <TableCell key={i} className="text-center px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400 dark:bg-gray-800 border border-black-200 bg-torq text-white  dark:border-gray-700">
-                                        {header}
-                                    </TableCell>
+                    <table className="min-w-full  undefined">
+                        {/* Table Header */} 
+                        <thead>
+                            <tr>
+                                {HEADERS.map((head, i) => (
+                                    <th
+                                        key={i}
+                                        className=" px-4 py-3 border border-gray-100 dark:bg-gray-900 dark:border-gray-700">
+                                        <div className="flex items-center justify-center gap-6 cursor-pointer">
+                                            <div className="gap-3">
+                                                <span className="font-medium text-theme-xs dark:text-gray-400">
+                                                    {head?.toUpperCase()}
+                                                </span>
+                                            </div>
+                                            <button className="flex flex-col gap-0.5" onClick={() => { }}>
+                                                <ChevronsUpDown size={12} className='dark:text-gray-700'
+                                                />
+                                            </button>
+                                        </div>
+                                    </th>
                                 ))}
-                            </TableRow>
-                        </TableHeader>
+                            </tr>
+                        </thead>
 
                         {/* Table Body */}
-                        <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]  dark:border-gray-800  dark:border-gray-700" >
+                        <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]  dark:border-gray-900  dark:border-gray-700 dark:bg-gray-900" >
                             {weeklyPrograms?.map((program: WeeklyProgram, i: number) => (
                                 <TableRow key={i}>
-                                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400 border border-black-200  dark:border-gray-700">
-                                        <div className="flex flex-col text-cenyter place-items-center">
+                                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400 border border-black-200  dark:border-gray-700 w-[25%]">
+                                        <div className="flex flex-col text-center place-items-center">
                                             {update ? (
                                                 <input
                                                     value={program?.day}
@@ -140,10 +162,18 @@ const WeeklyPrograms = () => {
                                             onChange={(e: any) => setNewTrialProgram(program.id, e)}
                                         />
                                     </TableCell>
+                                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400 border border-black-200 dark:border-gray-700 w-[5%]">
+                                        <button
+                                            onClick={() => handleEditProgram(program)}
+                                            className="flex gap-2 dark:bg-gray-700 bg-torq p-2 text-white rounded-lg hover:bg-blue-300 shadow">
+                                            <Edit size={16} />
+                                            Update
+                                        </button>
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
-                    </Table>
+                    </table>
                 </div>
             </div>
         </motion.div>

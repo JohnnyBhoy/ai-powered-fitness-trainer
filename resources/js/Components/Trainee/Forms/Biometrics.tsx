@@ -15,11 +15,11 @@ import {
 } from "@material-tailwind/react";
 import { toast } from 'sonner';
 
-const Biometrics = ({ userData }: { userData: GpfTraineeProps | null}) => {
-  if(userData == null) {
+const Biometrics = ({ userData }: { userData: GpfTraineeProps | null }) => {
+  if (userData == null) {
     return 'No Data';
   }
-  
+
   // Global states
   const { refetchData, setRefetchData } = useGpfStore();
 
@@ -67,12 +67,14 @@ const Biometrics = ({ userData }: { userData: GpfTraineeProps | null}) => {
             data={data.city}
             type="text"
             onChange={(e: any) => setData("city", e.target.value)}
+            error=""
           />
           <MtTextInput
             name="State"
             data={data.state}
             type="text"
             onChange={(e: any) => setData("state", e.target.value)}
+            error=""
           />
 
           <div className="flex flex-col">
@@ -119,12 +121,14 @@ const Biometrics = ({ userData }: { userData: GpfTraineeProps | null}) => {
             data={data.age}
             type="number"
             onChange={(e: any) => setData("age", e.target.value)}
+            error=""
           />
           <MtTextInput
             name="Sex"
             data={data.sex}
             type="text"
             onChange={(e: any) => setData("sex", e.target.value)}
+            error=""
           />
           <div className="w-full">
             <div className="flex flex-col">
@@ -151,6 +155,7 @@ const Biometrics = ({ userData }: { userData: GpfTraineeProps | null}) => {
             data={data.current_weight}
             type="number"
             onChange={(e: any) => setData("current_weight", e.target.value)}
+            error=""
           />
         </div>
 
@@ -161,24 +166,28 @@ const Biometrics = ({ userData }: { userData: GpfTraineeProps | null}) => {
             data={data.goal_weight}
             type="number"
             onChange={(e: any) => setData("goal_weight", e.target.value)}
+            error=""
           />
           <MtTextInput
             name="Fitness Level"
             data={data.fitness_level}
             type="text"
             onChange={(e: any) => setData("fitness_level", e.target.value)}
+            error=""
           />
           <MtTextInput
             name="Food Allergies"
             data={data.food_allergies}
             type="text"
             onChange={(e: any) => setData("food_allergies", e.target.value)}
+            error=""
           />
           <MtTextInput
             name="Equipment Access"
             data={data.equipment_access}
             type="text"
             onChange={(e: any) => setData("equipment_access", e.target.value)}
+            error=""
           />
         </div>
 

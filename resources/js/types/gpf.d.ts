@@ -66,14 +66,13 @@ export type TrainersProps = {
 };
 
 
-export type TraineeFormData =  {
+export type TraineeFormData = {
   first_name: string;
   last_name: string;
   email: string;
   user_name: string;
   password: string;
-  is_promo: string | number; // can be 0/1 or "0"/"1"
-  trainer_id: string | number | undefined;
+  is_promo: string | number; 
   city: string;
   state: string;
   phone_number: string;
@@ -84,6 +83,10 @@ export type TraineeFormData =  {
   fitness_level: string;
   equipment_access: string;
   food_allergies: string;
-  strictness_level: string | number;
-  role: number
+  strictness_level: string | nu
+  is_active: number;
+  goal: string,
+  why: string,
+  past_obstacles: string,
+  current_struggles: string,
 }

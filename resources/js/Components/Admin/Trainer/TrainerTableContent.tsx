@@ -28,10 +28,10 @@ export default function TrainerTableContent({ handleOpen, handleRemoveTrainer }:
                             {TABLE_HEAD.map((head, i) => (
                                 <th
                                     key={i}
-                                    className=" px-4 py-3 border border-gray-100 dark:border-white/[0.05]">
+                                    className=" px-4 py-3 border bg-black text-white border-gray-100 dark:border-white/[0.05]">
                                     <div className="flex items-center justify-between cursor-pointer">
                                         <div className="gap-3">
-                                            <span className="font-medium text-gray-700 text-theme-xs dark:text-gray-400">
+                                            <span className="font-medium text-gray-300 text-theme-xs dark:text-gray-400">
                                                 {head}
                                             </span>
                                         </div>

@@ -41,7 +41,7 @@ class ProgramService
         $systemPrompt = $this->programHelper->systemPrompt();
         $userPrompt   = $this->programHelper->userPrompt($user);
 
-        $weekNumber   = $this->programLogService->getWeekNumberById($user->user_id);
+        $weekNumber   = $this->programLogService->getWeekNumberById($user->userId);
 
         $maxRetries   = 3;
         $attempt      = 0;
@@ -65,7 +65,7 @@ class ProgramService
 
         // Always log response for traceability
         $this->programLogService->create([
-            'user_id'      => $user->user_id,
+            'user_id'      => $user->userId,
             'week_number'  => $weekNumber,
             'program_data' => $response,
         ]);
@@ -73,17 +73,17 @@ class ProgramService
         // Save only valid data
         if (is_array($programs) && count($programs) === 7) {
             //Remove the old weekly program
-            $hasExistingProgram = $this->find($user->user_id);
+            $hasExistingProgram = $this->find($user->userId);
             
             if ($hasExistingProgram) {
-                $this->delete($user->user_id);
+                $this->delete($user->userId);
             }
 
             return $this->programRepository->create($programs);
         }
 
         // If retries exhausted, log warning
-        \Log::warning("Failed to generate 7-day workout program for user {$user->user_id} after {$attempt} attempts.");
+        \Log::warning("Failed to generate 7-day workout program for user {$user->userId} after {$attempt} attempts.");
 
         return null;
     }

@@ -31,7 +31,7 @@ class NutritionService
         $systemPrompt = $this->nutritionSystemPrompt();
         $userPrompt   = $this->nutritionUserPrompt($user);
 
-        $weekNumber = $this->nutritionLogService->getWeekNumber($user->user_id);
+        $weekNumber = $this->nutritionLogService->getWeekNumber($user->userId);
 
         $maxRetries = 3;
         $attempt    = 0;
@@ -53,21 +53,21 @@ class NutritionService
         }
 
         // Save logs (keep AI response)
-        $this->nutritionLogService->create($user->user_id, $weekNumber, $response);
+        $this->nutritionLogService->create($user->userId, $weekNumber, $response);
 
         // Save only if valid
         if (is_array($plans) && count($plans) === 28) {
             // Remove the old weekly nutrition plan from DB
-            $hasExistingNutritionPlan = $this->find($user->user_id);
+            $hasExistingNutritionPlan = $this->find($user->userId);
 
             if ($hasExistingNutritionPlan) {
-                $this->delete($user->user_id);
+                $this->delete($user->userId);
             }
 
             return $this->nutritionRepository->create($plans);
         } else {
             // Optional: log failure if retries exhausted
-            \Log::warning("Nutrition plan generation failed for user {$user->user_id}. Attempts: $attempt");
+            \Log::warning("Nutrition plan generation failed for user {$user->userId}. Attempts: $attempt");
         }
 
         return null;
@@ -109,7 +109,7 @@ class NutritionService
      */
     public function nutritionUserPrompt(Object $user): string
     {
-        return   "Create a structured 7-day meal plan in JSON format for $user->first_name, a $user->age-year-old male who weighs $user->current_weight lbs with a goal weight of $user->goal_weight lbs. Their fitness level is $user->fitness_level, with access to a basic kitchen, and a diet strictness of $user->strictness_level. They are allergic to: $user->food_allergies. Their main goal is: $user->goal. Motivation: $user->why. Past obstacles: $user->past_obstacles. Current struggles: $user->current_struggles. Generate all 7 days (1–7) with 3–5 meals per day (breakfast, lunch, dinner, snacks), adjusted to their needs. Include one lighter day for digestion recovery. Return the output as a single JSON array of associative objects with the following keys: user_id (default: 1), plan_name, week_number, day_number (1–7), meal_type, meal_name, food_items, calories, protein, carbs, fats, notes (portion guidance, hydration tips, motivational reminders). Only return valid JSON — no explanations, no markdown, no extra text.";
+        return   "Create a structured 7-day meal plan in JSON format for $user->first_name, a $user->age-year-old male who weighs $user->current_weight lbs with a goal weight of $user->goal_weight lbs. Their fitness level is $user->fitness_level, with access to a basic kitchen, and a diet strictness of $user->strictness_level. They are allergic to: $user->food_allergies. Their main goal is: $user->goal. Motivation: $user->why. Past obstacles: $user->past_obstacles. Current struggles: $user->current_struggles. Generate all 7 days (1–7) with 3–5 meals per day (breakfast, lunch, dinner, snacks), adjusted to their needs. Include one lighter day for digestion recovery. Return the output as a single JSON array of associative objects with the following keys: user_id === $user->userId, plan_name, week_number, day_number (1–7), meal_type, meal_name, food_items, calories, protein, carbs, fats, notes (portion guidance, hydration tips, motivational reminders). Only return valid JSON — no explanations, no markdown, no extra text.";
     }
 
     /**

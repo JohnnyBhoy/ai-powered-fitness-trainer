@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\CreateWeeklyNutrition;
 use App\Models\NutritionMeal;
+use App\Services\NutritionLogService;
 use App\Services\NutritionService;
 use App\Services\UserService;
 use App\Support\HelperFunctions;
@@ -12,6 +14,7 @@ use Inertia\Inertia;
 class NutritionController extends Controller
 {
     protected $nutritionService;
+    protected $nutritionLogService;
     protected $userService;
     protected $helper;
 
@@ -22,11 +25,13 @@ class NutritionController extends Controller
     public function __construct(
         NutritionService $nutritionService,
         UserService $userService,
-        HelperFunctions $helper
+        HelperFunctions $helper,
+        NutritionLogService $nutritionLogService,
     ) {
         $this->nutritionService = $nutritionService;
         $this->userService = $userService;
         $this->helper = $helper;
+        $this->nutritionLogService = $nutritionLogService;
     }
 
     /**
@@ -58,11 +63,27 @@ class NutritionController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Generate Weekly Program
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request, UserService $userService)
     {
-        //
+        $userId  = $request->input('user_id');
+
+        try {
+            CreateWeeklyNutrition::dispatch($userId);
+
+            $nutrition = $this->nutritionLogService->getNutritionData($userId);
+
+            return response()->json([
+                'success' => true,
+                'data' => $nutrition,
+                'message' => 'Nutrition plan generated successfully.',
+            ]);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
     /**

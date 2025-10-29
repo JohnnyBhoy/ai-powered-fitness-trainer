@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ConsentController;
 use App\Http\Controllers\GoPeakFitTraineeController;
+use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TrainerController;
 use App\Http\Controllers\TrialProgramController;
@@ -10,8 +11,8 @@ use App\Http\Controllers\WorkoutTrainerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PromoController;
 use App\Http\Controllers\NonGoPeakFitTraineeController;
+use App\Http\Controllers\NutritionController;
 use App\Http\Controllers\TraineeController;
-use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,7 +48,7 @@ Route::post('/promocode/apply', [PromoController::class, 'update'])
 | Route to Update trainee information
 |
 */
-Route::prefix('admin')->group(function () {
+Route::middleware(['auth:sanctum', 'role:1'])->prefix('admin')->group(function () {
     Route::get('/get-gpf-trainees', [GoPeakFitTraineeController::class, 'index'])
         ->name('admin.getGpfUsers');
 
@@ -65,4 +66,10 @@ Route::prefix('admin')->group(function () {
 
     Route::put('/update-trial-programs', [TrialProgramController::class, 'update'])
         ->name('admin.trial.update');
+
+    Route::post('/generate-weekly-program', [ProgramController::class, 'store'])
+        ->name('admin.program.generate');
+
+    Route::post('/generate-weekly-nutrition', [NutritionController::class, 'store'])
+        ->name('admin.nutrition.generate');
 });

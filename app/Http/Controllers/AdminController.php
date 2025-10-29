@@ -102,4 +102,22 @@ class AdminController extends Controller
             throw $th;
         }
     }
+
+    /**
+     * Summary of getAdminProfile
+     * @return \Inertia\Response
+     */
+    public function getAdminProfile()
+    {
+        return Inertia::render('Admin/Profile/Index');
+    }
+
+    /**
+     * Summary of getAdminProfile
+     * @return \Inertia\Response
+     */
+    public function getAdminAccount()
+    {
+        return Inertia::render('Admin/Account/Index');
+    }
 }

@@ -1,10 +1,11 @@
+import { useTraineeStore } from '@/stores/useTraineeStore';
 import { GpfTraineeProps } from '@/types/gpf';
 import { getStrictnessLevel } from '@/utils/functions/helperFunctions';
 import {
   Card
 } from "@material-tailwind/react";
 
-import { Copy } from "lucide-react";
+import { ArrowLeft, Copy } from "lucide-react";
 import { useState } from 'react';
 
 interface UserProfile {
@@ -25,6 +26,9 @@ interface UserProfile {
 
 
 const Prompt = ({ data }: { data: GpfTraineeProps | null }) => {
+  // Global states
+  const { setShowPrompt } = useTraineeStore();
+
   if (data == null) {
     return 'No data';
   }
@@ -93,9 +97,13 @@ Always prioritize safety, and never suggest dangerous practices.
       shadow={false}
     >
       <div className="max-w-4xl mx-auto p-6">
-        <h1 className="text-2xl font-bold mb-4 text-center text-gray-800 dark:text-white transition-colors duration-300">
-          GoPeakFit 3x Daily Update Prompt Preview
-        </h1>
+        <div className="flex justify-between">
+          <h1 className="text-2xl font-bold mb-4 text-center text-gray-800 dark:text-white transition-colors duration-300">
+            GoPeakFit 3x Daily Update Prompt Preview
+          </h1>
+          <ArrowLeft className='dark:text-white/90 mr-5' onClick={() => setShowPrompt(false)} />
+        </div>
+
 
         <div className="bg-gray-100 dark:bg-white/[0.05] rounded-xl shadow-md p-4 relative transition-colors duration-300">
           <pre className="whitespace-pre-wrap text-sm font-mono text-gray-800 dark:text-gray-200 transition-colors duration-300">

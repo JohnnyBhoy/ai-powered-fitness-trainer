@@ -1,27 +1,26 @@
-import Update from '@/Components/Trainee/Gpf/Modal/Update';
 import Authenticated from '@/Pages/Layouts/AuthenticatedLayout';
 import { GpfTraineeProps } from '@/types/gpf';
 import { TraineeData } from '@/utils/data/trainee/gpf/trainee';
 import { getStrictnessLevel } from '@/utils/functions/helperFunctions';
 import {
-    ChevronUpDownIcon,
-    MagnifyingGlassIcon,
+  ChevronUpDownIcon,
+  MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 import { PencilIcon } from "@heroicons/react/24/solid";
 import { Head } from '@inertiajs/react';
 import {
-    Button,
-    Card,
-    CardBody,
-    CardHeader,
-    Chip,
-    IconButton,
-    Input,
-    Tab,
-    Tabs,
-    TabsHeader,
-    Tooltip,
-    Typography
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Chip,
+  IconButton,
+  Input,
+  Tab,
+  Tabs,
+  TabsHeader,
+  Tooltip,
+  Typography
 } from "@material-tailwind/react";
 import { useState } from 'react';
 
@@ -270,8 +269,6 @@ const Trainees = ({ trainees }: { trainees: any }) => {
             </table>
           </CardBody>
         </Card>
-
-        <Update traineeData={traineeData}/>
       </div>
     </Authenticated >
   )

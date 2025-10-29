@@ -1,3 +1,4 @@
+import { useDashboardStore } from "@/stores/dashboardStore";
 import { createContext, useContext, useState, useEffect } from "react";
 
 type SidebarContextType = {
@@ -26,12 +27,15 @@ export const useSidebar = () => {
 export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
+  // const [isExpanded, setIsExpanded] = useState(true);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [activeItem, setActiveItem] = useState<string | null>(null);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+
+  // Global state
+  const { isExpanded, setIsExpanded } = useDashboardStore();
 
   useEffect(() => {
     const handleResize = () => {
@@ -51,7 +55,7 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const toggleSidebar = () => {
-    setIsExpanded((prev) => !prev);
+    setIsExpanded(!isExpanded);
   };
 
   const toggleMobileSidebar = () => {

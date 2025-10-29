@@ -1,8 +1,13 @@
+import GenerateWeeklyProgram from "@/Components/Admin/Programs/WeeklyProgram/GenerateWeeklyProgram";
+import { useProgramStore } from "@/stores/useProgramStore";
+import { GpfTraineeProps } from "@/types/gpf";
+import { jsonFormatter } from "@/utils/functions";
 import { Tab, Tabs, TabsHeader } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
 import DailyWorkoutProgram from "./Program/DailyProgram";
 import WeeklyPrograms from "./Program/WeeklyProgram";
-import { useProgramStore } from "@/stores/useProgramStore";
+import { useTraineeStore } from "@/stores/useTraineeStore";
+import { ArrowLeft } from "lucide-react";
 
 type ProgramDay = {
   title: string;
@@ -14,15 +19,19 @@ type Program = {
   [day: number]: ProgramDay;
 };
 
-export default function Program({ data }: { data: string | undefined }) {
-  if (data == undefined) {
-    return <div>
-      <h3 className="dark:text-gray-400 text-center p-3 text-lg">No program created for this trainee.</h3>
-    </div>
-  }
-
+export default function Program({ data }: { data: GpfTraineeProps | null }) {
   //Global states from store
   const { setWeeklyPrograms } = useProgramStore();
+  const { showProgram, setShowProgram } = useTraineeStore();
+
+  const programs = jsonFormatter(data?.program_data ?? "");
+
+  // Display Generate Program Action
+  if (data?.program_data == undefined && showProgram) {
+    return (
+      <GenerateWeeklyProgram userId={data?.user_id ?? 0} />
+    )
+  }
 
   //Local states
   const [show, setShow] = useState<string>('Weekly');
@@ -37,43 +46,52 @@ export default function Program({ data }: { data: string | undefined }) {
   }];
 
   //Convert json weekly program to object
-  if (data == "") {
+  if (data?.program_data == "" && showProgram) {
     return <h1 className="text-center dark:text-gray-300 mt-[10rem]">No program was created for this trainee...</h1>
   }
 
-  const weeklyProgram = JSON?.parse(data);
+  const weeklyProgram = JSON?.parse(programs);
 
   //Store weekly program
   useEffect(() => {
     setWeeklyPrograms(weeklyProgram);
   }, []);
 
+  console.log('show program :', showProgram);
+
   return (
-    <div className="flex flex-col h-auto bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-      <Tabs
-        value={'Weekly'}
-        className="w-full md:w-max transition-colors duration-300"
-      >
-        <TabsHeader
-          className="bg-white dark:bg-gray-900 dark:text-gray-100 -xl dark:border-none border border-gray-200 dark:border-gray-700 transition-colors duration-300 mb-3"
+    <div className="flex flex-col bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      <div className="flex justify-between">
+        <Tabs
+          value={'Weekly'}
+          className="w-full md:w-max transition-colors duration-300"
         >
-          {TABS.map(({ label, value }) => (
-            <Tab
-              key={value}
-              value={value}
-              onClick={() => setShow(value)}
-              className={`
+          <TabsHeader
+            className="dark:data-[state=active]:bg-gray-600 bg-white dark:bg-gray-900 dark:text-gray-100 -xl dark:border-none border border-gray-200 dark:border-gray-700 transition-colors duration-300 mb-3"
+          >
+            {TABS.map(({ label, value }) => (
+              <Tab
+                key={value}
+                value={value}
+                onClick={() => setShow(value)}
+                className={`
               px-4 py-2 text-sm font-medium -lg transition-all duration-200
               hover:bg-blue-50 dark:hover:bg-gray-800 
               data-[state=active]:bg-blue-500 data-[state=active]:text-white 
               dark:data-[state=active]:bg-blue-600 dark:data-[state=active]:text-white dark:bg-white/[0.03] dark:text-gray-300
             `}
-            >
-              {label}
-            </Tab>
-          ))}
-        </TabsHeader>
-      </Tabs>
+              >
+                {label}
+              </Tab>
+            ))}
+          </TabsHeader>
+        </Tabs>
+
+        <button className="dark:text-white/90 mt-4 flex" onClick={() => setShowProgram(false)} >
+          <ArrowLeft /> Back
+        </button>
+      </div>
+
 
       {weeklyProgram == null ? (
         <h1 className="text-center dark:text-gray-300 mt-[10rem]">No program was created for this trainee...</h1>

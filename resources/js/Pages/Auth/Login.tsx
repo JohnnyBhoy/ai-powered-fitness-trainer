@@ -74,7 +74,7 @@ export default function Login({
 
                         <div className='w-full lg:w-1/2 lg:bg-slate-50 px-10 lg:px-16 py-10 rounded-xl lg:shadow-md text-left order-1 lg:order-2 flex flex-col justify-center'>
 
-                            <div className="grid place-items-center mb-10 space-y-2">
+                            <div className="lg:inline hidden grid place-items-center mb-10 space-y-2">
                                 <ApplicationLogo />
                                 <h3 className='text-slate-500'>Login to start your session</h3>
                             </div>
@@ -98,15 +98,15 @@ export default function Login({
                                 </div>
 
                                 <div className="mt-4 relative">
-                                    <InputLabel htmlFor="password" value="Password" />
+                                    <InputLabel htmlFor="password" value="Password"/>
                                     {showPassword ? (
                                         <EyeSlashFill
-                                            className='absolute ml-[25.5rem] mt-4'
+                                            className='hidden lg:block absolute ml-[25.5rem] mt-4'
                                             size={20}
                                             onClick={() => setShowPassword(false)}
                                         />
                                     ) : (
-                                        <Eye className='absolute ml-[25.5rem] mt-4'
+                                        <Eye className='hidden lg:block absolute ml-[25.5rem] mt-4'
                                             size={20}
                                             onClick={() => setShowPassword(true)}
                                         />
@@ -152,16 +152,16 @@ export default function Login({
                                     )}
                                 </div>
 
-                                <div className="mt-4 flex items-center justify-between">
+                                <div className="mt-4 lg:flex  lg:items-center lg:justify-between space-y-6 lg:space-y-0">
 
                                     <Link href="register">
-                                        <SecondaryButton disabled={processing}>
+                                        <SecondaryButton disabled={processing} className='w-full lg:auto justify-center'>
                                             Create Account
                                         </SecondaryButton>
                                     </Link>
 
 
-                                    <PrimaryButton className="ms-4" disabled={processing}>
+                                    <PrimaryButton className="lg:ms-4 w-full lg:w-auto text-center" disabled={processing}>
                                         Log in
                                     </PrimaryButton>
                                 </div>

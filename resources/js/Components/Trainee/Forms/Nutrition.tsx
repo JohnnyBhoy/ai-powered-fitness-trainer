@@ -1,17 +1,28 @@
+import GenerateWeeklyNutrition from "@/Components/Admin/NutritionPlan/GenerateWeeklyNutrition";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/Components/ui/table";
+import { useTraineeStore } from "@/stores/useTraineeStore";
+import { GpfTraineeProps } from "@/types/gpf";
 import { WeeklyNutrition } from "@/types/weekly-nutrition";
-import { Tab, Tabs, TabsHeader } from "@material-tailwind/react";
+import { jsonFormatter } from "@/utils/functions";
 import { motion } from "framer-motion";
+import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { Check2Square } from "react-bootstrap-icons";
 
-export default function Nutrition({ data }: { data: string | undefined }) {
- if (data == undefined) {
-    return <div>
-      <h3 className="dark:text-gray-400 text-center p-3 text-lg">No plan created for this trainee.</h3>
-    </div>
-  }
+export default function Nutrition({ data }: { data: GpfTraineeProps | null }) {
+  const programs = jsonFormatter(data?.nutrition_plan ?? "");
 
+  // Global states
+  const { showNutrition, setShowNutrition } = useTraineeStore();
+
+  console.log(showNutrition);
+
+  // Display Generate Program Action
+  if (data?.nutrition_plan == undefined && showNutrition) {
+    return (
+      <GenerateWeeklyNutrition userId={data?.user_id ?? 0} />
+    )
+  }
 
   //Local states
   const [show, setShow] = useState<string>('Weekly');
@@ -26,38 +37,20 @@ export default function Nutrition({ data }: { data: string | undefined }) {
   }];
 
   //Convert json to object
-  if (data == "") {
+  if (data?.nutrition_plan == "" && showNutrition) {
     return <h1 className="text-center dark:text-gray-300 mt-[10rem]">No nutrition plan was created for this trainee...</h1>
   }
 
-  const weeklyNutrition = JSON?.parse(data);
+  const weeklyNutrition = JSON?.parse(data?.nutrition_plan?.endsWith(']') ? data?.nutrition_plan : "[]");
 
   return (
     <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-      <Tabs
-        value={'Weekly'}
-        className="w-full md:w-max transition-colors duration-300"
-      >
-        <TabsHeader
-          className="bg-white dark:bg-gray-900 dark:text-gray-100 -xl dark:border-none border border-gray-200 dark:border-gray-700 transition-colors duration-300 mb-3"
-        >
-          {TABS.map(({ label, value }) => (
-            <Tab
-              key={value}
-              value={value}
-              onClick={() => setShow(value)}
-              className={`
-              px-4 py-2 text-sm font-medium -lg transition-all duration-200
-              hover:bg-blue-50 dark:hover:bg-gray-800 
-              data-[state=active]:bg-blue-500 data-[state=active]:text-white 
-              dark:data-[state=active]:bg-blue-600 dark:data-[state=active]:text-white dark:bg-white/[0.03] dark:text-gray-300
-            `}
-            >
-              {label}
-            </Tab>
-          ))}
-        </TabsHeader>
-      </Tabs>
+      <div className="flex justify-between pb-2">
+        <h3 className="text-lg dark:text-white/90">Weekly Nutrition Plan</h3>
+        <button className="flex gap-1 dark:text-white/90" onClick={() => setShowNutrition(false)} >
+          <ArrowLeft className="dark:text-white/90" /> back
+        </button>
+      </div>
 
       <WeeklyNutritions weeklyNutrition={weeklyNutrition} />
     </div>
@@ -67,6 +60,8 @@ export default function Nutrition({ data }: { data: string | undefined }) {
 
 const WeeklyNutritions = ({ weeklyNutrition }: { weeklyNutrition: WeeklyNutrition[] }) => {
   const HEADERS = ["Day Number", "Meal Name", "Food Items ", "Macros", "Notes"];
+
+  console.log(weeklyNutrition);
 
   return (
     <motion.div
@@ -87,7 +82,7 @@ const WeeklyNutritions = ({ weeklyNutrition }: { weeklyNutrition: WeeklyNutritio
                 {HEADERS.map((header, index) => (
                   <TableCell
                     key={index}
-                    className="text-center  font-semibold text-gray-200 text-theme-sm uppercase tracking-wide bg-torq dark:bg-gray-800 border border-gray-200 dark:border-gray-700 w-[20%] py-2.5"
+                    className={`text-center  font-semibold text-gray-300 text-theme-sm uppercase tracking-wide bg-black dark:bg-gray-800 border border-gray-200 dark:border-gray-700 w-[${index == HEADERS?.length - 1 ? '40' : '15'}%] py-2.5`}
                   >
                     {header}
                   </TableCell>
@@ -115,7 +110,7 @@ const WeeklyNutritions = ({ weeklyNutrition }: { weeklyNutrition: WeeklyNutritio
                   {/* Food Items */}
                   <TableCell className="px-1  text-gray-500 text-start dark:text-gray-300 border border-gray-200 dark:border-gray-700 w-[30%]">
                     <ul className="space-y-1">
-                      {nutrition.food_items.map((item, idx) => (
+                      {nutrition?.food_items?.map((item, idx) => (
                         <li key={idx} className="flex items-center gap-2">
                           <Check2Square className="text-green-500" />
                           <span>{item}</span>

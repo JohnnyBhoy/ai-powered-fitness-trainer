@@ -24,12 +24,12 @@ const WeeklyProgram = () => {
 
             if (success) {
                 setWeeklyPrograms(newWeeklyProgram);
-                toast.success(`✅ ${message}`);
+                toast.success(`${message}`);
             } else {
-                toast.error(`❌ ${message}`);
+                toast.error(`${message}`);
             }
         } catch (error) {
-            toast.error("❌ Failed to update Weekly programs.");
+            toast.error("Failed to update Weekly programs.");
         } finally {
             setLoading(false);
             setUpdate(!update);

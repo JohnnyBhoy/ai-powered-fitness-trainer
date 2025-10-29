@@ -2,7 +2,7 @@ import InputWithIcon from '@/Components/InputWithIcon';
 import { useGpfStore } from '@/stores/useGpfStore';
 import { useTraineeStore } from '@/stores/useTraineeStore';
 import { TraineeFormData } from '@/types/gpf';
-import { Dumbbell, Heart, MapPin, Phone, Target, User2, Weight } from 'lucide-react';
+import { Dumbbell, Heart, MapPin, Phone, Save, Target, User2, Weight, X } from 'lucide-react';
 
 type AddressFormProps = {
     data: TraineeFormData
@@ -23,15 +23,17 @@ const AddressForm = ({ data, setData, errors, processing }: AddressFormProps) =>
     }
 
     return (
-        <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
-            <div className="px-6 py-5">
-                <h3 className="text-base font-medium text-gray-800 dark:text-white/90">
-                    Location and Biometrics
-                </h3>
-            </div>
+        <div className="rounded border border-gray-200 bg-white dark:border-gray-700 dark:bg-white/[0.03]">
+            <div className="p-4 sm:p-6 gap-6 space-y-4">
+                <div className="flex justify-between place-items-center">
+                    <h3 className="dark:text-white/90 font-bold text-lg mb-3">Location and Biometrics</h3>
+                    <div className="flex justify-end place-items-center dark:text-white/90 gap-3">
+                        <button onClick={() => setShowAddTraineeForm(false)} type="button"><X /></button>
+                        <button type="submit"><Save /></button>
+                    </div>
+                </div>
 
-            <div className="p-4 border-t dark:border-gray-700 sm:p-6 gap-6 space-y-4">
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-7 gap-y-2">
                     {/* City */}
                     <InputWithIcon
                         id="city"
@@ -55,9 +57,7 @@ const AddressForm = ({ data, setData, errors, processing }: AddressFormProps) =>
                         icon={<MapPin size={18} />}
                     />
                     {errors.state && <p className="text-red-500 text-sm">{errors.state}</p>}
-                </div>
 
-                <div className="grid grid-cols-2 gap-3">
                     {/* Age */}
                     <InputWithIcon
                         id="age"
@@ -81,9 +81,7 @@ const AddressForm = ({ data, setData, errors, processing }: AddressFormProps) =>
                         icon={<Phone size={18} />}
                     />
                     {errors.phone_number && <p className="text-red-500 text-sm">{errors.phone_number}</p>}
-                </div>
 
-                <div className="grid grid-cols-2 gap-3">
                     {/* Sex */}
                     <div>
                         <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Sex</label>
@@ -119,9 +117,7 @@ const AddressForm = ({ data, setData, errors, processing }: AddressFormProps) =>
                         </select>
                         {errors.fitness_level && <p className="text-red-500 text-sm">{errors.fitness_level}</p>}
                     </div>
-                </div>
 
-                <div className="grid grid-cols-2 gap-3">
                     {/* Current Weight */}
                     <InputWithIcon
                         id="current_weight"
@@ -145,52 +141,52 @@ const AddressForm = ({ data, setData, errors, processing }: AddressFormProps) =>
                         icon={<Target size={18} />}
                     />
                     {errors.goal_weight && <p className="text-red-500 text-sm">{errors.goal_weight}</p>}
-                </div>
 
-                {/* Equipment Access */}
-                <InputWithIcon
-                    id="equipment_access"
-                    name="equipment_access"
-                    type="text"
-                    placeholder="Enter available equipment (e.g., Dumbbells)"
-                    value={data.equipment_access}
-                    onChange={(e: any) => setData('equipment_access', e.target.value)}
-                    icon={<Dumbbell size={18} />}
-                />
-                {errors.equipment_access && <p className="text-red-500 text-sm">{errors.equipment_access}</p>}
+                    {/* Equipment Access */}
+                    <InputWithIcon
+                        id="equipment_access"
+                        name="equipment_access"
+                        type="text"
+                        placeholder="Enter available equipment (e.g., Dumbbells)"
+                        value={data.equipment_access}
+                        onChange={(e: any) => setData('equipment_access', e.target.value)}
+                        icon={<Dumbbell size={18} />}
+                    />
+                    {errors.equipment_access && <p className="text-red-500 text-sm">{errors.equipment_access}</p>}
 
-                {/* Food Allergies */}
-                <InputWithIcon
-                    id="food_allergies"
-                    name="food_allergies"
-                    type="text"
-                    placeholder="Enter food allergies (if any)"
-                    value={data.food_allergies}
-                    onChange={(e: any) => setData('food_allergies', e.target.value)}
-                    icon={<Heart size={18} />}
-                />
-                {errors.food_allergies && <p className="text-red-500 text-sm">{errors.food_allergies}</p>}
+                    {/* Food Allergies */}
+                    <InputWithIcon
+                        id="food_allergies"
+                        name="food_allergies"
+                        type="text"
+                        placeholder="Enter food allergies (if any)"
+                        value={data.food_allergies}
+                        onChange={(e: any) => setData('food_allergies', e.target.value)}
+                        icon={<Heart size={18} />}
+                    />
+                    {errors.food_allergies && <p className="text-red-500 text-sm">{errors.food_allergies}</p>}
 
-                {/* Strictness Level */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Strictness Level</label>
-                    <select
-                        id="strictness_level"
-                        name="strictness_level"
-                        value={data.strictness_level}
-                        onChange={(e) => setData('strictness_level', e.target.value)}
-                        className="block w-full rounded-lg text-gray-500 border-gray-300 focus:border-brand-500 dark:border-gray-700  focus:ring-brand-500 dark:bg-gray-900 dark:text-white/90"
-                    >
-                        <option value={0}>Select</option>
-                        <option value={1}>Chill: General meal guidelines (no tracking)</option>
-                        <option value={2}>Balanced: Macro targets with suggested portions</option>
-                        <option value={3}>Strict: Precise calorie/macro tracking with specific food weights</option>
-                    </select>
-                    {errors.strictness_level && <p className="text-red-500 text-sm">{errors.strictness_level}</p>}
-                </div>
 
-                {/* Submit Button */}
-                <div className="flex gap-6">
+                    {/* Strictness Level */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Strictness Level</label>
+                        <select
+                            id="strictness_level"
+                            name="strictness_level"
+                            value={data.strictness_level}
+                            onChange={(e) => setData('strictness_level', e.target.value)}
+                            className="block w-full rounded-lg text-gray-500 border-gray-300 focus:border-brand-500 dark:border-gray-700  focus:ring-brand-500 dark:bg-gray-900 dark:text-white/90"
+                        >
+                            <option value={0}>Select</option>
+                            <option value={1}>Chill: General meal guidelines (no tracking)</option>
+                            <option value={2}>Balanced: Macro targets with suggested portions</option>
+                            <option value={3}>Strict: Precise calorie/macro tracking with specific food weights</option>
+                        </select>
+                        {errors.strictness_level && <p className="text-red-500 text-sm">{errors.strictness_level}</p>}
+                    </div>
+
+                    {/* Submit Button 
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <button
                         type="button"
                         onClick={handleCloseCreateTrainee}
@@ -201,10 +197,17 @@ const AddressForm = ({ data, setData, errors, processing }: AddressFormProps) =>
                     <button
                         type="submit"
                         disabled={processing}
-                        className="w-full bg-torq dark:bg-gray-700 border dark:border-gray-900 dark:hover:bg-gray-800 text-white rounded-lg py-2 transition"
+                        className="w-full bg-torq dark:bg-gray-700 border dark:border-gray-900 dark:hover:bg-gray-800 text-white rounded-lg py-2 transition flex place-items-center gap-2 justify-center"
                     >
-                        {processing ? 'Saving...' : 'Submit'}
+                        {processing ? <>
+                            <Loader className='animate-spin' />
+                            Saving...
+                        </> : <>
+                            <Save />
+                            Save
+                        </>}
                     </button>
+                </div> */}
                 </div>
             </div>
         </div>

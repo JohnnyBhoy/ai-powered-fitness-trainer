@@ -75,7 +75,6 @@ const othersItems: NavItem[] = [
     subItems: [
       { name: "Profile", path: "/admin/profile", pro: false },
       { name: "Account", path: "/admin/account", pro: false },
-      { name: "Analytics", path: "/admin/analytics", pro: false },
     ],
   },
 ];

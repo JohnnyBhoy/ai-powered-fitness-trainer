@@ -37,7 +37,7 @@ class ProgramLogService
      */
     public function getWeekNumberById(Int $userId): int
     {
-        return $this->programLogRepository->getWeekNumberById($userId);
+        return $this->programLogRepository->getWeekNumberById($userId) ?? 0;
     }
 
 
@@ -48,7 +48,7 @@ class ProgramLogService
      */
     public function getTrialProgramByDay($day): GpfWeeklyProgramLog|null
     {
-        return $this->programLogRepository->getTrialProgramByDay($day);
+        return $this->programLogRepository->getTrialProgramByDay($day) ?? [];
     }
 
     /**
@@ -59,5 +59,14 @@ class ProgramLogService
     public function getDateProgramCreated(int $userId): string
     {
         return $this->programLogRepository->getDateProgramCreated($userId);
+    }
+
+    /**
+     * Retrieve program data
+     * @param int $userId
+     */
+    public function getProgramData(Int $userId)
+    {
+        return $this->programLogRepository->getProgramData($userId);
     }
 }

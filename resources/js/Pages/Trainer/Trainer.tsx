@@ -93,13 +93,13 @@ const Trainer = ({ data }: { data: any }) => {
 
     // Delete trainee handler
     const handleRemoveTrainer = (id: number) => {
-        if (!confirm('Are you sure you want to delete this trainee?')) return;
+        if (!confirm('Are you sure you want to delete this trainer?')) return;
 
         try {
             destroy(route('users.destroy', id), {
                 preserveScroll: true,
                 onSuccess: () => {
-                    toast.success('Trainee deleted successfully!');
+                    toast.success('Trainer  has been deleted successfully!');
                     setRefetchData(!refetchData);
                 },
                 onError: (errors) => {

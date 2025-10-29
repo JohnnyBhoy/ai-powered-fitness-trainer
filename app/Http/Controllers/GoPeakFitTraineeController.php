@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateTraineeRequest;
 use App\Models\GpfBiometric;
-use App\Models\User;
 use App\Services\BiometricService;
+use App\Services\GoalService;
 use App\Services\UserService;
 use App\Support\HelperFunctions;
 use Exception;
@@ -23,12 +23,18 @@ class GoPeakFitTraineeController extends Controller
     protected $userService;
     protected $helperFunctions;
     protected $biometricService;
+    protected $goalService;
 
-    public function __construct(UserService $userService, HelperFunctions $helperFunctions, BiometricService $biometricService)
-    {
+    public function __construct(
+        UserService $userService,
+        HelperFunctions $helperFunctions,
+        BiometricService $biometricService,
+        GoalService $goalService,
+    ) {
         $this->userService = $userService;
         $this->helperFunctions = $helperFunctions;
         $this->biometricService = $biometricService;
+        $this->goalService = $goalService;
     }
 
 
@@ -84,8 +90,7 @@ class GoPeakFitTraineeController extends Controller
                 'user_name'  => $validated['user_name'],
                 'password'   => Hash::make($validated['password']),
                 'role'       => $validated['role'],
-                'is_promo'   => $validated['is_promo'],
-                'trainer_id' => $validated['trainer_id'] ?? null,
+                'is_promo'   => $validated['is_promo'] ?? 0,
             ];
 
             // Create user
@@ -110,6 +115,18 @@ class GoPeakFitTraineeController extends Controller
 
             // Create biometric info linked to user_id
             $this->biometricService->create($biometricData);
+
+            // Goals data
+            $goalData = [
+                'user_id' => $user->id,
+                'goal' => $request->get('goal') ?? "",
+                'why' => $request->get('why') ?? "",
+                'past_obstacles' => $request->get('past_obstacles') ?? "",
+                'current_strugggles' => $request->get('current_strugggles') ?? "",
+            ];
+
+            // Create goals in db
+            $this->goalService->createGoal($goalData);
 
             DB::commit();
 

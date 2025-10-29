@@ -11,7 +11,10 @@ type InputWithIconProps = {
 }
 
 const InputWithIcon = ({ id, placeholder, type, icon, value, name, onChange }: InputWithIconProps) => {
-    return <div className="relative">
+    return <div className="">
+        <label htmlFor="first_name" className="dark:text-white/90">{
+            name?.replace("_", " ")?.replace(name?.charAt(0), name?.charAt(0)?.toUpperCase())}
+        </label>
         <div className="relative">
             <input
                 id={id}
@@ -27,10 +30,10 @@ const InputWithIcon = ({ id, placeholder, type, icon, value, name, onChange }: I
                        dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 
                        dark:border-gray-700 dark:focus:border-brand-800 pl-11"
             />
+            <span className="absolute text-gray-500 -translate-y-1/2 pointer-events-none left-4 top-1/2 dark:text-gray-400">
+                {icon}
+            </span>
         </div>
-        <span className="absolute text-gray-500 -translate-y-1/2 pointer-events-none left-4 top-1/2 dark:text-gray-400">
-            {icon}
-        </span>
     </div>
 }
 

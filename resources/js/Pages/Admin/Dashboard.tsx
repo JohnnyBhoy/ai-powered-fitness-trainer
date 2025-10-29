@@ -6,11 +6,12 @@ import StatisticsChart from "@/Components/Admin/Dashboard/StatisticsChart";
 import TrainersMetrics from "@/Components/Admin/Dashboard/TrainersMetrics";
 import Authenticated from '@/Pages/Layouts/AuthenticatedLayout';
 import { useDashboardStore } from '@/stores/dashboardStore';
+import { useTraineeStore } from "@/stores/useTraineeStore";
 import { Head } from '@inertiajs/react';
 import { useEffect } from 'react';
 
 const Dashboard = () => {
-  const { data, loading, error, fetchDashboardData } = useDashboardStore();
+  const { fetchDashboardData } = useDashboardStore();
 
   // Get data every 7 seconds
   useEffect(() => {
@@ -24,6 +25,11 @@ const Dashboard = () => {
 
     return () => clearInterval(interval);
   }, [fetchDashboardData]);
+
+  const { showProgram } = useTraineeStore();
+
+  console.log('program status in dashboard : ', showProgram);
+
 
   return (
     <Authenticated>

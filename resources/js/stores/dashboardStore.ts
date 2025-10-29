@@ -19,18 +19,21 @@ interface DashboardStore {
   data: DashboardData | null;
   loading: boolean;
   error: string | null;
+  isExpanded: boolean;
   fetchDashboardData: () => Promise<void>;
+  setIsExpanded: (isExpanded: boolean) => void;
 }
 
 export const useDashboardStore = create<DashboardStore>((set) => ({
   data: null,
   loading: false,
   error: null,
+  isExpanded: false,
 
   fetchDashboardData: async () => {
     set({ loading: true, error: null });
     try {
-      const res = await fetch("/api/admin/get-data"); // Your Laravel API endpoint
+      const res = await fetch("/api/admin/get-data");
       if (!res.ok) throw new Error("Failed to fetch dashboard data");
 
       const data = await res.json();
@@ -40,4 +43,5 @@ export const useDashboardStore = create<DashboardStore>((set) => ({
       set({ error: err.message || "Unknown error", loading: false });
     }
   },
+  setIsExpanded: (isExpanded: boolean) => set({ isExpanded: isExpanded }),
 }));

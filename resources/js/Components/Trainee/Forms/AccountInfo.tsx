@@ -20,7 +20,7 @@ const AccountInfo = ({ userData }: { userData: GpfTraineeProps | null }) => {
 
   const UPDATE_USER_URL = import.meta.env.VITE_UPDATE_USER as string;
 
-  const { data, setData, put, processing } = useForm({
+  const { data, setData, put, processing, errors } = useForm({
     first_name: userData?.first_name || "",
     last_name: userData?.last_name || "",
     user_name: userData?.user_name || "",
@@ -54,6 +54,7 @@ const AccountInfo = ({ userData }: { userData: GpfTraineeProps | null }) => {
             data={data.first_name}
             type="text"
             onChange={(e: any) => setData("first_name", e.target.value)}
+            error={errors?.first_name}
           />
 
           <MtTextInput
@@ -61,6 +62,7 @@ const AccountInfo = ({ userData }: { userData: GpfTraineeProps | null }) => {
             data={data.last_name}
             type="text"
             onChange={(e: any) => setData("last_name", e.target.value)}
+            error={errors?.last_name}
           />
 
 
@@ -69,6 +71,7 @@ const AccountInfo = ({ userData }: { userData: GpfTraineeProps | null }) => {
             data={userData.email}
             type="text"
             onChange={() => { }}
+            error=""
           />
 
           <MtTextInput
@@ -76,6 +79,7 @@ const AccountInfo = ({ userData }: { userData: GpfTraineeProps | null }) => {
             data={data.user_name}
             type="text"
             onChange={(e: any) => setData("user_name", e.target.value)}
+            error=""
           />
 
           <MtTextInput
@@ -83,6 +87,7 @@ const AccountInfo = ({ userData }: { userData: GpfTraineeProps | null }) => {
             data={userData?.role == 3 ? 'Trainee' : 'Trainer'}
             type="text"
             onChange={() => { }}
+            error=""
           />
 
           <div className="grid grid-cols-2">
@@ -121,6 +126,7 @@ const AccountInfo = ({ userData }: { userData: GpfTraineeProps | null }) => {
             data={userData?.trainer_id == null ? 'GoPeakFit AI' : 'Trainer'}
             type="text"
             onChange={(e) => { }}
+            error=""
           />
 
           <MtTextInput
@@ -130,6 +136,7 @@ const AccountInfo = ({ userData }: { userData: GpfTraineeProps | null }) => {
               : 'Not veified'}
             type="text"
             onChange={() => { }}
+            error=""
           />
 
           <MtTextInput
@@ -137,6 +144,7 @@ const AccountInfo = ({ userData }: { userData: GpfTraineeProps | null }) => {
             data={moment(userData?.created_at).format('MMMM D, YYYY hA')}
             type="text"
             onChange={() => { }}
+            error=""
           />
         </div>
 

@@ -2,16 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\CreateWeeklyProgram;
 use App\Models\GpfFiveDaysProgram;
 use App\Models\GpfWeeklyProgram;
 use App\Models\User;
+use App\Services\ProgramLogService;
+use App\Services\ProgramService;
+use App\Services\UserService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class ProgramController extends Controller
 {
+    private $programService;
+    private $programLogService;
+
+    public function __construct(ProgramService $programService, ProgramLogService $programLogService)
+    {
+        $this->programService = $programService;
+        $this->programLogService = $programLogService;
+    }
+
     /**
      * Show all program in DB
      * @return \Inertia\Response
@@ -33,6 +45,7 @@ class ProgramController extends Controller
             throw $th;
         }
     }
+
     /**
      * Summary of index
      * @return \Inertia\Response
@@ -59,27 +72,29 @@ class ProgramController extends Controller
         ]);
     }
 
+
     /**
-     * Summary of show
-     * @param mixed $days
-     * @return \Inertia\Response
+     * Generate Weekly Program
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($days)
+    public function store(Request $request, UserService $userService)
     {
-        // Calculate the target day
-        $targetDate = Carbon::today()->subDays($days);
+        $userId  = $request->input('user_id');
 
-        // Query users created exactly on that day
-        $users = User::whereDate('created_at', $targetDate)
-            ->where('role', 3)
-            ->whereNull('trainer_id')
-            ->latest()
-            ->get();
+        try {
+            CreateWeeklyProgram::dispatch($userId);
 
-        return Inertia::render('Admin/TraineesByDay', [
-            'day'   => $days,
-            'users' => $users,
-        ]);
+            $program = $this->programLogService->getProgramData($userId);
+
+            return response()->json([
+                'success' => true,
+                'data' => $program,
+                'message' => 'Program generated successfully.',
+            ]);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
     /**

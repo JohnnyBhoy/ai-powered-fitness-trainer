@@ -36,6 +36,19 @@ class ProgramLogRepository
         return null;
     }
 
+
+    /**
+     * Retrieve program data
+     * @param int $userId
+     */
+    public function getProgramData(Int $userId)
+    {
+        return $this->programLog
+            ->where('user_id', $userId)
+            ->orderByDesc('week_number')
+            ->first();
+    }
+
     /**
      * Get week number of program
      * @param int $userId
