@@ -1,6 +1,6 @@
 import Update from '@/Components/Admin/Programs/TrialProgram/Update';
 import ProgramData from '@/Components/Admin/Programs/WeeklyProgram/ProgramData';
-import WeeklyPrograms from '@/Components/Trainee/Forms/Program/WeeklyProgram';
+import WeeklyPrograms from '@/Components/Trainee/Forms/Program/WeeklyPrograms';
 import Authenticated from '@/Pages/Layouts/AuthenticatedLayout';
 import { useProgramStore } from '@/stores/useProgramStore';
 import { WeeklyProgramLists } from '@/types/program';

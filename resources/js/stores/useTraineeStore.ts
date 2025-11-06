@@ -23,6 +23,7 @@ interface TraineeStore {
     showProgram: boolean;
     showNutrition: boolean;
     showPrompt: boolean;
+    showAnalytics: boolean;
 
     // Actions
     setStrictnessLevel: (level: number) => void;
@@ -39,6 +40,7 @@ interface TraineeStore {
     setShowProgram: (showProgram: boolean) => void;
     setShowNutrition: (showNutrition: boolean) => void;
     setShowPrompt: (showPrompt: boolean) => void;
+    setShowAnalytics: (showAnalytics: boolean) => void;
 }
 
 export const useTraineeStore = create<TraineeStore>((set) => ({
@@ -61,6 +63,7 @@ export const useTraineeStore = create<TraineeStore>((set) => ({
         currentPage: 1,
         lastPage: 1,
     },
+    showAnalytics: false,
 
     // Actions
     setStrictnessLevel: (level) => set({ strictnessLevel: level }),
@@ -97,4 +100,5 @@ export const useTraineeStore = create<TraineeStore>((set) => ({
     setShowProgram: (showProgram) => set({ showProgram }),
     setShowNutrition: (showNutrition) => set({ showNutrition }),
     setShowPrompt: (showPrompt) => set({ showPrompt }),
+    setShowAnalytics: (showAnalytics) => set({ showAnalytics }),
 }));

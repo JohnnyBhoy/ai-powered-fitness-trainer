@@ -79,42 +79,11 @@ class NutritionController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $nutrition,
+                'user_id' => $userId,
                 'message' => 'Nutrition plan generated successfully.',
             ]);
         } catch (\Throwable $th) {
             throw $th;
         }
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(NutritionMeal $nutritionMeal)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(NutritionMeal $nutritionMeal)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, NutritionMeal $nutritionMeal)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(NutritionMeal $nutritionMeal)
-    {
-        //
     }
 }

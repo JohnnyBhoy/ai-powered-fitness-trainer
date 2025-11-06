@@ -8,10 +8,10 @@ import { toast } from 'sonner'
 import Loading from '../Loading';
 
 interface RegisterFormData {
-  firstName: string
-  lastName: string
+  first_name: string
+  last_name: string
   email: string
-  username: string
+  user_name: string
   password: string
   password_confirmation: string
 }
@@ -21,10 +21,10 @@ function CreateAccount({ onComplete }: { onComplete: () => void }) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [form, setForm] = useState<RegisterFormData>({
-    firstName: '',
-    lastName: '',
+    first_name: '',
+    last_name: '',
     email: '',
-    username: '',
+    user_name: '',
     password: '',
     password_confirmation: '',
   })
@@ -89,8 +89,8 @@ function CreateAccount({ onComplete }: { onComplete: () => void }) {
               <div className="w-1/2">
                 <label htmlFor="first-name" className="block text-sm font-semibold mb-2">First Name</label>
                 <input
-                  name="firstName"
-                  value={form.firstName}
+                  name="first_name"
+                  value={form.first_name}
                   onChange={handleChange}
                   className="w-full p-2 border border-gray-400 rounded-md bg-white"
                 />
@@ -98,8 +98,8 @@ function CreateAccount({ onComplete }: { onComplete: () => void }) {
               <div className="w-1/2">
                 <label htmlFor="last-name" className="block text-sm font-semibold mb-2">Last Name</label>
                 <input
-                  name="lastName"
-                  value={form.lastName}
+                  name="last_name"
+                  value={form.last_name}
                   onChange={handleChange}
                   type="text"
                   className="w-full p-2 border border-gray-400 rounded-md bg-white"
@@ -120,12 +120,12 @@ function CreateAccount({ onComplete }: { onComplete: () => void }) {
               />
             </div>
 
-            {/* Username Input */}
+            {/* user_name Input */}
             <div>
-              <label htmlFor="username" className="block text-sm font-semibold mb-2">Username</label>
+              <label htmlFor="user_name" className="block text-sm font-semibold mb-2">user_name</label>
               <input
-                name="username"
-                value={form.username}
+                name="user_name"
+                value={form.user_name}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-400 rounded-md bg-white"
               />

@@ -8,12 +8,13 @@ class BiometricRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return auth()->user()->role == 1;
+        return true;
     }
 
     public function rules(): array
     {
         return [
+            'user_id'           => 'required|integer',
             'city'              => 'required|string|max:255',
             'state'             => 'required|string|max:255',
             'phone_number'      => 'required|string|max:20',

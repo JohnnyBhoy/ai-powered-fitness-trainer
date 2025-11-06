@@ -54,12 +54,9 @@ const navItems: NavItem[] = [
     ],
   },
   {
-    name: "Nutrition",
     icon: <TableIcon />,
-    subItems: [
-      { name: "5-Day Trial", path: "/admin/nutrition-plans", pro: false },
-      { name: "Weekly Nutrition", path: "/admin/weekly-nutrition", pro: false },
-    ],
+    name: "Nutrition Plan",
+    path: "/admin/nutrition-plans",
   },
 ];
 

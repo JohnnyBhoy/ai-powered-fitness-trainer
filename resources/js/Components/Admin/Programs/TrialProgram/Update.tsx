@@ -36,11 +36,16 @@ function Update() {
                     type="text"
                     onChange={(e: any) => setData("focus", e.target.value)} error={undefined} />
             </div>
-            <MtTextInput
-                name="warm_up"
-                data={dailyProgram.warm_up}
-                type="text"
-                onChange={(e: any) => setData("warm_up", e.target.value)} error={undefined} />
+            
+            <div className="mt-7">
+                <MtTextInput
+                    name="warm_up"
+                    data={dailyProgram.warm_up}
+                    type="text"
+                    onChange={(e: any) => setData("warm_up", e.target.value)} error={undefined}
+                />
+            </div>
+
             <MtTextArea
                 name="workout"
                 data={dailyProgram.workout}

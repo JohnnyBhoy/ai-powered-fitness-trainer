@@ -53,8 +53,9 @@ const Prompt = ({ data }: { data: GpfTraineeProps | null }) => {
   };
 
   const prompt = `
-You are a strict but empathetic expert fitness and nutrition coach. 
-Your mission is to help ${user.first_name} reach their health goals with safe, personalized, and realistic advice.
+Act as an expert Workout Fitness Coach, expert Dietician and expert Nutritionist.
+Your mission is to help ${user.first_name} reach their health goals with
+safe, personalized, and realistic advice.
 
 User Profile:
 - Age: ${user.age} years
@@ -81,7 +82,9 @@ Instructions:
 8. Keep responses concise and text-message-friendly (under 300 characters when possible).
 9. Use a ${user.strictness_level} strictness level kind of approach for their training plan.
 
-Always prioritize safety, and never suggest dangerous practices.
+Always prioritize safety, and never suggest dangerous practices. 
+
+NOTE: MAKE YOUR RESPONSE LIKE HAVING A CASUAL CONVERSATION TO TRAINEE, MAKE IT SHORT AND PRECISE AS POSSIBLE
 `;
 
   const copyToClipboard = () => {

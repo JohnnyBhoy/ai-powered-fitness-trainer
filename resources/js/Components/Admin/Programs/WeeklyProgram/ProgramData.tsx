@@ -1,4 +1,4 @@
-import WeeklyPrograms from "@/Components/Trainee/Forms/Program/WeeklyProgram";
+import WeeklyPrograms from "@/Components/Trainee/Forms/Program/WeeklyPrograms";
 import Authenticated from "@/Pages/Layouts/AuthenticatedLayout";
 import { useProgramStore } from "@/stores/useProgramStore";
 import { useEffect } from "react";

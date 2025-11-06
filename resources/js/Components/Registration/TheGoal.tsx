@@ -1,4 +1,3 @@
-import { useUserStore } from '@/stores/useUserStore'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import { useForm } from 'react-hook-form'
@@ -11,11 +10,11 @@ type GoalFormData = {
   why: string
   past_obstacles: string
   current_struggles: string
-  user_id: null | number
+  user_id: null | string | number
 }
 
 function TheGoal({ onComplete }: { onComplete: () => void }) {
-  const { userId } = useUserStore();
+  const userId = localStorage.getItem('user_id');
 
   //Data form preparation
   const {

@@ -1,7 +1,7 @@
 import { useProgramStore } from '@/stores/useProgramStore';
 import { useTraineeStore } from '@/stores/useTraineeStore';
 import axios from 'axios';
-import { Loader, Sparkles } from 'lucide-react'
+import { ArrowLeft, Loader, Sparkles } from 'lucide-react'
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -9,6 +9,8 @@ function GenerateWeeklyNutrition({ userId }: { userId: number }) {
     const GENERATE_WEEKLY_NUTRITION_URL = import.meta.env.VITE_GENERATE_WEEKLY_NUTRITION as string;
     const [loading, setLoading] = useState<boolean>(false);
     const { setWeeklyPrograms } = useProgramStore();
+
+    console.log(userId);
 
     // Global states
     const { setShowNutrition } = useTraineeStore();
@@ -52,17 +54,27 @@ function GenerateWeeklyNutrition({ userId }: { userId: number }) {
         }
     };
 
+    const handleBackToProfileUpdate = () => {
+        setShowNutrition(false);
+    }
+
 
     return (
-        <div className="mt-[10rem]">
-            <h3 className="dark:text-gray-400 text-center p-3 text-md font-bold m">No plan created for this trainee.</h3>
+        <div className="mt-[7rem]">
+            <h3 className="dark:text-gray-400 text-center p-3 text-md font-bold mb-10">No plan created for this trainee, <br /> Press Generate to Create Weekly Nutrition Plan</h3>
             <div className="flex place-items-center justify-center gap-2">
-                <button
-                    onClick={generateWeeklyNutrition}
-                    className="flex gap-2 bg-torq hover:bg-blue-300 dark:bg-gray-800 text-white dark:text-gray-200 py-2 px-4 rounded border shadow">
-                    {loading ? <Loader className='animate-spin' /> : <Sparkles />}
-                    {loading ? 'Generating nutrition plan...' : 'Generate nutrition plan'}
-                </button>
+                <div className="flex gap-2 place-items-center gap-8">
+                    <span className='flex gap-1 place-items-center dark:text-gray-300 cursor-pointer' onClick={() => setShowNutrition(false)} >
+                        <ArrowLeft className='dark:text-gray-300' size={18} /> back
+                    </span>
+                    <button
+                        onClick={generateWeeklyNutrition}
+                        className="flex gap-2 bg-torq hover:bg-blue-300 dark:bg-gray-800 animate-pulse text-white dark:text-gray-200 py-2 px-4 rounded-full border shadow">
+                        {loading ? <Loader className='animate-spin' /> : <Sparkles />}
+                        {loading ? 'Generating..' : 'Generate'}
+                    </button>
+                </div>
+
             </div>
         </div>
     )

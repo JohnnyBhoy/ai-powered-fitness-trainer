@@ -1,4 +1,4 @@
-import WeeklyPrograms from '@/Components/Trainee/Forms/Program/WeeklyProgram';
+import WeeklyPrograms from '@/Components/Trainee/Forms/Program/WeeklyPrograms';
 import { useProgramStore } from '@/stores/useProgramStore';
 import axios from 'axios';
 import { motion } from 'framer-motion';

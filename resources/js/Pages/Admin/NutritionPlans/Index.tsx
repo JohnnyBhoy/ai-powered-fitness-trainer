@@ -1,40 +1,25 @@
-import AddPlan from '@/Components/Admin/NutritionPlan/AddPlan';
-import Header from '@/Components/Admin/NutritionPlan/Header';
-import Table from '@/Components/Admin/NutritionPlan/Table';
+import PageBreadcrumb from '@/common/PageBreadCrumb';
+import MembersNutritionListsTable from '@/Components/Admin/NutritionPlan/MembersNutritionListsTable';
+import Update from '@/Components/Admin/NutritionPlan/Update';
 import Authenticated from '@/Pages/Layouts/AuthenticatedLayout';
+import { useNutritionStore } from '@/stores/useNutritionStore';
+import { Plan } from '@/types/weekly-nutrition';
 import { Head } from '@inertiajs/react';
+import { useEffect } from 'react';
 
-type Trainee = {
-  id: number;
-  name: string;
-  goal: string;
-};
+export default function Index({ plans }: { plans: Plan[] }) {
+  const { setShowUpdatePlan } = useNutritionStore();
 
-type NutritionPlan = {
-  id: number;
-  calories: number;
-  protein_g: number;
-  carbs_g: number;
-  fats_g: number;
-  start_date: string;
-  end_date?: string;
-  trainee: Trainee;
-};
-
-type Props = {
-  plans: NutritionPlan[];
-};
-
-export default function Index({ plans }: Props) {
+  useEffect(() => {
+    setShowUpdatePlan(false);
+  }, []);
 
   return (
     <Authenticated>
-      <Head title="Nutrition Plans" />
-      <div className="max-w-6xl mx-auto py-10">
-        <Header title="Nutrition Plans"/>
-        <AddPlan />
-        <Table plans={plans} />
-      </div>
+      <Head title="GoPeakFit Trainees Lists Table, Workout and Diet Expert Coach" />
+      <PageBreadcrumb pageTitle="GoPeakFit Trainees Nutrition Lists" />
+      <MembersNutritionListsTable plans={plans} />
+      <Update />
     </Authenticated>
   );
 }

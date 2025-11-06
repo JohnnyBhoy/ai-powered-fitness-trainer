@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\GpfNutritionPlan;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class NutritionRepository
 {
@@ -60,5 +61,29 @@ class NutritionRepository
         return $this->nutrition->where('user_id', $userId)
             ->where('day_number', $day)
             ->get();
+    }
+
+    /**
+     * Summary of getAll
+     * @return array of Data
+     */
+    public function getAll(): array
+    {
+        return DB::table('users as u')
+            ->leftJoin('gpf_nutrition_plan_logs as l', 'u.id', '=', 'l.user_id')
+            ->select(
+                'u.id as userId',
+                'u.first_name',
+                'u.last_name',
+                'u.email',
+                'l.week_number',
+                'l.nutrition_plan',
+                'l.id',
+                'l.created_at',
+            )
+            ->where('u.is_active', 1)
+            ->where('u.role', 3)
+            ->get()
+            ->toArray();
     }
 }

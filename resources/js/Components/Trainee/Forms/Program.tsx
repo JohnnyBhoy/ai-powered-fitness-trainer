@@ -5,7 +5,7 @@ import { jsonFormatter } from "@/utils/functions";
 import { Tab, Tabs, TabsHeader } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
 import DailyWorkoutProgram from "./Program/DailyProgram";
-import WeeklyPrograms from "./Program/WeeklyProgram";
+import WeeklyPrograms from "./Program/WeeklyPrograms";
 import { useTraineeStore } from "@/stores/useTraineeStore";
 import { ArrowLeft } from "lucide-react";
 
@@ -22,12 +22,15 @@ type Program = {
 export default function Program({ data }: { data: GpfTraineeProps | null }) {
   //Global states from store
   const { setWeeklyPrograms } = useProgramStore();
-  const { showProgram, setShowProgram } = useTraineeStore();
+  const { showProgram, setShowProgram, showNutrition, showPrompt } = useTraineeStore();
 
   const programs = jsonFormatter(data?.program_data ?? "");
 
+  console.log('programs: ', programs == "");
+  console.log('programs: ', showProgram);
+
   // Display Generate Program Action
-  if (data?.program_data == undefined && showProgram) {
+  if (data?.program_data == undefined || programs == "") {
     return (
       <GenerateWeeklyProgram userId={data?.user_id ?? 0} />
     )
@@ -60,7 +63,7 @@ export default function Program({ data }: { data: GpfTraineeProps | null }) {
   console.log('show program :', showProgram);
 
   return (
-    <div className="flex flex-col bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div className={`${showProgram && !showNutrition && !showPrompt ? '' : 'hidden'} flex flex-col bg-gray-50 dark:bg-gray-900 transition-colors duration-300`}>
       <div className="flex justify-between">
         <Tabs
           value={'Weekly'}

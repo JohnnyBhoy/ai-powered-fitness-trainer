@@ -28,7 +28,7 @@ export const useDashboardStore = create<DashboardStore>((set) => ({
   data: null,
   loading: false,
   error: null,
-  isExpanded: false,
+  isExpanded: true,
 
   fetchDashboardData: async () => {
     set({ loading: true, error: null });

@@ -1,6 +1,5 @@
+import PageBreadcrumb from '@/common/PageBreadCrumb';
 import Create from '@/Components/Admin/Trainees/GoPeakFit/Create';
-import TableHeaderTop from '@/Components/Admin/Trainees/GoPeakFit/TableHeaderTop';
-import TraineeTable from '@/Components/Admin/Trainees/TraineeTable';
 import Update from '@/Components/Trainee/Forms/Update';
 import Authenticated from '@/Pages/Layouts/AuthenticatedLayout';
 import { useGpfStore } from '@/stores/useGpfStore';
@@ -9,6 +8,9 @@ import { Head } from '@inertiajs/react';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
+import GpfTable from '../GpfTrainee/GpfTable';
+import TableHeader from '@/Components/Admin/Trainees/GoPeakFit/TableHeader';
+import { Button } from '@material-tailwind/react';
 
 const GpfTrainee = ({ data }: { data: any }) => {
   // Constants
@@ -17,6 +19,7 @@ const GpfTrainee = ({ data }: { data: any }) => {
   //Global states from store
   const { refetchData, showAddTraineeForm } = useGpfStore();
   const {
+    loading,
     strictnessLevel,
     perPage,
     pageNumber,
@@ -77,16 +80,28 @@ const GpfTrainee = ({ data }: { data: any }) => {
   return (
     <Authenticated>
 
-      <Head title="GoPeakFit Trainees" />
+      <Head title="GoPeakFit Trainees Lists Table, Workout and Diet Expert Coach" />
+      <div className={`${(updateTrainee || showAddTraineeForm) && 'hidden'}`}>
 
-      <div className={`${(updateTrainee || showAddTraineeForm) && 'hidden'} rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]`}>
-        <TraineeTable />
+        <PageBreadcrumb pageTitle="GoPeakFit Trainees" />
+        {/*<Card className="h-full w-full dark:bg-gray-900">
+          <TraineeTable />
+        </Card> */}
+        <TableHeader />
+        <div className="space-y-6">
+          {loading ? <div className='flex justify-center mt-[15%]'>
+            <Button variant="outline" className="dark:bg-gray-700 p-3.5" loading={true}>
+              Loading Trainees
+            </Button>
+          </div> : <GpfTable />}
+        </div>
       </div>
 
       {updateTrainee && <Update />}
 
       {showAddTraineeForm && <Create />}
-    </Authenticated >
+
+    </Authenticated>
   )
 }
 

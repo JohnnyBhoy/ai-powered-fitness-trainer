@@ -3,19 +3,13 @@ import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/Components
 import { useTraineeStore } from "@/stores/useTraineeStore";
 import { GpfTraineeProps } from "@/types/gpf";
 import { WeeklyNutrition } from "@/types/weekly-nutrition";
-import { jsonFormatter } from "@/utils/functions";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
-import { useState } from "react";
 import { Check2Square } from "react-bootstrap-icons";
 
 export default function Nutrition({ data }: { data: GpfTraineeProps | null }) {
-  const programs = jsonFormatter(data?.nutrition_plan ?? "");
-
   // Global states
-  const { showNutrition, setShowNutrition } = useTraineeStore();
-
-  console.log(showNutrition);
+  const { showNutrition, setShowNutrition, showProgram, showPrompt } = useTraineeStore();
 
   // Display Generate Program Action
   if (data?.nutrition_plan == undefined && showNutrition) {
@@ -24,31 +18,19 @@ export default function Nutrition({ data }: { data: GpfTraineeProps | null }) {
     )
   }
 
-  //Local states
-  const [show, setShow] = useState<string>('Weekly');
-
-  //Weekly and daily toggle options to be display
-  const TABS = [{
-    label: 'Weekly',
-    value: 'Weekly',
-  }, {
-    label: 'Daily',
-    value: 'Daily',
-  }];
-
   //Convert json to object
   if (data?.nutrition_plan == "" && showNutrition) {
-    return <h1 className="text-center dark:text-gray-300 mt-[10rem]">No nutrition plan was created for this trainee...</h1>
+    return <h1 className="text-center dark:text-gray-500 mt-[10rem]">No nutrition plan was created for this trainee...</h1>
   }
 
   const weeklyNutrition = JSON?.parse(data?.nutrition_plan?.endsWith(']') ? data?.nutrition_plan : "[]");
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div className={`${showNutrition ? '' : 'hidden'} flex flex-col h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300`}>
       <div className="flex justify-between pb-2">
-        <h3 className="text-lg dark:text-white/90">Weekly Nutrition Plan</h3>
-        <button className="flex gap-1 dark:text-white/90" onClick={() => setShowNutrition(false)} >
-          <ArrowLeft className="dark:text-white/90" /> back
+        <h3 className="text-lg dark:text-gray-500">Weekly Nutrition Plan</h3>
+        <button className="flex gap-1 dark:text-gray-500" onClick={() => setShowNutrition(false)} >
+          <ArrowLeft className="dark:text-gray-500" /> back
         </button>
       </div>
 
@@ -61,8 +43,6 @@ export default function Nutrition({ data }: { data: GpfTraineeProps | null }) {
 const WeeklyNutritions = ({ weeklyNutrition }: { weeklyNutrition: WeeklyNutrition[] }) => {
   const HEADERS = ["Day Number", "Meal Name", "Food Items ", "Macros", "Notes"];
 
-  console.log(weeklyNutrition);
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 15 }}
@@ -74,7 +54,7 @@ const WeeklyNutritions = ({ weeklyNutrition }: { weeklyNutrition: WeeklyNutritio
         {/* Scrollable vertical container */}
         <div className="max-h-[700px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800">
           {weeklyNutrition == undefined ? (
-            <h1 className="text-center dark:text-gray-300 mt-[5rem]">No nutrition plan was created for this trainee...</h1>
+            <h1 className="text-center dark:text-gray-500 mt-[5rem]">No nutrition plan was created for this trainee...</h1>
           ) : (<Table>
             {/* Table Header */}
             <TableHeader className="border dark:border-gray-800 dark:border-white/[0.05] sticky top-0 z-10 bg-torq dark:bg-gray-900">
@@ -82,7 +62,7 @@ const WeeklyNutritions = ({ weeklyNutrition }: { weeklyNutrition: WeeklyNutritio
                 {HEADERS.map((header, index) => (
                   <TableCell
                     key={index}
-                    className={`text-center  font-semibold text-gray-300 text-theme-sm uppercase tracking-wide bg-black dark:bg-gray-800 border border-gray-200 dark:border-gray-700 w-[${index == HEADERS?.length - 1 ? '40' : '15'}%] py-2.5`}
+                    className={`text-center  font-semibold text-gray-500 text-theme-sm uppercase tracking-wide bg-black dark:bg-gray-800 border border-gray-200 dark:border-gray-700 w-[${index == HEADERS?.length - 1 ? '40' : '15'}%] py-2.5`}
                   >
                     {header}
                   </TableCell>
@@ -95,7 +75,7 @@ const WeeklyNutritions = ({ weeklyNutrition }: { weeklyNutrition: WeeklyNutritio
               {weeklyNutrition?.map((nutrition, i) => (
                 <TableRow key={i}>
                   {/* Day Number */}
-                  <TableCell className="px-1  text-gray-500 text-start dark:text-gray-300 border border-gray-200 dark:border-gray-700">
+                  <TableCell className="px-1  text-gray-500 text-start dark:text-gray-500 border border-gray-200 dark:border-gray-700">
                     <div className="flex flex-col text-center place-items-center">
                       <h3 className="font-bold text-2xl">Day {nutrition.day_number}</h3>
                       <h4 className="font-semibold">{nutrition.meal_type}</h4>
@@ -103,12 +83,12 @@ const WeeklyNutritions = ({ weeklyNutrition }: { weeklyNutrition: WeeklyNutritio
                   </TableCell>
 
                   {/* Meal Name */}
-                  <TableCell className="px-1  text-gray-500 text-start dark:text-gray-300 border border-gray-200 dark:border-gray-700">
+                  <TableCell className="px-1  text-gray-500 text-start dark:text-gray-500 border border-gray-200 dark:border-gray-700">
                     {nutrition.meal_name}
                   </TableCell>
 
                   {/* Food Items */}
-                  <TableCell className="px-1  text-gray-500 text-start dark:text-gray-300 border border-gray-200 dark:border-gray-700 w-[30%]">
+                  <TableCell className="px-1  text-gray-500 text-start dark:text-gray-500 border border-gray-200 dark:border-gray-700 w-[30%]">
                     <ul className="space-y-1">
                       {nutrition?.food_items?.map((item, idx) => (
                         <li key={idx} className="flex items-center gap-2">
@@ -120,7 +100,7 @@ const WeeklyNutritions = ({ weeklyNutrition }: { weeklyNutrition: WeeklyNutritio
                   </TableCell>
 
                   {/* Macros */}
-                  <TableCell className="px-1 text-gray-500 text-start dark:text-gray-300 border border-gray-200 dark:border-gray-700 w-[20%]">
+                  <TableCell className="px-1 text-gray-500 text-start dark:text-gray-500 border border-gray-200 dark:border-gray-700 w-[20%]">
                     <div>🍎 {nutrition.calories} kcal</div>
                     <div>🥩 {nutrition.protein}g Protein</div>
                     <div>🍞 {nutrition.carbs}g Carbs</div>
@@ -128,7 +108,7 @@ const WeeklyNutritions = ({ weeklyNutrition }: { weeklyNutrition: WeeklyNutritio
                   </TableCell>
 
                   {/* Notes */}
-                  <TableCell className="px-1  text-gray-500 text-start italic dark:text-gray-300 border border-gray-200 dark:border-gray-700">
+                  <TableCell className="px-1  text-gray-500 text-start italic dark:text-gray-500 border border-gray-200 dark:border-gray-700">
                     {nutrition.notes}
                   </TableCell>
                 </TableRow>

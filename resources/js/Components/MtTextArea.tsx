@@ -14,7 +14,7 @@ const MtTextArea = ({ name, data, row , onChange}: InputProps) => {
             <Typography
                 variant="small"
                 color="blue-gray"
-                className="mb-3 dark:text-gray-500 text-gray-500 font-bold mt-4"
+                className="mb-3 dark:text-gray-300 text-gray-500 font-bold mt-4"
             >
                   {name?.charAt(0).toUpperCase() + name.slice(1)?.replace('_', " ")}
             </Typography>

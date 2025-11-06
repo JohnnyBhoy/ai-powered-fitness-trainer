@@ -1,7 +1,7 @@
 import { useProgramStore } from '@/stores/useProgramStore';
 import { useTraineeStore } from '@/stores/useTraineeStore';
 import axios from 'axios';
-import { Loader, Sparkles } from 'lucide-react'
+import { ArrowLeft, Loader, Sparkles } from 'lucide-react'
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -54,15 +54,21 @@ function GenerateWeeklyProgram({ userId }: { userId: number }) {
 
 
     return (
-        <div className="mt-[10rem]">
-            <h3 className="dark:text-gray-400 text-center p-3 text-md font-bold m">No program created for this trainee.</h3>
+        <div className="mt-[7rem]">
+            <h3 className="dark:text-gray-400 text-center p-3 text-md font-bold mb-10">No program created for this trainee, <br /> Press Generate to Create Weekly Program</h3>
             <div className="flex place-items-center justify-center gap-2">
-                <button
-                    onClick={generateWeeklyProgram}
-                    className="flex gap-2 bg-torq hover:bg-blue-300 dark:bg-gray-800 text-white dark:text-gray-200 py-2 px-4 rounded border shadow">
-                    {loading ? <Loader className='animate-spin' /> : <Sparkles />}
-                    {loading ? 'Generating weekly program...' : 'Generate Weekly Program'}
-                </button>
+                <div className="flex gap-2 place-items-center gap-8">
+                    <span className='flex gap-1 place-items-center dark:text-gray-300 cursor-pointer' onClick={() => setShowProgram(false)} >
+                        <ArrowLeft className='dark:text-gray-300' size={18} /> back
+                    </span>
+                    <button
+                        onClick={generateWeeklyProgram}
+                        className="flex gap-2 bg-torq hover:bg-blue-300 dark:bg-gray-800 animate-pulse text-white dark:text-gray-200 py-2 px-4 rounded-full border shadow">
+                        {loading ? <Loader className='animate-spin' /> : <Sparkles />}
+                        {loading ? 'Generating..' : 'Generate'}
+                    </button>
+                </div>
+
             </div>
         </div>
     )

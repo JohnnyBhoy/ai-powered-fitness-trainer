@@ -1,4 +1,3 @@
-import { useUserStore } from '@/stores/useUserStore'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import { useRef, useState } from 'react'
@@ -7,18 +6,19 @@ import { toast } from 'sonner'
 import Loading from '../Loading'
 
 type PhoneVerificationData = {
-    user_id: number | null
+    user_id: number | string | null
     otp: string,
     phone_number: string // Ensure phone_number field is here
 }
 
 type ResendPhoneVerificationData = {
-    user_id: number | null
+    user_id: number | string | null
 }
 
 function PhoneVerification({ onComplete }: { onComplete: () => void }) {
     const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
-    const { userId } = useUserStore();
+    //const { userId } = useUserStore();
+    const userId = localStorage.getItem('user_id');
     const [otpCode, setOtpCode] = useState('');
     const [phoneNumber, setPhoneNumber] = useState(''); // Store phone number to reset it
     const {

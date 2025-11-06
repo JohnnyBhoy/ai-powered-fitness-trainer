@@ -1,16 +1,16 @@
+import PageBreadcrumb from '@/common/PageBreadCrumb';
 import Create from '@/Components/Admin/Trainees/GoPeakFit/Create';
-import TraineeTable from '@/Components/Admin/Trainees/TraineeTable';
 import Update from '@/Components/Trainee/Forms/Update';
 import Authenticated from "@/Pages/Layouts/AuthenticatedLayout";
 import { useGpfStore } from '@/stores/useGpfStore';
 import { useTraineeStore } from '@/stores/useTraineeStore';
 import { Head, router, useForm } from "@inertiajs/react";
-import {
-  Card
-} from "@material-tailwind/react";
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import GpfTable from './GpfTable';
+import { Button } from '@material-tailwind/react';
+import TableHeader from '@/Components/Admin/Trainees/GoPeakFit/TableHeader';
 
 const TABS = [
   {
@@ -186,13 +186,20 @@ const GpfTrainee = () => {
   return (
     <Authenticated>
 
-      <Head title="GoPeakFit Trainees" />
-      <div className={`${(updateTrainee || showAddTraineeForm) && 'hidden'} border border-gray-200 dark:border-gray-800 dark:bg-white/[0.03]`}>
+      <Head title="GoPeakFit Trainees Lists Table, Workout and Diet Expert Coach" />
+      <div className={`${(updateTrainee || showAddTraineeForm) && 'hidden'}`}>
 
-        <Card className="h-full w-full dark:bg-gray-900">
-          <TraineeTable />
-        </Card>
+        <PageBreadcrumb pageTitle="GoPeakFit Trainees" />
+         <TableHeader />
+        <div className="space-y-6">
+          {loading ? <div className='flex justify-center mt-[15%]'>
+            <Button variant="outline" className="dark:bg-gray-700 p-3.5" loading={true}>
+              Loading Trainees
+            </Button>
+          </div> : <GpfTable />}
+        </div>
       </div>
+
       {updateTrainee && <Update />}
 
       {showAddTraineeForm && <Create />}
@@ -202,80 +209,3 @@ const GpfTrainee = () => {
 }
 
 export default GpfTrainee;
-
-{/**           {/*<div className="flex justify-between pt-6 px-6">
-            <h3 className='font-bold dark:text-gray-300'>Total : {traineeDataArray?.length ?? 0} Trainees</h3>
-            <div className="relative flex ">
-              <Search className='absolute m-2 dark:bg-black dark:text-white/90' size={18} />
-              <input placeholder='Search trainee...' className='dark:bg-black text-sm p-1 dark:text-white/90 rounded pl-7' />
-              <button
-                onClick={() => setShowAddTraineeForm(true)}
-                className='ml-3 bg-black border border-gray-500 rounded py-1 px-3 text-gray-300 flex gap-2 place-items-center'>
-                <UserPlus size={16} />Add Trainee
-              </button>
-            </div>
-          </div> 
-<CardBody className="overflow-scroll">
-  {loading ? <div className='flex place-items-center justify-center dark:text-white/90'>
-    <Loader className='animate-spin grid place-items-center mr-1' /> Loading trainees...
-  </div>
-    : TABLE_ROWS?.length == 0 ? (
-      <h1 className='font-bold text-lg text-center'>No trainee found.</h1>
-    ) : (
-      <div className="max-w-full overflow-x-auto">
-        <Table>
-          {/* Table Header 
-                    <TableHeader className="border-gray-100 dark:border-gray-800 border border-1 border-gray-700">
-                      <TableRow>
-                        {TABLE_HEAD?.map((header, i) => (
-                          <TableCell
-                            isHeader
-                            className="py-3 font-medium dark:text-gray-200 text-center text-theme-xs dark:text-white/90 border border-gray-300 border-1 border-gray-700"
-                            key={i}
-                          >
-                            <div className="flex gap-7 place-items-center justify-center">
-                              {header}
-                              <ChevronsUpDown size={12} />
-                            </div>
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    </TableHeader>
-
-                    {/* Table Body
-
-                    <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
-                      {traineeDataArray.map((trainee, i) => (
-                        <TableRow key={i} className="">
-                          <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-white/90 border border-1 border-gray-700 pl-2">
-                            {trainee.first_name} {trainee?.last_name}
-                          </TableCell>
-                          <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-white/90 border border-1 border-gray-700 pl-2">
-                            {trainee.email}
-                          </TableCell>
-                          <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-white/90 border border-1 border-gray-700 pl-2">
-                            {trainee.city?.substring(0, 20)}, {trainee.state?.substring(0, 20)}
-                          </TableCell>
-                          <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-white/90 border border-1 border-gray-700 pl-2">
-                            {trainee?.goal?.substring(0, 20)}
-                          </TableCell>
-                          <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-white/90 border border-1 border-gray-700 pl-2">
-                            {trainee?.current_weight} lbs
-                          </TableCell>
-                          <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-white/90 border border-1 border-gray-700 pl-2">
-                            {trainee?.goal_weight} lbs
-                          </TableCell>
-                          <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-white/90 border border-1 border-gray-700 pl-2">
-                            {getStrictnessLevel(trainee?.strictness_level)}
-                          </TableCell>
-                          <TableCell className="py-3 flex justify-center text-gray-500 text-theme-sm dark:text-gray-400 border border-1 border-gray-700">
-                            <Edit onClick={() => handleEditTrainee(trainee)} />
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              )}
-
-          </CardBody>  */}

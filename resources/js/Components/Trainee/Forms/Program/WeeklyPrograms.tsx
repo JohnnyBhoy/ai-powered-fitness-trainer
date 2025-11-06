@@ -7,6 +7,7 @@ import { ChevronsUpDown, Edit } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { Check2Square } from "react-bootstrap-icons";
 import ProgramData from "./ProgramData";
+import { useTraineeStore } from "@/stores/useTraineeStore";
 
 
 const WeeklyPrograms = () => {
@@ -16,6 +17,7 @@ const WeeklyPrograms = () => {
     // Global states
     const { setTrialPrograms, trialPrograms, editTrialByDay, setEditTrialByDay } = useTrialProgramStore();
     const { weeklyPrograms, update, setUpdate, setDailyProgram } = useProgramStore();
+    const { showProgram } = useTraineeStore();
 
     // Local states
     const [trialProgram, setTrialProgram] = useState<WeeklyProgram[]>(trialPrograms);
@@ -55,6 +57,12 @@ const WeeklyPrograms = () => {
         setDailyProgram(program);
     }
 
+    const activeProgram = currentPage == 'five-days-trail' ? trialProgram : weeklyPrograms;
+
+    console.log(trialProgram);
+    console.log(weeklyPrograms);
+    console.log(currentPage);
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 15 }}
@@ -62,10 +70,10 @@ const WeeklyPrograms = () => {
             transition={{ duration: 0.6, ease: "easeOut" }}
             className={`${editTrialByDay ? "hidden" : ""} overflow-hidden dark:border-gray-800 bg-white dark:border-white/[0.05] dark:bg-white/[0.03] shadow-lg`}
         >
-            <div className="overflow-hidden bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+            <div className={`${showProgram ? '' : 'hidden'} overflow-hidden bg-white dark:border-white/[0.05] dark:bg-white/[0.03]`}>
                 <div className="max-w-full overflow-x-auto">
                     <table className="min-w-full  undefined">
-                        {/* Table Header */} 
+                        {/* Table Header */}
                         <thead>
                             <tr>
                                 {HEADERS.map((head, i) => (

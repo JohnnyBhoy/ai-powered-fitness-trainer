@@ -3,21 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Models\GpfNutritionPlan;
+use App\Services\NutritionService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class NutritionPlanController extends Controller
 {
+    private $nutritionService;
+
+    public function __construct(NutritionService $nutritionService)
+    {
+        $this->nutritionService = $nutritionService;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $plans = GpfNutritionPlan::orderBy('created_at', 'desc')
-            ->get();
+        $memberNutritionPlanLists = $this->nutritionService->getAll();
 
         return Inertia::render('Admin/NutritionPlans/Index', [
-            'plans' => $plans,
+            'plans' => $memberNutritionPlanLists,
         ]);
     }
 

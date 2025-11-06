@@ -15,15 +15,7 @@ type GoalsInformationProps = {
 export default function GoalsInformation({ data, setData, errors, processing, isNowSaving, setIsNowSaving, onSubmit }: GoalsInformationProps) {
     return (
         <form onSubmit={onSubmit} className="border dark:border-gray-700 border-gray-200 dark:bg-white/[0.03] bg-white rounded p-6 pb-5 h-auto space-y-3">
-            <div className="flex justify-between">
-                <h3 className="dark:text-white/90 font-bold text-lg">Goals</h3>
-                <button onClick={() => setIsNowSaving(3)}>
-                    {processing && isNowSaving == 3
-                        ? <Loader className='dark:text-white/90 animate-spin' />
-                        : <Save className='hover:cursor-pointer dark:text-white/90' type='submit' />
-                    }
-                </button>
-            </div>
+            <h3 className="dark:text-white/90 font-bold text-lg">Goals</h3>
             <MtTextInput
                 name="What's your primary health and fitness goal?"
                 data={data.goal}

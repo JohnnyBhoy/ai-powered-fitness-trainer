@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class GoalRequest extends FormRequest
 {
     public function authorize(): bool {
-        return auth()->user()->role == 1;
+        return true;
     }
 
     public function rules(): array {

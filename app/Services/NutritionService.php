@@ -22,6 +22,15 @@ class NutritionService
     }
 
     /**
+     * Summary of getAll
+     * @return array
+     */
+    public function getAll(): array
+    {
+        return $this->nutritionRepository->getAll();
+    }
+
+    /**
      * Summary of create
      * @param mixed $user
      * @return null

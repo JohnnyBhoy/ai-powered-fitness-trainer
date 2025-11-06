@@ -172,7 +172,7 @@ class HelperFunctions
         $trialPogramData = $this->trialProgramService->find($daysSinceAccountCreated);
         $workout = implode(",", $trialPogramData->workout);
 
-        $ubscribedInstruction = "1. Personalize the workout and nutrition advice for {$user->first_name}.
+        $subscribedInstruction = "1. Personalize the workout and nutrition advice for {$user->first_name}.
         2. Stay supportive, realistic, and practical.
         3. Use {$user->equipment_access} equipment for workouts.
         4. Avoid foods that cause allergies.
@@ -182,7 +182,7 @@ class HelperFunctions
         8. Keep responses concise and text-message-friendly (under 300 characters when possible).
         9. Use a {$strictnessLevel} approach for their training plan.";
 
-        $inTrialInstruction = "Reply based on the given trail program by day
+        $inTrialInstruction = "Reply based on the given program by day
         1. Program name : $trialPogramData->program_name
         2. Day: $trialPogramData->day
         3. Focus: $trialPogramData->focus
@@ -195,7 +195,7 @@ class HelperFunctions
         TRAINEE WANT A LONG OR BASED ON ITS CONVERSATION.
         ";
 
-        $instruction = $daysSinceAccountCreated <= 5 ? $inTrialInstruction : $ubscribedInstruction;
+        $instruction = $daysSinceAccountCreated <= 5 ? $inTrialInstruction : $subscribedInstruction;
 
         return  trim("Act as an expert Workout Fitness Coach, expert Dietician and expert Nutritionist.
         Your mission is to help {$user->first_name} reach their health goals with
